@@ -684,37 +684,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 
-	/**
-	 * what I was planning to use for the threads
-	 * but it seems that you can't call them 
-	 * more than once with a passed object as it seems to mess it up
-	 */
-	/*
-	public void callUpdateSlideThread(String operation)
-	{
-		if (pdfHandlerSet == true){
-			//
-			UpdateSlideThread slideThreadHandler = new UpdateSlideThread(pdfHandler);
-			setSlideThread = true;
-
-
-
-			if (setSlideThread == true){
-
-				slideThreadHandler.setSlideOperation(operation);
-				try{
-					slideThreadHandler.join();
-					slideThreadHandler.start();
-
-				}
-				catch (InterruptedException e){
-					e.printStackTrace();
-				}
-			}
-
-		}
-	}
-	*/
+	
 
 //--GETTERS & SETTERS--
 
@@ -958,32 +928,24 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
         Point p = e.getPoint();
         double pointXCoord = p.getX();
         double pointYCoord = p.getY();
-		try {
-			if (currentPage == "1"){
-				startPageLaunchQuizButtonClickCheck(pointXCoord, pointYCoord);
-				startPageChangeFileButtonClickCheck(pointXCoord, pointYCoord);
-				startPageResetCompletedQuestionsButtonClickCheck(pointXCoord, pointYCoord);
-				startPageSlideMode1ButtonClickCheck(pointXCoord, pointYCoord);
-				startPageSlideMode2ButtonClickCheck(pointXCoord, pointYCoord);
-				startPageSlideMode3ButtonClickCheck(pointXCoord, pointYCoord);
-				startPageSlideOrder1ButtonClickCheck(pointXCoord, pointYCoord);
-				startPageSlideOrder2ButtonClickCheck(pointXCoord, pointYCoord);
+		if (currentPage == "1") {
+			startPageLaunchQuizButtonClickCheck(pointXCoord, pointYCoord);
+			startPageChangeFileButtonClickCheck(pointXCoord, pointYCoord);
+			startPageResetCompletedQuestionsButtonClickCheck(pointXCoord, pointYCoord);
+			startPageSlideMode1ButtonClickCheck(pointXCoord, pointYCoord);
+			startPageSlideMode2ButtonClickCheck(pointXCoord, pointYCoord);
+			startPageSlideMode3ButtonClickCheck(pointXCoord, pointYCoord);
+			startPageSlideOrder1ButtonClickCheck(pointXCoord, pointYCoord);
+			startPageSlideOrder2ButtonClickCheck(pointXCoord, pointYCoord);
 
-				
-			}
-			else if (currentPage == "2"){
-				nextQuestionButtonClickCheck(pointXCoord, pointYCoord);
-				forwardButtonClickCheck(pointXCoord, pointYCoord);
-				backwardButtonClickCheck(pointXCoord, pointYCoord);
-				tickButtonClickCheck(pointXCoord, pointYCoord);
-				xButtonClickCheck(pointXCoord, pointYCoord);
-				textBoxClickCheck(pointXCoord, pointYCoord);
-				backToMenuButtonClickCheck(pointXCoord, pointYCoord);
-			}
-
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} else if (currentPage == "2") {
+			nextQuestionButtonClickCheck(pointXCoord, pointYCoord);
+			forwardButtonClickCheck(pointXCoord, pointYCoord);
+			backwardButtonClickCheck(pointXCoord, pointYCoord);
+			tickButtonClickCheck(pointXCoord, pointYCoord);
+			xButtonClickCheck(pointXCoord, pointYCoord);
+			textBoxClickCheck(pointXCoord, pointYCoord);
+			backToMenuButtonClickCheck(pointXCoord, pointYCoord);
 		}
         
 	}
@@ -1019,11 +981,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * @param clickedXCoord the y coordinate where the mouse was clicked
 	 * @param clickedYCoord the x coordinate where the mouse was clicked
-	 * @throws IOException
 	 * checks if the mouse click was inside of the next question button
 	 * if so, sets the button to clicked and gets the question
 	 */
-	public void nextQuestionButtonClickCheck(double clickedXCoord, double clickedYCoord) throws IOException
+	public void nextQuestionButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (setNextQuestionButtonStuff == true){
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight)){
@@ -1038,9 +999,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * checks whether the forward button has been clicked
 	 * 
-	 * @throws IOException
 	 */
-	public void forwardButtonClickCheck(double clickedXCoord, double clickedYCoord) throws IOException
+	public void forwardButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (setForwardPageButtonStuff == true){
 			//
@@ -1055,9 +1015,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * checks whether the backward button has been clicked
 	 * 
-	 * @throws IOException
 	 */
-	public void backwardButtonClickCheck(double clickedXCoord, double clickedYCoord) throws IOException
+	public void backwardButtonClickCheck(double clickedXCoord, double clickedYCoord) 
 	{
 		if (setBackPageButtonStuff == true){
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,backPageButtonX, backPageButtonY, buttonWidth, buttonHeight)){
@@ -1071,9 +1030,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * checks whether the tick button has been clicked
 	 * 
-	 * @throws IOException
 	 */
-	public void tickButtonClickCheck(double clickedXCoord, double clickedYCoord) throws IOException
+	public void tickButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (setGreenTickStuff == true){
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, greenTickButtonX, greenTickButtonY, greenTickButtonWidth, greenTickButtonHeight)){
@@ -1086,9 +1044,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * checks whether the 'X button has been clicked
 	 * 
-	 * @throws IOException
 	 */
-	public void xButtonClickCheck(double clickedXCoord, double clickedYCoord) throws IOException
+	public void xButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (setRedXStuff == true){
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,  redXButtonX, redXButtonY, redXButtonWidth, redXButtonHeight)){
@@ -1287,9 +1244,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * changes the slide reference image to the appropriate question
 	 * 
-	 * @throws IOException
 	 */
-	public void getNextQuestion() throws IOException
+	public void getNextQuestion()
 	{
 		//
 		if (pdfHandlerSet == false){
@@ -1306,9 +1262,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 * changes the slide reference image to the appropriate slide
 	 * moving forward through the seen slides
 	 * 
-	 * @throws IOException
 	 */
-	public void getForwardSlide() throws IOException
+	public void getForwardSlide()
 	{
 		//
 		if (pdfHandlerSet == true){
@@ -1320,9 +1275,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 * changes the slide reference image to the appropriate slide
 	 * moving backward through the seen slides
 	 * 
-	 * @throws IOException
 	 */
-	public void getBackwardSlide() throws IOException
+	public void getBackwardSlide()
 	{
 		//
 		if (pdfHandlerSet == true){
@@ -1544,12 +1498,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				if (typedChar == "enter"){
 					//next question button clicked
 					nextQuestionClicked = true;
-					try {
-						getNextQuestion();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					getNextQuestion();
 					
 				}
 				else if (typedChar.equals("t")){
@@ -1577,23 +1526,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				else if (typedChar.equals("[")){
 					//move left in seen slides button clicked
 					backwardPageButtonClicked = true;
-					try {
-						getBackwardSlide();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					getBackwardSlide();
 					
 				}
 				else if (typedChar.equals("]")){
 					//move right in seen slides button clicked
 					forwardPageButtonClicked = true;
-					try {
-						getForwardSlide();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					getForwardSlide();
 					
 				}
 				else if (typedChar.equals("b")){
@@ -1776,7 +1715,7 @@ public void drawSlide()
 		}
 
 	} catch (IOException ex) {
-		ex.printStackTrace();
+		System.out.println("could not attain the slide image file");
 	}
 
 
@@ -2396,7 +2335,7 @@ public void drawRedXButton()
 
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		System.out.println("could not read the red X file");
 	}
 
 	
@@ -2473,7 +2412,7 @@ public void drawGreenTickButton()
 
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
-		e.printStackTrace();
+		System.out.println("could not read the green tick image");
 	}
 
 }
@@ -2517,7 +2456,7 @@ public void drawDoneQuestionTick()
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("could not read the done question tick");
 			}
 
 		}
@@ -3390,8 +3329,8 @@ public void drawResetQuestionsTextIndication()
             fwOb.close();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+			// TODO Auto-generated catch block
+			System.out.println("could not clear the given text file");
         }
 
 	}
@@ -3453,7 +3392,7 @@ public void drawResetQuestionsTextIndication()
 	
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("could not set all of the slides to unseen");
 				}
 	
 			} 
@@ -3487,7 +3426,7 @@ public void drawResetQuestionsTextIndication()
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("could not re-write the new values to the file");
 			}
 		}
 

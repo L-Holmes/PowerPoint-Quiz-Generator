@@ -20,13 +20,7 @@ public class UpdateSlideThread extends Thread {
         System.out.println("started the thread");
         try {
             if ((newSlideChangeObj != null) && (slideOperation != "")) {
-                // then user has set the appropriate values and can call the update slide method
-                try {
-                    newSlideChangeObj.changeSlide(slideOperation);
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                newSlideChangeObj.changeSlide(slideOperation);
             }
             //
             Thread.sleep(100);

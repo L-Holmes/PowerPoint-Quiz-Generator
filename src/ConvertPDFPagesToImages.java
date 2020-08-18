@@ -103,7 +103,7 @@ public class ConvertPDFPagesToImages {
 
     //
 
-    public ConvertPDFPagesToImages(ClickPanel linkedClickPanel) throws IOException {
+    public ConvertPDFPagesToImages(ClickPanel linkedClickPanel) {
         // init
         motherClickPanel = linkedClickPanel;
         sourceDir = motherClickPanel.getPowerPointLocation();
@@ -123,7 +123,7 @@ public class ConvertPDFPagesToImages {
     }
 
 
-    public void loadPowerPoint() throws IOException {
+    public void loadPowerPoint(){
         sourceFile = new File(sourceDir);
         destinationFile = new File(destinationDir);
         if (!destinationFile.exists()) {
@@ -131,42 +131,48 @@ public class ConvertPDFPagesToImages {
         }
         if (sourceFile.exists()) {
             // loading the pdf document
-            document = PDDocument.load(sourceFile);
+            try {
+                document = PDDocument.load(sourceFile);
+                // getting a list of all the pdf pages
+                list = document.getDocumentCatalog().getPages();
 
-            // getting a list of all the pdf pages
-            list = document.getDocumentCatalog().getPages();
-
-            // number of pages in the pdf
-            totalNumPages = list.getCount();
-            completedSlides = new int[totalNumPages];
-            completedQuestions = new int[totalNumPages];
-            slidesDoneBefore = new int[totalNumPages];
-            importCompletedSlides(totalNumPages);
+                // number of pages in the pdf
+                totalNumPages = list.getCount();
+                completedSlides = new int[totalNumPages];
+                completedQuestions = new int[totalNumPages];
+                slidesDoneBefore = new int[totalNumPages];
+                importCompletedSlides(totalNumPages);
 
 
-            fileName = sourceFile.getName().replace(".pdf", "");
-            pdfRenderer = new PDFRenderer(document);
+                fileName = sourceFile.getName().replace(".pdf", "");
+                pdfRenderer = new PDFRenderer(document);
 
-            if (slidesFound == false) {
-                // create slides unchecked, array of numbers from 1 to num of pages
-                // list of all slide numbers not checked
-                slidesUnchecked = getPopulatedNumberArray(1, totalNumPages);
-                removeCompletedSlidesFromSlidesLeft();
-                slidesFound = true;
+                if (slidesFound == false) {
+                    // create slides unchecked, array of numbers from 1 to num of pages
+                    // list of all slide numbers not checked
+                    slidesUnchecked = getPopulatedNumberArray(1, totalNumPages);
+                    removeCompletedSlidesFromSlidesLeft();
+                    slidesFound = true;
+                }
+
+                if (slideChoiceDescendingWrongness == true){
+                    //change from the default random to desending wrongness order
+                    changeSlidesUncheckedToAscendingWrongness();
+                }
+
+
+                outputFileName = destinationDir + "slideImage" + "." + fileExtension;
+                outPutFile = new File(outputFileName);
+                ppLoaded = true;
+
+                //load all of the slides
+                importAllSlides();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                System.out.println("couldn't open the source file");
             }
 
-            if (slideChoiceDescendingWrongness == true){
-                //change from the default random to desending wrongness order
-                changeSlidesUncheckedToAscendingWrongness();
-            }
-
-
-            outputFileName = destinationDir + "slideImage" + "." + fileExtension;
-            outPutFile = new File(outputFileName);
-            ppLoaded = true;
-
-            //load all of the slides
-            importAllSlides();
+            
         } else {
             System.err.println(sourceFile.getName() + " File not exists");
 
@@ -198,7 +204,7 @@ public class ConvertPDFPagesToImages {
 
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    System.out.println("could not import all of the slides");
                 }
             }
 
@@ -206,20 +212,17 @@ public class ConvertPDFPagesToImages {
     }
 
 
-    public  int  changeSlide(String nextSlideOperation) throws IOException {
+    public  int  changeSlide(String nextSlideOperation) {
         //
         if (ppLoaded == true) {
             //
             if (nextSlideOperation == "newQuestion") {
-                //
                 getNextQuestion();
 
             } else if (nextSlideOperation == "back") {
-                //
                 moveBackwardInSeenSlides();
 
             } else if (nextSlideOperation == "forward") {
-                //
                 moveForewardInSeenSlides();
             } else {
                 pageNumber = -1;
@@ -227,17 +230,11 @@ public class ConvertPDFPagesToImages {
 
             //setting (or not) the 'on first slide' text
             if (currentQuestion == 1){
-                try {
-                    if (isQuestion(pageNumber, document) == true){
-                        motherClickPanel.setFirstSlideStatus(true);
-                    }
-                    else{
-                        
-                        motherClickPanel.setFirstSlideStatus(false);
-                    }
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                if (isQuestion(pageNumber, document) == true) {
+                    motherClickPanel.setFirstSlideStatus(true);
+                } else {
+
+                    motherClickPanel.setFirstSlideStatus(false);
                 }
     
             }
@@ -272,11 +269,9 @@ public class ConvertPDFPagesToImages {
      * when the text question button is clicked this gets the slide of the next
      * available question, that has not been asked yet
      * 
-     * @throws IOException
      */
-    public void getNextQuestion() throws IOException
+    public void getNextQuestion()
     {
-        // first question has not been displayed yet
         pageNumber = getNewQuestionSlide(document);
     }
 
@@ -284,10 +279,8 @@ public class ConvertPDFPagesToImages {
      * shows the next slide in the queue of questions/answer slides that have
      * already been asked to the user
      * 
-     * @throws IOException
      */
-    public void moveForewardInSeenSlides() throws IOException {
-        
+    public void moveForewardInSeenSlides() {
         if (pageNumber != -1) {
             // first question has been displayed
 
@@ -299,7 +292,6 @@ public class ConvertPDFPagesToImages {
                     previousSeenStack.push(pageNumber);
                     pageNumber = (int) forwardSeenStack.pop();
 
-
                 } else {
                     // if next stack item is a question,try to get the next answer
                     int pageBeforeFunctionCall = pageNumber;
@@ -307,8 +299,8 @@ public class ConvertPDFPagesToImages {
                     if (pageBeforeFunctionCall == pageNumber) {
                         // no answers left, so move back onto the next question
                         // by popping off the forward stack
-                        if (motherClickPanel.getCorrectness() == false){
-                            //but make sure the user has said their correctness first
+                        if (motherClickPanel.getCorrectness() == false) {
+                            // but make sure the user has said their correctness first
                             previousSeenStack.push(pageNumber);
                             pageNumber = (int) forwardSeenStack.pop();
 
@@ -326,9 +318,10 @@ public class ConvertPDFPagesToImages {
                 getNextAnswer();
             }
         }
+        
     }
 
-    public void getNextAnswer() throws IOException {
+    public void getNextAnswer() {
         int nextSlide = pageNumber + 1;
         // check if next slide is within the boundaries
         if ((0 < nextSlide) && (nextSlide <= totalNumPages)) {
@@ -352,7 +345,7 @@ public class ConvertPDFPagesToImages {
                 pageNumber = nextSlide;
                 // removes this answer slide from the slides unchecked list
                 slidesUnchecked = ArrayUtils.removeElement(slidesUnchecked, nextSlide);
-                
+
             } else {
                 // there is no answer to the current question
                 // or there are no more answer slides left for
@@ -366,16 +359,15 @@ public class ConvertPDFPagesToImages {
 
             motherClickPanel.setNoMoreSlideText(true);
         }
+        
     }
 
     /**
      * shows the next slide in the queue of questions/answer slides that have
      * already been asked to the user
      * 
-     * @throws IOException
      */
-    public void moveBackwardInSeenSlides() throws IOException {
-        //
+    public void moveBackwardInSeenSlides() {
         if (pageNumber != -1) {
             // first question has been displayed
 
@@ -393,13 +385,12 @@ public class ConvertPDFPagesToImages {
                     // but moved back
                     // then you have moved to the
                     // previous question
-                    if (motherClickPanel.getCorrectness() == false){
-                        //but make sure the user has said their correctness first
+                    if (motherClickPanel.getCorrectness() == false) {
+                        // but make sure the user has said their correctness first
                         handleCurrentQuestion(false);
-                    }
-                    else{
-                        //user needs to stay on the current question,
-                        //so revert back to the prevoius slides.
+                    } else {
+                        // user needs to stay on the current question,
+                        // so revert back to the prevoius slides.
                         previousSeenStack.push(pageNumber);
                         pageNumber = (int) forwardSeenStack.pop();
                     }
@@ -407,11 +398,10 @@ public class ConvertPDFPagesToImages {
                 }
 
             } else {
-                //On first slide 
-                //motherClickPanel.setFirstSlideStatus(true);
+                // On first slide
+                // motherClickPanel.setFirstSlideStatus(true);
 
             }
-        } else {
         }
     }
 
@@ -420,24 +410,21 @@ public class ConvertPDFPagesToImages {
      * question slide then returns the question slide number
      * 
      */
-    private int getNewQuestionSlide(PDDocument pDocument) throws IOException {
+    private int getNewQuestionSlide(PDDocument pDocument) {
         boolean foundNewQuestion = false;
 
-        
         // get random number
         while (foundNewQuestion == false) {
             if (slidesUnchecked.length > 0) {
                 int randIndex;
-                if (slideChoiceRandomOrder == true){
+                if (slideChoiceRandomOrder == true) {
                     randIndex = getRandomNumber(0, slidesUnchecked.length - 1);
-                }
-                else if (slideChoiceDescendingWrongness == true){
-                    //need to change this to get descending wrongness
-                    //start at top and move down until a question is found, 
+                } else if (slideChoiceDescendingWrongness == true) {
+                    // need to change this to get descending wrongness
+                    // start at top and move down until a question is found,
                     randIndex = 0;
-                    
-                }
-                else{
+
+                } else {
                     randIndex = getRandomNumber(0, slidesUnchecked.length - 1);
                 }
                 // use as index for slidesUnchecked
@@ -448,8 +435,8 @@ public class ConvertPDFPagesToImages {
                 boolean slideQuestionStatus = isQuestion(possibleQuestion, pDocument);
                 // if question, return
                 if (slideQuestionStatus == true) {
-                    if (motherClickPanel.getCorrectness() == false){
-                        //but make sure the user has said their correctness first
+                    if (motherClickPanel.getCorrectness() == false) {
+                        // but make sure the user has said their correctness first
 
                         // add question to seen slides stack
                         if (pageNumber != -1) {
@@ -580,56 +567,48 @@ public class ConvertPDFPagesToImages {
         int checkSlideNumBackwards = pageNumber;
         
         Stack foundSlides = new Stack();
-        try {
-            //until question is found add 1 to page number 
-            //adds the current answer and all answers after this
-            while ((isQuestion(checkSlideNumForwards, document) == false) && (checkSlideNumForwards<=totalNumPages)) {
-                foundSlides.push(checkSlideNumForwards);
-                checkSlideNumForwards++;
+        // until question is found add 1 to page number
+        // adds the current answer and all answers after this
+        while ((isQuestion(checkSlideNumForwards, document) == false) && (checkSlideNumForwards <= totalNumPages)) {
+            foundSlides.push(checkSlideNumForwards);
+            checkSlideNumForwards++;
+        }
+
+        // adds any previous answers and the question
+        boolean foundQuestion = false;
+        while (foundQuestion == false) {
+            checkSlideNumBackwards--;
+            foundSlides.push(checkSlideNumBackwards);
+            if ((isQuestion(checkSlideNumBackwards, document) == true) || (checkSlideNumBackwards < 1)) {
+                foundQuestion = true;
             }
+        }
 
-            //adds any previous answers and the question
-            boolean foundQuestion = false;
-            while (foundQuestion == false){
-                checkSlideNumBackwards--;
-                foundSlides.push(checkSlideNumBackwards);
-                if ((isQuestion(checkSlideNumBackwards, document) == true) || (checkSlideNumBackwards < 1)){
-                    foundQuestion = true;
-                }
-            }
+        // adds all of the found page numbers to the completed slides array
+        int stackSize = foundSlides.size();
+        if (stackSize > 0) {
+            for (int fwdStackIndex = 0; fwdStackIndex < stackSize; fwdStackIndex++) {
+                int currentValueFromTheFound = (int) foundSlides.pop();
+                boolean alreadyCompletedThisSlide = isInCompletedSlides(currentValueFromTheFound);
 
-            //adds all of the found page numbers to the completed slides array
-            int stackSize = foundSlides.size();
-            if (stackSize > 0) {
-                for (int fwdStackIndex = 0; fwdStackIndex < stackSize; fwdStackIndex++) {
-                    int currentValueFromTheFound = (int) foundSlides.pop();
-                    boolean alreadyCompletedThisSlide = isInCompletedSlides(currentValueFromTheFound);
-
-                    if (alreadyCompletedThisSlide == false){
-                        //
-                        completedSlides[nextAddSlideIndex] = currentValueFromTheFound;
-                        //might have the see wrong questions turned on, so need to check
-                        if (slideNumWithAttemptsWrongMap.containsKey(currentValueFromTheFound) == false){
-                            //if it doesn't contain it, then set the value to zero
-                            slideNumWithAttemptsWrongMap.put(currentValueFromTheFound, 0);
-                        }
-                        currentlyCompletedMap.put(currentValueFromTheFound, true);
-                        wrongLastTimeMap.put(currentValueFromTheFound, incorrect);
-                        nextAddSlideIndex++;
+                if (alreadyCompletedThisSlide == false) {
+                    //
+                    completedSlides[nextAddSlideIndex] = currentValueFromTheFound;
+                    // might have the see wrong questions turned on, so need to check
+                    if (slideNumWithAttemptsWrongMap.containsKey(currentValueFromTheFound) == false) {
+                        // if it doesn't contain it, then set the value to zero
+                        slideNumWithAttemptsWrongMap.put(currentValueFromTheFound, 0);
                     }
-                    else{
-                        //slide already completed
-                        currentlyCompletedMap.put(currentValueFromTheFound, true);
-                        wrongLastTimeMap.put(currentValueFromTheFound, incorrect);
-                    }
-                    
+                    currentlyCompletedMap.put(currentValueFromTheFound, true);
+                    wrongLastTimeMap.put(currentValueFromTheFound, incorrect);
+                    nextAddSlideIndex++;
+                } else {
+                    // slide already completed
+                    currentlyCompletedMap.put(currentValueFromTheFound, true);
+                    wrongLastTimeMap.put(currentValueFromTheFound, incorrect);
                 }
+
             }
-
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
 
         
@@ -644,27 +623,33 @@ public class ConvertPDFPagesToImages {
      * @param currentSlide
      * @param pDoc
      * @return
-     * @throws IOException
      */
-    private boolean isQuestion(int currentSlide, PDDocument pDoc) throws IOException {
+    private boolean isQuestion(int currentSlide, PDDocument pDoc)  {
         //
-        PDFTextStripper reader = new PDFTextStripper();
-        reader.setStartPage(currentSlide);
-        reader.setEndPage(currentSlide);
+        try{
+            PDFTextStripper reader = new PDFTextStripper();
+            reader.setStartPage(currentSlide);
+            reader.setEndPage(currentSlide);
 
-        // aquiring all of the text on screen
-        String pageText = reader.getText(pDoc);
+            // aquiring all of the text on screen
+            String pageText = reader.getText(pDoc);
 
-        if (pageText.contains("(Q)")) {
-            // next page is a question
-            // need to get a new slide
-            // that is not the current slide
-            // that is a question
-            return true;
-        } else {
-            // next page is an answer (or not a question)
+            if (pageText.contains("(Q)")) {
+                // next page is a question
+                // need to get a new slide
+                // that is not the current slide
+                // that is a question
+                return true;
+            } else {
+                // next page is an answer (or not a question)
+                return false;
+            }
+        }
+        catch(IOException e){
+            System.out.println("io error when checking if question");
             return false;
         }
+        
     }
 
     /**
@@ -747,7 +732,7 @@ public class ConvertPDFPagesToImages {
             document.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("could not close the document");
         }
     }
 
@@ -852,7 +837,7 @@ public class ConvertPDFPagesToImages {
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("could not write int array to file");
         }
 
     }
@@ -895,7 +880,7 @@ public class ConvertPDFPagesToImages {
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("could not clear the text file");
         }
 
     }
@@ -996,7 +981,7 @@ public class ConvertPDFPagesToImages {
 
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                System.out.println("could not read the completed slides array");
             }
 
         } 
