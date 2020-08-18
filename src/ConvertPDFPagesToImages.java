@@ -193,14 +193,12 @@ public class ConvertPDFPagesToImages {
             for (int pageIndex = 0; pageIndex<document.getNumberOfPages(); pageIndex++){
                 fileNameToCreate = "images/slideImage" + (pageIndex+1)+".png";
                 fileToExportTo = new File(fileNameToCreate);
-                System.out.println("DOES THE FILE EXIST? :: "+fileToExportTo.exists());
-                System.out.println("--specificSlideLocation " + fileNameToCreate);
+                
 
 
                 try {
                     bim = pdfRenderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
                     ImageIO.write(bim, fileExtension, fileToExportTo);
-                    System.out.println("created file");
 
                 } catch (IOException e) {
                     // TODO Auto-generated catch block

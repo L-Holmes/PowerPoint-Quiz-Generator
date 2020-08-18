@@ -80,7 +80,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	boolean textBoxEntered; 
 
 	//text box text stuff
-	String textBoxText;
+	String textBoxTextLeftOfCursor;
+	String textBoxTextRightOfCursor;
 	int totalNumTextBoxLines;
 
 	//text box scroll stuff
@@ -239,10 +240,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	boolean setAnswerTextBoxStuff;
 
 	//--drawing text in the text box--
-	int textBoxTextWidth;
-	int textBoxTextHeight;
-	int textBoxTextX;
-	int textBoxTextY;
+	int textBoxTextLeftOfCursorWidth;
+	int textBoxTextLeftOfCursorHeight;
+	int textBoxTextLeftOfCursorX;
+	int textBoxTextLeftOfCursorY;
 	int drawingTextStartY;
 	boolean exceededTextBoxHeight;
 	int lineCount;
@@ -632,7 +633,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 		textBoxEntered = false; 
 
-		textBoxText = "";
+		textBoxTextLeftOfCursor = "";
 		totalNumTextBoxLines = 1;
 
 		scrollAmount = 0;
@@ -1292,7 +1293,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void greenTickClicked()
 	{
-		textBoxText = "";
+		textBoxTextLeftOfCursor = "";
 		if (pdfHandlerSet == true){
 			//write green tick stuff here 
 			pdfHandler.handleGreenTickClicked();	
@@ -1301,7 +1302,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 	public void redXClicked() 
 	{
-		textBoxText = "";
+		textBoxTextLeftOfCursor = "";
 		if (pdfHandlerSet == true){
 			pdfHandler.handleRedXClicked();
 			
@@ -1488,7 +1489,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 						//
 						typedChar = "\n";
 					}
-					updateTextBoxText(typedChar);
+					updatetextBoxTextLeftOfCursor(typedChar);
 					System.out.println("updating with another new line");
 				}
 				
@@ -1508,7 +1509,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				}
 				else if (typedChar.equals("/")){
 					//text box clicked
-					textBoxText = "";
+					textBoxTextLeftOfCursor = "";
 					
 				}
 				else if (typedChar.equals("r")){
@@ -1551,14 +1552,14 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		
 	}
 
-	public void updateTextBoxText(String typedChar)
+	public void updatetextBoxTextLeftOfCursor(String typedChar)
 	{
 		//
 		if (typedChar == "backspace"){
-			textBoxText = backspaceString(textBoxText);
+			textBoxTextLeftOfCursor = backspaceString(textBoxTextLeftOfCursor);
 		}
 		else{
-			textBoxText = textBoxText + typedChar;
+			textBoxTextLeftOfCursor = textBoxTextLeftOfCursor + typedChar;
 		}
 	}
 
@@ -1667,9 +1668,7 @@ public void drawSlide()
 			if (slideImageUpdated == true){
 				//--normal code to run--
 				String specificSlideLocation = "images/slideImage" + imagePageNumber+ ".png";
-				System.out.println("--specificSlideLocation "+specificSlideLocation);
 				slideImg = new File(specificSlideLocation);
-				System.out.println("s l i d e I M G:"+ slideImg.exists());
 				introImg = new File(introImgLocation);
 				if (pdfHandlerSet == true){
 					img = ImageIO.read(slideImg);
@@ -2071,21 +2070,21 @@ public void drawTextInTextBox()
 
 	g.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
 	g.setColor(new Color(0, 0, 0));
-	textBoxTextWidth = g.getFontMetrics().stringWidth(textBoxText);
-	textBoxTextHeight = g.getFontMetrics().getAscent();
-	textBoxTextX = answerTextBoxX;
-	textBoxTextY = answerTextBoxY +textBoxTextHeight - scrollAmount;
+	textBoxTextLeftOfCursorWidth = g.getFontMetrics().stringWidth(textBoxTextLeftOfCursor);
+	textBoxTextLeftOfCursorHeight = g.getFontMetrics().getAscent();
+	textBoxTextLeftOfCursorX = answerTextBoxX;
+	textBoxTextLeftOfCursorY = answerTextBoxY +textBoxTextLeftOfCursorHeight - scrollAmount;
 					
 
-	//g.drawString(textBoxText, textBoxTextX, textBoxTextY);
-	drawingTextStartY = textBoxTextY - g.getFontMetrics().getHeight();
+	//g.drawString(textBoxTextLeftOfCursor, textBoxTextLeftOfCursorX, textBoxTextLeftOfCursorY);
+	drawingTextStartY = textBoxTextLeftOfCursorY - g.getFontMetrics().getHeight();
 
 	exceededTextBoxHeight = false;
 
 	lineCount = 0;
 	//may have to re-do with a while loop
 	//may have to completely redo with a string list
-	for (String line : textBoxText.split("\n")){
+	for (String line : textBoxTextLeftOfCursor.split("\n")){
 		lineCount++;
 
 		//adding a new line if the text becomes longer than the text box
@@ -2094,27 +2093,27 @@ public void drawTextInTextBox()
 
 
 			//get last space
-			lastSpace = textBoxText.lastIndexOf(" ") + 1;
-			lastNewLine = textBoxText.lastIndexOf("\n");
+			lastSpace = textBoxTextLeftOfCursor.lastIndexOf(" ") + 1;
+			lastNewLine = textBoxTextLeftOfCursor.lastIndexOf("\n");
 			//-if this line has a space in it-
 			if ((lastSpace > 0) && (lastNewLine < lastSpace)){
 				
 				//get everything after space
-				lastWord = textBoxText.substring(lastSpace);
+				lastWord = textBoxTextLeftOfCursor.substring(lastSpace);
 				if (lastWord.equals("")){
 					//then there was a space which caused the line to be longer than the text box
 					//add \n at last space
-					textMinusLastWord = textBoxText.substring(0, lastSpace - 1);
+					textMinusLastWord = textBoxTextLeftOfCursor.substring(0, lastSpace - 1);
 					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
 					//add everything back on
-					textBoxText = textMinusLastWordWithNewLine;
+					textBoxTextLeftOfCursor = textMinusLastWordWithNewLine;
 				}
 				else{
 					//add \n at last space
-					textMinusLastWord = textBoxText.substring(0, lastSpace);
+					textMinusLastWord = textBoxTextLeftOfCursor.substring(0, lastSpace);
 					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
 					//add everything back on
-					textBoxText = textMinusLastWordWithNewLine + lastWord;
+					textBoxTextLeftOfCursor = textMinusLastWordWithNewLine + lastWord;
 				}
 				
 			}
@@ -2123,13 +2122,13 @@ public void drawTextInTextBox()
 
 
 				//length of string:
-				textLength = Math.max(textBoxText.length() - 2, 0);
+				textLength = Math.max(textBoxTextLeftOfCursor.length() - 2, 0);
 				//get the last 2 characters
-				lastTwoCharacters = textBoxText.substring(textLength);
+				lastTwoCharacters = textBoxTextLeftOfCursor.substring(textLength);
 				//remove the last 2 characters
-				lastTwoRemoved = textBoxText.substring(0, textLength);
+				lastTwoRemoved = textBoxTextLeftOfCursor.substring(0, textLength);
 				//add "-\n" and add last two back on
-				textBoxText = lastTwoRemoved + "-\n" + lastTwoCharacters;
+				textBoxTextLeftOfCursor = lastTwoRemoved + "-\n" + lastTwoCharacters;
 			}
 
 			//if do a space then type without spaces until the end of the line breaks it
@@ -2149,7 +2148,7 @@ public void drawTextInTextBox()
 		}
 
 		//drawing the line
-		g.drawString(line, textBoxTextX, drawingTextStartY += g.getFontMetrics().getHeight());
+		g.drawString(line, textBoxTextLeftOfCursorX, drawingTextStartY += g.getFontMetrics().getHeight());
 
 		//updating the default cursor details
 		defaultCursorY = drawingTextStartY - g.getFontMetrics().getHeight() + 4;
@@ -2159,9 +2158,9 @@ public void drawTextInTextBox()
 	}
 
 	//makes the cursor move to the next line if there is a new line at the end of the text
-	if (textBoxText.length() >= 2){
+	if (textBoxTextLeftOfCursor.length() >= 2){
 		//
-		String lastTwoChars = textBoxText.substring(textBoxText.length() - 2);
+		String lastTwoChars = textBoxTextLeftOfCursor.substring(textBoxTextLeftOfCursor.length() - 2);
 		//
 		if (lastTwoChars.contains("\n")){
 			defaultCursorY = defaultCursorY + g.getFontMetrics().getHeight();
@@ -2170,7 +2169,7 @@ public void drawTextInTextBox()
 
 	}
 	else{
-		if (textBoxText.equals("\n")){
+		if (textBoxTextLeftOfCursor.equals("\n")){
 			defaultCursorY = defaultCursorY + g.getFontMetrics().getHeight();
 			defaultCursorX = answerTextBoxX;
 		}
