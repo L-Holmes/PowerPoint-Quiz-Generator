@@ -42,12 +42,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	private boolean rendered = false;
 
 	//location of the powerpoint
-	String slideImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/src/images/"; // converted images from pdf document are saved here
-	String slidePDFLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/test_pp.pdf";
+	String slideImgLocation = "images/"; // converted images from pdf document are saved here
+	String slidePDFLocation = "test_pp.pdf";
 	boolean slideImageUpdated;
 
 	//new slide stuff
-	int imagePageNumber = -1; 
+	int imagePageNumber = 1; 
 	
 
 	//slide thread handler
@@ -1659,10 +1659,10 @@ public void drawTitle()
 public void drawSlide()
 {
 	//the intro slide location
-	introImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/greyBackground.png"; 
+	introImgLocation = "greyBackground.png"; 
 
 	try {
-		if ((imagePageNumber != -1) || (pdfHandlerSet == false)){
+		if ((imagePageNumber != -1) || (pdfHandlerSet == true)){
 			//
 			if (slideImageUpdated == true){
 				//--normal code to run--
@@ -2271,7 +2271,7 @@ public void drawRedXButton()
 		if (setRedXStuff == false){
 			//
 			//the img location
-			redXButtonImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/red_cross.png"; 
+			redXButtonImgLocation = "red_cross.png"; 
 			redXButtonImg = new File(redXButtonImgLocation);
 
 			redXBimg = ImageIO.read(redXButtonImg);
@@ -2349,7 +2349,7 @@ public void drawGreenTickButton()
 		if (setGreenTickStuff == false){
 			//
 			//the img location
-			greenTickButtonImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/green_tick.png"; 
+			greenTickButtonImgLocation = "green_tick.png"; 
 			greenTickButtonImg = new File(greenTickButtonImgLocation);
 
 
@@ -2424,14 +2424,14 @@ public void drawDoneQuestionTick()
 		if (pdfHandler.isComplete(currentQuestion)){
 			//draw the tick
 			//the img location
-			doneTickImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/doneTick.png"; 
+			doneTickImgLocation = "doneTick.png"; 
 			doneTickImg = new File(doneTickImgLocation);
 
 			try {
 				if (setDoneQuestionTickStuff == false){
 					//
 					//the img location
-					doneTickImgLocation = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/doneTick.png"; 
+					doneTickImgLocation = "doneTick.png"; 
 					doneTickImg = new File(doneTickImgLocation);
 
 					doneTickBimg = ImageIO.read(doneTickImg);

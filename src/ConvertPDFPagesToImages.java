@@ -737,12 +737,18 @@ public class ConvertPDFPagesToImages {
     }
 
     /**
-     * check if it is in the complete list, if so return true
+     * check if the slide is in the complete list, if so return true
      */
     public boolean isComplete(int checkComplete) {
         // https://stackoverflow.com/questions/1128723/how-do-i-determine-whether-an-array-contains-a-particular-value-in-java
         // check if it is in the complete list, if so return true
-        boolean contains = IntStream.of(completedQuestions).anyMatch(x -> x == checkComplete);
+        boolean contains = false;
+        try{
+            contains = IntStream.of(completedQuestions).anyMatch(x -> x == checkComplete);
+        }
+        catch(Exception e){
+            System.out.println("int stream failed");
+        }
         if (contains == true) {
             //
             return true;
