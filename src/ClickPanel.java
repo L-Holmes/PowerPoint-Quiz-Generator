@@ -272,6 +272,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	int textBoxTextRightOfCursorX;
 	int textBoxTextRightOfCursorY;
 	int drawingRightTextStartY;		
+	int leftLineWidth = 0;
+	int linesLastTime = 0;
 	
 	boolean setDrawingRightTextInTextBoxStuff = false;
 
@@ -1500,7 +1502,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 						typedChar = "\n";
 					}
 					updatetextBoxTextLeftOfCursor(typedChar);
-					System.out.println("updating with another new line");
 				}
 				
 			}
@@ -2097,7 +2098,7 @@ public void drawTextInTextBox()
 	lineCount = 0;
 	for (String line : textBoxTextLeftOfCursor.split("\n")){
 		lineCount++;
-
+		leftLineWidth = g.getFontMetrics().stringWidth(line);
 		//adding a new line if the text becomes longer than the text box
 		if (g.getFontMetrics().stringWidth(line) > answerTextBoxWidth ){
 			//add a new line onto the end 
@@ -2118,6 +2119,8 @@ public void drawTextInTextBox()
 					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
 					//add everything back on
 					textBoxTextLeftOfCursor = textMinusLastWordWithNewLine;
+					textBoxTextLeftOntoNewLine();
+					leftLineWidth = g.getFontMetrics().stringWidth(lastWord);
 				}
 				else{
 					//add \n at last space
@@ -2125,6 +2128,9 @@ public void drawTextInTextBox()
 					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
 					//add everything back on
 					textBoxTextLeftOfCursor = textMinusLastWordWithNewLine + lastWord;
+					textBoxTextLeftOntoNewLine();
+					leftLineWidth = g.getFontMetrics().stringWidth(lastWord);
+
 				}
 				
 			}
@@ -2140,6 +2146,9 @@ public void drawTextInTextBox()
 				lastTwoRemoved = textBoxTextLeftOfCursor.substring(0, textLength);
 				//add "-\n" and add last two back on
 				textBoxTextLeftOfCursor = lastTwoRemoved + "-\n" + lastTwoCharacters;
+				textBoxTextLeftOntoNewLine();
+				leftLineWidth = g.getFontMetrics().stringWidth(lastTwoCharacters);
+
 			}
 
 			//if do a space then type without spaces until the end of the line breaks it
@@ -2194,6 +2203,13 @@ public void drawTextInTextBox()
 			scrollAmount = scrollAmount - g.getFontMetrics().getHeight();
 		}
 	}
+
+	if (linesLastTime > textBoxTextLeftOfCursor.length()){
+		System.out.println("left text has got shorter");
+		textBoxTextLeftRemovedNewLine();
+		
+	}
+	linesLastTime = textBoxTextLeftOfCursor.length();
 	
 
 	if (lineCount > 0){
@@ -2274,6 +2290,47 @@ public void drawTextInTextBox()
 	setDrawingTextInTextBoxStuff = true;//indicates that the above variables can be referenced
 }
 
+public void textBoxTextLeftOntoNewLine(){
+	//
+	//if the left text goes onto a new line, if the first 2 chars of right text is newline, remove them
+	if (textBoxTextRightOfCursor.length() > 1){
+		//
+		String firstTwoLines = textBoxTextRightOfCursor.substring(0, 2);
+		if (firstTwoLines.contains("\n")){
+			//
+			textBoxTextRightOfCursor = textBoxTextRightOfCursor.substring(1);
+		}
+	}
+	
+}
+
+public void textBoxTextLeftRemovedNewLine(){
+	//
+	//if the left text goes onto a new line, if the first 2 chars of right text is newline, remove them
+	if (textBoxTextRightOfCursor.length() > 1){
+		//
+		String firstTwoLines = textBoxTextRightOfCursor.substring(0, 1);
+		if (firstTwoLines.contains("\n")){
+			//
+			textBoxTextRightOfCursor = textBoxTextRightOfCursor.substring(1);
+		}
+
+
+
+		int pos = textBoxTextRightOfCursor.indexOf("\n");
+		if (pos != -1) {
+			String left = textBoxTextRightOfCursor.substring(0, pos);
+			String right = textBoxTextRightOfCursor.substring(pos+1);
+
+			textBoxTextRightOfCursor = left+right;
+		}
+		
+
+		//jump
+	}
+	
+}
+
 
 /**
  * draws the text that is to the right of the cursor into the text box 
@@ -2297,81 +2354,130 @@ public void drawRightTextInTextBox()
 
 	drawingRightTextStartY = blinkingCursorY  - (int) ((float) (g.getFontMetrics().getHeight())/3.5);
 
+	String lastWordOnThisLine;
+	int lastSpaceOnThisLine;
+	String remainingTextAfterThisLine;
+	int indexOfNextNewLine;
 
 	/*
 	FOR THE RIGHT, NEED TO CHECK IF RIGHTING ONTO THE END OF THE LEFT TEXT AND THEN ADJUST FOR THE 
 	TEXT BOX WIDTH CHECKS
 	*/
-	lineCount = 0;
-	for (String line : textBoxTextRightOfCursor.split("\n")){
-		lineCount++;
 
-		//adding a new line if the text becomes longer than the text box
-		if (g.getFontMetrics().stringWidth(line) > answerTextBoxWidth ){
-			//add a new line onto the end 
+	String[] splitLinesArray = textBoxTextRightOfCursor.split("\n");
+	int numLines = splitLinesArray.length;
+	for (int i = 0; i < numLines; i++){
+		
+		String line = splitLinesArray[i];
 
+		String nextLine;
+		int nextLineWidth;
+		if (i != numLines - 1){
+			nextLine = splitLinesArray[i+1];
+			nextLineWidth = g.getFontMetrics().stringWidth(nextLine);
+		}
+		else{
+			nextLine = "";
+			nextLineWidth = 0;
+		}
 
-			//get last space
-			lastSpace = textBoxTextRightOfCursor.lastIndexOf(" ") + 1;
-			lastNewLine = textBoxTextRightOfCursor.lastIndexOf("\n");
-			//-if this line has a space in it-
-			if ((lastSpace > 0) && (lastNewLine < lastSpace)){
+		//for a line that is on the same line as the end of the left
+		//need to split the line in two if it overhangs greater than the text box
+		if (g.getFontMetrics().stringWidth(line) > answerTextBoxWidth - leftLineWidth){
+
+			/*
+			if the difference between the next two new lines + right split < text box width: 
+			just add the right bit to the start of the next line
+			*/
+
+			
+
+			if (!line.equals("")){
+				//
+				//seperating the overhang into two strings
+				int overhangLength = g.getFontMetrics().stringWidth(line) - (answerTextBoxWidth - leftLineWidth);
+				overhangLength =  g.getFontMetrics().stringWidth(line) - overhangLength;
+				int estimateOfCharactersToSpanOverhang = overhangLength / g.getFontMetrics().stringWidth("a");
+				if (estimateOfCharactersToSpanOverhang == 0){
+					estimateOfCharactersToSpanOverhang++;
+				}
+				String stringLeftOfOverhang = line.substring(0, estimateOfCharactersToSpanOverhang);
+				String stringRightOfOverhang = line.substring(estimateOfCharactersToSpanOverhang);
 				
-				//get everything after space
-				lastWord = textBoxTextRightOfCursor.substring(lastSpace);
-				if (lastWord.equals("")){
-					//then there was a space which caused the line to be longer than the text box
-					//add \n at last space
-					textMinusLastWord = textBoxTextRightOfCursor.substring(0, lastSpace - 1);
-					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
-					//add everything back on
-					textBoxTextRightOfCursor = textMinusLastWordWithNewLine;
+				
+				if (stringRightOfOverhang.equals("")){
+					stringRightOfOverhang = stringLeftOfOverhang;
+					stringLeftOfOverhang = "";
+				}
+				
+				int rightOfOverhangWidth = g.getFontMetrics().stringWidth(stringRightOfOverhang);
+				//just want to add a new line since you cannot move the right text onto the next line
+				String leftWithNewLine = stringLeftOfOverhang + "\n";
+
+				if (nextLineWidth == 0 || (nextLineWidth + rightOfOverhangWidth > answerTextBoxWidth)){
+
+					
+					
+
+					//getting the rest of the string after the overhang
+					int nextNewLineIndex = ordinalIndexOf(textBoxTextRightOfCursor, "\n", i+1);
+					String restOfString;
+					if (nextNewLineIndex != -1){
+						//
+						restOfString = textBoxTextRightOfCursor.substring(nextNewLineIndex);
+					}
+					else{
+						//
+						restOfString = "";
+					}
+
+					
+					
+
+					//update the entire right of cursor string to not have the overhang
+					textBoxTextRightOfCursor = leftWithNewLine + stringRightOfOverhang + restOfString;
+
 				}
 				else{
-					//add \n at last space
-					textMinusLastWord = textBoxTextRightOfCursor.substring(0, lastSpace);
-					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
-					//add everything back on
-					textBoxTextRightOfCursor = textMinusLastWordWithNewLine + lastWord;
+					//just want to move the right overhang onto the beginning of the next line
+					String rightOverhangPlusNextLine = stringRightOfOverhang + nextLine;
+
+
+					//getting the rest of the string after the overhang
+					int nextNewLineIndex = ordinalIndexOf(textBoxTextRightOfCursor, "\n", i+2);
+					String restOfString;
+					if (nextNewLineIndex != -1){
+						//
+						restOfString = textBoxTextRightOfCursor.substring(nextNewLineIndex);
+					}
+					else{
+						//
+						restOfString = "";
+					}
+
+
+					textBoxTextRightOfCursor = leftWithNewLine + rightOverhangPlusNextLine + restOfString;
+
+
+
 				}
-				
-			}
-			else{
-				//-there are no spaces- 
-
-
-				//length of string:
-				textLength = Math.max(textBoxTextRightOfCursor.length() - 2, 0);
-				//get the last 2 characters
-				lastTwoCharacters = textBoxTextRightOfCursor.substring(textLength);
-				//remove the last 2 characters
-				lastTwoRemoved = textBoxTextRightOfCursor.substring(0, textLength);
-				//add "-\n" and add last two back on
-				textBoxTextRightOfCursor = lastTwoRemoved + "-\n" + lastTwoCharacters;
 			}
 
-			//if do a space then type without spaces until the end of the line breaks it
-
-			//increase the total number of lines
-			lineCount++;
-
+			
 			
 		}
 
-		if (lineCount > totalNumTextBoxLines){
-			//checking if can scroll
-			if ((lineCount*g.getFontMetrics().getHeight()) > answerTextBoxHeight){
-				exceededTextBoxHeight = true;
-				scrollAmount = scrollAmount + g.getFontMetrics().getHeight();
-			}
-		}
 
 		//drawing the line
 		g.drawString(line, textBoxTextRightOfCursorX, drawingRightTextStartY += g.getFontMetrics().getHeight());
 
+		//since not on the line that connects the left to the right text (since that is the first line)
+		leftLineWidth = 0;
+		textBoxTextRightOfCursorX = answerTextBoxX;
+
 	}
 
-	if (lineCount < totalNumTextBoxLines){
+	if (numLines < totalNumTextBoxLines){
 		//checking if can scroll
 		if (scrollAmount >= g.getFontMetrics().getHeight() ){
 			exceededTextBoxHeight = true;
@@ -2379,8 +2485,8 @@ public void drawRightTextInTextBox()
 		}
 	}
 
-	if (lineCount > 0){
-		totalNumTextBoxLines = lineCount;
+	if (numLines > 0){
+		totalNumTextBoxLines = totalNumTextBoxLines + numLines - 1;
 	}	
 
 	if (exceededTextBoxHeight == true){
@@ -2388,6 +2494,17 @@ public void drawRightTextInTextBox()
 	}
 
 	setDrawingRightTextInTextBoxStuff = true;//indicates that the above variables can be referenced
+}
+
+
+
+//https://stackoverflow.com/questions/3976616/how-to-find-nth-occurrence-of-character-in-a-string
+//accessed: 22/08/2020
+public static int ordinalIndexOf(String str, String substr, int n) {
+    int pos = str.indexOf(substr);
+    while (--n > 0 && pos != -1)
+        pos = str.indexOf(substr, pos + 1);
+    return pos;
 }
 
 public void drawRedXButton()
