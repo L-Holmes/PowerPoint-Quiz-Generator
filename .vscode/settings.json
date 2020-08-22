@@ -91,5 +91,8 @@
         "/Users/lindonholmes/Documents/personal_projects/revision_quiz_tool/revision_tool_load_all_pics_before/batic_files/xml-apis-1.4.01.jar",
         "/Users/lindonholmes/Documents/personal_projects/revision_quiz_tool/revision_tool_load_all_pics_before/batic_files/xml-apis-ext-1.3.04.jar",
         "/Users/lindonholmes/Documents/personal_projects/revision_quiz_tool/revision_tool_load_all_pics_before/batic_files/xmlgraphics-commons-2.4.jar"
-    ]
+    ],
+    "files.associations": {
+        "string": "cpp"
+    }
 }

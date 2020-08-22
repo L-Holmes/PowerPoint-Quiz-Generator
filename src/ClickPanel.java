@@ -81,7 +81,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	//text box text stuff
 	String textBoxTextLeftOfCursor;
-	String textBoxTextRightOfCursor;
+	String textBoxTextRightOfCursor = "right of cursor";
 	int totalNumTextBoxLines;
 
 	//text box scroll stuff
@@ -265,6 +265,16 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	int textBoxNewClickPositionY = -1;
 
 	boolean setDrawingTextInTextBoxStuff;
+
+	//--drawing the right text in the text box--
+	int textBoxTextRightOfCursorWidth;
+	int textBoxTextRightOfCursorHeight;
+	int textBoxTextRightOfCursorX;
+	int textBoxTextRightOfCursorY;
+	int drawingRightTextStartY;		
+	
+	boolean setDrawingRightTextInTextBoxStuff = false;
+
 
 	//--drawing the red 'X' button--
 	String redXButtonImgLocation; 
@@ -1621,6 +1631,9 @@ public void drawQuiz()
 	//--DRAWING TEXT IN THE TEXT BOX--
 	drawTextInTextBox();
 
+	//--DRAWING THE RIGHT OF CURSOR TEXT IN THE TEXT BOX--
+	drawRightTextInTextBox();
+
 	//--DRAWING RED X BUTTON--
 	drawRedXButton();
 
@@ -2082,8 +2095,6 @@ public void drawTextInTextBox()
 	exceededTextBoxHeight = false;
 
 	lineCount = 0;
-	//may have to re-do with a while loop
-	//may have to completely redo with a string list
 	for (String line : textBoxTextLeftOfCursor.split("\n")){
 		lineCount++;
 
@@ -2225,6 +2236,7 @@ public void drawTextInTextBox()
 	}
 
 	//--drawing the blinking cursor--
+	//blinking cursor will always come after the left side (not the right)
 	if (textBoxEntered == true){
 		//
 		if ((blinkingCursorCount !=0) && (blinkingCursorCount > 5)){
@@ -2260,6 +2272,122 @@ public void drawTextInTextBox()
 	
 
 	setDrawingTextInTextBoxStuff = true;//indicates that the above variables can be referenced
+}
+
+
+/**
+ * draws the text that is to the right of the cursor into the text box 
+ */
+public void drawRightTextInTextBox()
+{
+
+	//for the cursor position
+	int defaultCursorY = answerTextBoxY;
+	int defaultCursorX = answerTextBoxX;
+	//
+
+	g.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+	g.setColor(new Color(0, 0, 0));
+	textBoxTextRightOfCursorWidth = g.getFontMetrics().stringWidth(textBoxTextRightOfCursor);
+	textBoxTextRightOfCursorHeight = g.getFontMetrics().getAscent();
+	//set the start coordinates to be straight after the left section
+	textBoxTextRightOfCursorX = blinkingCursorX;
+	textBoxTextRightOfCursorY = blinkingCursorY;
+					
+
+	drawingRightTextStartY = blinkingCursorY  - (int) ((float) (g.getFontMetrics().getHeight())/3.5);
+
+
+	/*
+	FOR THE RIGHT, NEED TO CHECK IF RIGHTING ONTO THE END OF THE LEFT TEXT AND THEN ADJUST FOR THE 
+	TEXT BOX WIDTH CHECKS
+	*/
+	lineCount = 0;
+	for (String line : textBoxTextRightOfCursor.split("\n")){
+		lineCount++;
+
+		//adding a new line if the text becomes longer than the text box
+		if (g.getFontMetrics().stringWidth(line) > answerTextBoxWidth ){
+			//add a new line onto the end 
+
+
+			//get last space
+			lastSpace = textBoxTextRightOfCursor.lastIndexOf(" ") + 1;
+			lastNewLine = textBoxTextRightOfCursor.lastIndexOf("\n");
+			//-if this line has a space in it-
+			if ((lastSpace > 0) && (lastNewLine < lastSpace)){
+				
+				//get everything after space
+				lastWord = textBoxTextRightOfCursor.substring(lastSpace);
+				if (lastWord.equals("")){
+					//then there was a space which caused the line to be longer than the text box
+					//add \n at last space
+					textMinusLastWord = textBoxTextRightOfCursor.substring(0, lastSpace - 1);
+					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
+					//add everything back on
+					textBoxTextRightOfCursor = textMinusLastWordWithNewLine;
+				}
+				else{
+					//add \n at last space
+					textMinusLastWord = textBoxTextRightOfCursor.substring(0, lastSpace);
+					textMinusLastWordWithNewLine = textMinusLastWord + "\n";
+					//add everything back on
+					textBoxTextRightOfCursor = textMinusLastWordWithNewLine + lastWord;
+				}
+				
+			}
+			else{
+				//-there are no spaces- 
+
+
+				//length of string:
+				textLength = Math.max(textBoxTextRightOfCursor.length() - 2, 0);
+				//get the last 2 characters
+				lastTwoCharacters = textBoxTextRightOfCursor.substring(textLength);
+				//remove the last 2 characters
+				lastTwoRemoved = textBoxTextRightOfCursor.substring(0, textLength);
+				//add "-\n" and add last two back on
+				textBoxTextRightOfCursor = lastTwoRemoved + "-\n" + lastTwoCharacters;
+			}
+
+			//if do a space then type without spaces until the end of the line breaks it
+
+			//increase the total number of lines
+			lineCount++;
+
+			
+		}
+
+		if (lineCount > totalNumTextBoxLines){
+			//checking if can scroll
+			if ((lineCount*g.getFontMetrics().getHeight()) > answerTextBoxHeight){
+				exceededTextBoxHeight = true;
+				scrollAmount = scrollAmount + g.getFontMetrics().getHeight();
+			}
+		}
+
+		//drawing the line
+		g.drawString(line, textBoxTextRightOfCursorX, drawingRightTextStartY += g.getFontMetrics().getHeight());
+
+	}
+
+	if (lineCount < totalNumTextBoxLines){
+		//checking if can scroll
+		if (scrollAmount >= g.getFontMetrics().getHeight() ){
+			exceededTextBoxHeight = true;
+			scrollAmount = scrollAmount - g.getFontMetrics().getHeight();
+		}
+	}
+
+	if (lineCount > 0){
+		totalNumTextBoxLines = lineCount;
+	}	
+
+	if (exceededTextBoxHeight == true){
+		canScroll = true;
+	}
+
+	setDrawingRightTextInTextBoxStuff = true;//indicates that the above variables can be referenced
 }
 
 public void drawRedXButton()
