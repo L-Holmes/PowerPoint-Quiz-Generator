@@ -17,10 +17,8 @@ import java.awt.event.*;
 
 
 /*
-the cursor does not update when typing in a new position
-since it is repeatedly going to the spot that the user last clicked instead of going to the new most left spot-
-maybe solbe this by just only re-adjusting it at the point of the click as any time after the user has began
-typing again it must be at the end of the left text.
+clicking only seems to go onto the first half of the second line- must
+be something wrong with the new function
 */
 
 
@@ -2327,8 +2325,9 @@ public void drawTextInTextBox()
 		canScroll = true;
 	}
 
-	//--if the user has clicked a different position to place their cursor--
 	boolean setNewCursorPosition = false;
+	/*
+	//--if the user has clicked a different position to place their cursor--
 	if (textBoxEntered == true){
 
 		//if the y is greater than the max y
@@ -2353,8 +2352,13 @@ public void drawTextInTextBox()
 					setNewCursorPosition = true;
 				}
 			}
+
+			textBoxNewClickPositionX = -1;
+			textBoxNewClickPositionY = -1;
+
 		}
 	}
+	*/
 
 	//--drawing the blinking cursor--
 	//blinking cursor will always come after the left side (not the right)
