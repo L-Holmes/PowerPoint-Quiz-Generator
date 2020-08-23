@@ -17,7 +17,10 @@ import java.awt.event.*;
 
 
 /*
--look into redering hints to try and make the image thing lag less
+the cursor does not update when typing in a new position
+since it is repeatedly going to the spot that the user last clicked instead of going to the new most left spot-
+maybe solbe this by just only re-adjusting it at the point of the click as any time after the user has began
+typing again it must be at the end of the left text.
 */
 
 
@@ -81,7 +84,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	//text box text stuff
 	String textBoxTextLeftOfCursor;
-	String textBoxTextRightOfCursor = "right of cursor";
+	String textBoxTextRightOfCursor = "";
 	int totalNumTextBoxLines;
 
 	//text box scroll stuff
@@ -239,6 +242,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	boolean setAnswerTextBoxStuff;
 
+	
 	//--drawing text in the text box--
 	int textBoxTextLeftOfCursorWidth;
 	int textBoxTextLeftOfCursorHeight;
@@ -784,6 +788,107 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		textBoxNewClickPositionX = x;
 		textBoxNewClickPositionY = y;
 	}
+
+	/**
+	 * sets the text left of the cursor to be everything left of the new 
+	 * cursor position, and vice versa for everything to the right of 
+	 * the new cursor position
+	 * @param x = the new x coordinate of the click point within the text box
+	 * @param y = the new y coordinate of the click point within the text box
+	 */
+	public void updateLeftAndRightText(int x, int y)
+	{
+		//need to get the letter that the click is the closest to 
+		//-need to add the scroll amount to the click position
+		//-jump
+
+	
+
+		/*
+		if ((y <= defaultCursorY + g.getFontMetrics().getHeight()))
+		{
+			if ((y >= defaultCursorY) && (x > defaultCursorX)){
+			}
+			else{
+				int avgCharWidth = g.getFontMetrics().stringWidth("a");
+				int avgCharHeight = g.getFontMetrics().getHeight();
+				
+				int numberOfVerticalRows = (int) Math.rint((y - answerTextBoxY) / avgCharHeight);
+				blinkingCursorY =answerTextBoxY + numberOfVerticalRows*avgCharHeight;
+				int numberOfHorizontalColumns = (int) Math.rint((x- answerTextBoxX) / avgCharWidth);
+				blinkingCursorX =answerTextBoxX + numberOfHorizontalColumns*avgCharWidth;
+
+			}
+		}
+		*/
+
+
+		//--getting the entire string--
+		String totalString = textBoxTextLeftOfCursor + textBoxTextRightOfCursor;
+
+		System.out.println("1");
+
+		//--getting the average character dimensions--
+		int avgCharWidth = g.getFontMetrics().stringWidth("a");
+		int avgCharHeight = g.getFontMetrics().getHeight();
+
+		System.out.println("2");
+
+		//--predicting the number of rows & columns (each character representing a col.) that the new cursor will lie in--
+		int yDiff = answerTextBoxY - y;
+		int approxRowNum = (yDiff / avgCharHeight) + (scrollAmount/avgCharHeight);
+
+		int xDiff = x - answerTextBoxX;
+		int approxColNum = (xDiff / avgCharWidth);
+
+		System.out.println("3");
+
+		//--getting all of the string on the lines above & below the line that the cursor is suspected to be in--
+		int indexOfNewLineBeforeClickPos = ordinalIndexOf(totalString, "\n", approxRowNum-1);
+		String stringAboveSelectedLine;
+		System.out.println("3.25");
+		if (indexOfNewLineBeforeClickPos != -1)
+		{
+			stringAboveSelectedLine = totalString.substring(0, indexOfNewLineBeforeClickPos);
+		}
+		else{
+			stringAboveSelectedLine = "";
+		}
+
+		System.out.println("3.5");
+
+		int indexOfNewLineAfterClickPos = ordinalIndexOf(totalString, "\n", approxRowNum);
+		System.out.println("3.75");
+
+		String stringBelowSelectedLine; 
+
+
+
+		if (indexOfNewLineAfterClickPos != -1)
+		{
+			stringBelowSelectedLine = totalString.substring(indexOfNewLineAfterClickPos);
+		}
+		else{
+			stringBelowSelectedLine = "";
+		}
+
+		System.out.println("4");
+		//--getting the suspected index of character that the cursor will lie after--
+		int totalCharsToLeft = stringAboveSelectedLine.length();
+		int splitPosition = totalCharsToLeft + approxColNum;
+
+		//--creating the new strings from the left and right of the new cursor position--
+		String newLeftOfCursor = totalString.substring(0, splitPosition);
+		String newRightOfCursor = totalString.substring(splitPosition);
+
+		System.out.println("new left of cursor = :" +newLeftOfCursor+":");
+		System.out.println("new right of cursor = :" +newRightOfCursor+":");
+
+		textBoxTextLeftOfCursor = newLeftOfCursor;
+		textBoxTextRightOfCursor = newRightOfCursor;
+
+
+	}
 	
 
 //START OF TEXT INDICATOR METHODS
@@ -1080,6 +1185,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					//if the user is already in the text box and wants to change their cursor position
 					if (textBoxEntered == true){
 						setTextBoxNewClickPositions((int) clickedXCoord, (int) clickedYCoord);
+						updateLeftAndRightText((int) clickedXCoord, (int) clickedYCoord);
 					}
 					textBoxEntered = true;
 			}
@@ -2205,7 +2311,6 @@ public void drawTextInTextBox()
 	}
 
 	if (linesLastTime > textBoxTextLeftOfCursor.length()){
-		System.out.println("left text has got shorter");
 		textBoxTextLeftRemovedNewLine();
 		
 	}
@@ -2326,7 +2431,7 @@ public void textBoxTextLeftRemovedNewLine(){
 		}
 		
 
-		//jump
+		
 	}
 	
 }
