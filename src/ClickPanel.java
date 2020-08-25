@@ -21,6 +21,12 @@ clicking only seems to go onto the first half of the second line- must
 be something wrong with the new function
 */
 
+/*
+text box tip for myself:
+don't add the newlines and dashes to the actual text as they can then not be distinguished from
+the ones that the user actually added thenselves
+*/
+
 
 // source to get click detection to work
 // https://stackoverflow.com/questions/27678603/how-to-check-mouse-click-in-2d-graphics-java
@@ -803,13 +809,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 
 		/*
-		if ((y <= defaultCursorY + g.getFontMetrics().getHeight()))
+		if ((y <= defaultCursorY + g.getFontMetrics().getAscent()))
 		{
 			if ((y >= defaultCursorY) && (x > defaultCursorX)){
 			}
 			else{
 				int avgCharWidth = g.getFontMetrics().stringWidth("a");
-				int avgCharHeight = g.getFontMetrics().getHeight();
+				int avgCharHeight = g.getFontMetrics().getAscent();
 				
 				int numberOfVerticalRows = (int) Math.rint((y - answerTextBoxY) / avgCharHeight);
 				blinkingCursorY =answerTextBoxY + numberOfVerticalRows*avgCharHeight;
@@ -820,31 +826,43 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 		*/
 
+		
 
 		//--getting the entire string--
 		String totalString = textBoxTextLeftOfCursor + textBoxTextRightOfCursor;
+		int totalStringLength = totalString.length();
 
-		System.out.println("1");
 
 		//--getting the average character dimensions--
-		int avgCharWidth = g.getFontMetrics().stringWidth("a");
-		int avgCharHeight = g.getFontMetrics().getHeight();
+		g.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+		int avgCharWidth = g.getFontMetrics().stringWidth("t");
+		int avgCharHeight = g.getFontMetrics().getAscent();
 
-		System.out.println("2");
+		System.out.println("char width in func: " + avgCharWidth);
+		System.out.println("char height in func: " + avgCharHeight);
+
+		System.out.println("\ntext box top left y = " + answerTextBoxY);
+		System.out.println("text box top left x = " + answerTextBoxX);
+		System.out.println("text box bottom right x = " + answerTextBoxX + answerTextBoxWidth);
+		System.out.println("text box bottom right y = " + answerTextBoxY + answerTextBoxHeight);
 
 		//--predicting the number of rows & columns (each character representing a col.) that the new cursor will lie in--
-		int yDiff = answerTextBoxY - y;
-		int approxRowNum = (yDiff / avgCharHeight) + (scrollAmount/avgCharHeight);
+		int yDiff = y - answerTextBoxY;
+		int approxRowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight) + ((double)scrollAmount/(double)avgCharHeight));
 
 		int xDiff = x - answerTextBoxX;
-		int approxColNum = (xDiff / avgCharWidth);
+		int approxColNum = (int) Math.ceil(((double) xDiff / (double) avgCharWidth));
 
-		System.out.println("3");
+		System.out.println("y distance spanned by the text = "+ yDiff);
+		System.out.println("y distance equates to this many lines downward = "+ approxRowNum);
+
+		System.out.println("x distance spanned by the text = " + xDiff);
+		System.out.println("x distance equates to this many lines laterlly = "+ approxColNum);
 
 		//--getting all of the string on the lines above & below the line that the cursor is suspected to be in--
 		int indexOfNewLineBeforeClickPos = ordinalIndexOf(totalString, "\n", approxRowNum-1);
 		String stringAboveSelectedLine;
-		System.out.println("3.25");
+		System.out.println("how many new lines before the click position: "+ indexOfNewLineBeforeClickPos);
 		if (indexOfNewLineBeforeClickPos != -1)
 		{
 			stringAboveSelectedLine = totalString.substring(0, indexOfNewLineBeforeClickPos);
@@ -853,15 +871,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			stringAboveSelectedLine = "";
 		}
 
-		System.out.println("3.5");
+		System.out.println("string above selected line: "+ stringAboveSelectedLine);
 
 		int indexOfNewLineAfterClickPos = ordinalIndexOf(totalString, "\n", approxRowNum);
-		System.out.println("3.75");
+		System.out.println("how many new lines after the click position: "+ indexOfNewLineAfterClickPos);
 
 		String stringBelowSelectedLine; 
-
-
-
 		if (indexOfNewLineAfterClickPos != -1)
 		{
 			stringBelowSelectedLine = totalString.substring(indexOfNewLineAfterClickPos);
@@ -870,11 +885,19 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			stringBelowSelectedLine = "";
 		}
 
-		System.out.println("4");
+		System.out.println("string below selected line: "+ stringBelowSelectedLine);
+
+
 		//--getting the suspected index of character that the cursor will lie after--
 		int totalCharsToLeft = stringAboveSelectedLine.length();
 		int splitPosition = totalCharsToLeft + approxColNum;
 
+		if (splitPosition> totalStringLength){
+			splitPosition = totalStringLength;
+		}
+
+		System.out.println("total chars to the left = " + totalCharsToLeft);
+		System.out.println("split position = " + splitPosition);
 		//--creating the new strings from the left and right of the new cursor position--
 		String newLeftOfCursor = totalString.substring(0, splitPosition);
 		String newRightOfCursor = totalString.substring(splitPosition);
@@ -2189,13 +2212,11 @@ public void drawTextInTextBox()
 	g.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
 	g.setColor(new Color(0, 0, 0));
 	textBoxTextLeftOfCursorWidth = g.getFontMetrics().stringWidth(textBoxTextLeftOfCursor);
-	textBoxTextLeftOfCursorHeight = g.getFontMetrics().getAscent();
+	textBoxTextLeftOfCursorHeight = (int) (g.getFontMetrics().getAscent());
 	textBoxTextLeftOfCursorX = answerTextBoxX;
 	textBoxTextLeftOfCursorY = answerTextBoxY +textBoxTextLeftOfCursorHeight - scrollAmount;
-					
-
 	//g.drawString(textBoxTextLeftOfCursor, textBoxTextLeftOfCursorX, textBoxTextLeftOfCursorY);
-	drawingTextStartY = textBoxTextLeftOfCursorY - g.getFontMetrics().getHeight();
+	drawingTextStartY = textBoxTextLeftOfCursorY - g.getFontMetrics().getAscent();
 
 	exceededTextBoxHeight = false;
 
@@ -2265,17 +2286,17 @@ public void drawTextInTextBox()
 
 		if (lineCount > totalNumTextBoxLines){
 			//checking if can scroll
-			if ((lineCount*g.getFontMetrics().getHeight()) > answerTextBoxHeight){
+			if ((lineCount*g.getFontMetrics().getAscent()) > answerTextBoxHeight){
 				exceededTextBoxHeight = true;
-				scrollAmount = scrollAmount + g.getFontMetrics().getHeight();
+				scrollAmount = scrollAmount + g.getFontMetrics().getAscent();
 			}
 		}
 
 		//drawing the line
-		g.drawString(line, textBoxTextLeftOfCursorX, drawingTextStartY += g.getFontMetrics().getHeight());
+		g.drawString(line, textBoxTextLeftOfCursorX, drawingTextStartY += g.getFontMetrics().getAscent());
 
 		//updating the default cursor details
-		defaultCursorY = drawingTextStartY - g.getFontMetrics().getHeight() + 4;
+		defaultCursorY = drawingTextStartY - g.getFontMetrics().getAscent() + 4;
 		defaultCursorX = answerTextBoxX + g.getFontMetrics().stringWidth(line);
 
 
@@ -2287,14 +2308,14 @@ public void drawTextInTextBox()
 		String lastTwoChars = textBoxTextLeftOfCursor.substring(textBoxTextLeftOfCursor.length() - 2);
 		//
 		if (lastTwoChars.contains("\n")){
-			defaultCursorY = defaultCursorY + g.getFontMetrics().getHeight();
+			defaultCursorY = defaultCursorY + g.getFontMetrics().getAscent();
 			defaultCursorX = answerTextBoxX;
 		}
 
 	}
 	else{
 		if (textBoxTextLeftOfCursor.equals("\n")){
-			defaultCursorY = defaultCursorY + g.getFontMetrics().getHeight();
+			defaultCursorY = defaultCursorY + g.getFontMetrics().getAscent();
 			defaultCursorX = answerTextBoxX;
 		}
 	}
@@ -2302,9 +2323,9 @@ public void drawTextInTextBox()
 
 	if (lineCount < totalNumTextBoxLines){
 		//checking if can scroll
-		if (scrollAmount >= g.getFontMetrics().getHeight() ){
+		if (scrollAmount >= g.getFontMetrics().getAscent() ){
 			exceededTextBoxHeight = true;
-			scrollAmount = scrollAmount - g.getFontMetrics().getHeight();
+			scrollAmount = scrollAmount - g.getFontMetrics().getAscent();
 		}
 	}
 
@@ -2335,7 +2356,7 @@ public void drawTextInTextBox()
 		if ((textBoxNewClickPositionX != -1) && (textBoxNewClickPositionY != -1)){
 			//then the user has clicked a new position
 
-			if ((textBoxNewClickPositionY <= defaultCursorY + g.getFontMetrics().getHeight()))
+			if ((textBoxNewClickPositionY <= defaultCursorY + g.getFontMetrics().getAscent()))
 			{
 				if ((textBoxNewClickPositionY >= defaultCursorY) && (textBoxNewClickPositionX > defaultCursorX)){
 					//then the user has clicked into a space with no text in it
@@ -2343,8 +2364,8 @@ public void drawTextInTextBox()
 				else{
 					//get the position
 					//find the y of the line that is closest to that point--> text box y + font height
-					int numberOfVerticalRows = (int) Math.rint((textBoxNewClickPositionY - answerTextBoxY) / g.getFontMetrics().getHeight());
-					blinkingCursorY =answerTextBoxY + numberOfVerticalRows*g.getFontMetrics().getHeight();
+					int numberOfVerticalRows = (int) Math.rint((textBoxNewClickPositionY - answerTextBoxY) / g.getFontMetrics().getAscent());
+					blinkingCursorY =answerTextBoxY + numberOfVerticalRows*g.getFontMetrics().getAscent();
 					//find the x of the letter that will be closest to that point--> text box x + font width
 					int numberOfHorizontalColumns = (int) Math.rint((textBoxNewClickPositionX- answerTextBoxX) / g.getFontMetrics().stringWidth("a"));
 					blinkingCursorX =answerTextBoxX + numberOfHorizontalColumns*g.getFontMetrics().stringWidth("a");
@@ -2377,8 +2398,8 @@ public void drawTextInTextBox()
 				blinkingCursorX = defaultCursorX;
 			}
 			//
-			blinkingCursorW = (int) ((g.getFontMetrics().getHeight())/6);
-			blinkingCursorH = (int) ((g.getFontMetrics().getHeight())*0.9);
+			blinkingCursorW = (int) ((g.getFontMetrics().getAscent())/6);
+			blinkingCursorH = (int) ((g.getFontMetrics().getAscent()));
 			//blinkingCursorCount;
 	
 			g.setColor(new Color(0, 0, 0));
@@ -2461,7 +2482,7 @@ public void drawRightTextInTextBox()
 	textBoxTextRightOfCursorY = blinkingCursorY;
 					
 
-	drawingRightTextStartY = blinkingCursorY  - (int) ((float) (g.getFontMetrics().getHeight())/3.5);
+	drawingRightTextStartY = blinkingCursorY  - (int) ((float) (g.getFontMetrics().getAscent())/3.5);
 
 	String lastWordOnThisLine;
 	int lastSpaceOnThisLine;
@@ -2578,7 +2599,7 @@ public void drawRightTextInTextBox()
 
 
 		//drawing the line
-		g.drawString(line, textBoxTextRightOfCursorX, drawingRightTextStartY += g.getFontMetrics().getHeight());
+		g.drawString(line, textBoxTextRightOfCursorX, drawingRightTextStartY += g.getFontMetrics().getAscent());
 
 		//since not on the line that connects the left to the right text (since that is the first line)
 		leftLineWidth = 0;
@@ -2588,9 +2609,9 @@ public void drawRightTextInTextBox()
 
 	if (numLines < totalNumTextBoxLines){
 		//checking if can scroll
-		if (scrollAmount >= g.getFontMetrics().getHeight() ){
+		if (scrollAmount >= g.getFontMetrics().getAscent() ){
 			exceededTextBoxHeight = true;
-			scrollAmount = scrollAmount - g.getFontMetrics().getHeight();
+			scrollAmount = scrollAmount - g.getFontMetrics().getAscent();
 		}
 	}
 
