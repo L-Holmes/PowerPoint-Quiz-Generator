@@ -860,12 +860,18 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		System.out.println("x distance equates to this many lines laterlly = "+ approxColNum);
 
 		//--getting all of the string on the lines above & below the line that the cursor is suspected to be in--
-		int indexOfNewLineBeforeClickPos = ordinalIndexOf(totalString, "\n", approxRowNum-1);
+		int indexOfNewLineBeforeClickPos = ordinalIndexOf(totalString, "\n", approxRowNum - 1);
 		String stringAboveSelectedLine;
-		System.out.println("how many new lines before the click position: "+ indexOfNewLineBeforeClickPos);
+		System.out.println("index of the newline before the click position: "+ indexOfNewLineBeforeClickPos);
 		if (indexOfNewLineBeforeClickPos != -1)
 		{
-			stringAboveSelectedLine = totalString.substring(0, indexOfNewLineBeforeClickPos);
+			if (approxRowNum != 1){
+				//
+				stringAboveSelectedLine = totalString.substring(0, indexOfNewLineBeforeClickPos);
+			}
+			else{
+				stringAboveSelectedLine = "";
+			}
 		}
 		else{
 			stringAboveSelectedLine = "";
@@ -874,7 +880,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		System.out.println("string above selected line: "+ stringAboveSelectedLine);
 
 		int indexOfNewLineAfterClickPos = ordinalIndexOf(totalString, "\n", approxRowNum);
-		System.out.println("how many new lines after the click position: "+ indexOfNewLineAfterClickPos);
+		System.out.println("index of the newline after the click position: "+ indexOfNewLineAfterClickPos);
 
 		String stringBelowSelectedLine; 
 		if (indexOfNewLineAfterClickPos != -1)
@@ -2632,8 +2638,9 @@ public void drawRightTextInTextBox()
 //accessed: 22/08/2020
 public static int ordinalIndexOf(String str, String substr, int n) {
     int pos = str.indexOf(substr);
-    while (--n > 0 && pos != -1)
-        pos = str.indexOf(substr, pos + 1);
+    while (--n > 0 && pos != -1){
+		pos = str.indexOf(substr, pos + 1);
+	}
     return pos;
 }
 
