@@ -1693,7 +1693,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			}
 		}
 		
-		
 	}
 
 	public void updatetextBoxTextLeftOfCursor(String typedChar)
@@ -2159,22 +2158,20 @@ public void drawNextQuestionButton()
 
 public void drawAnswerTextBox()
 {
-	if (setAnswerTextBoxStuff == false){
-		//
-		answerTextBoxSpacing = (int) ((float) (windowWidth)*0.02);//
-		answerTextBoxWidth = (int) (windowWidth*0.34);
-		answerTextBoxHeight=(int) (answerTextBoxWidth*0.56);
+	//
+	answerTextBoxSpacing = (int) ((float) (windowWidth)*0.02);//
+	answerTextBoxWidth = (int) (windowWidth*0.34);
+	answerTextBoxHeight=(int) (answerTextBoxWidth*0.56);
 
-		answerTextBoxX = windowWidth - answerTextBoxSpacing - answerTextBoxWidth;//
-		answerTextBoxY=(int) (windowHeight/2 - (windowWidth*0.6*0.56)/2); //lines up with slide image
+	answerTextBoxX = windowWidth - answerTextBoxSpacing - answerTextBoxWidth;//
+	answerTextBoxY=(int) (windowHeight/2 - (windowWidth*0.6*0.56)/2); //lines up with slide image
 
-		//changing next question button colour to be darker if it is hovered over
-		answerTextBoxRight = answerTextBoxX + answerTextBoxWidth;
-		answerTextBoxBottom = answerTextBoxY + answerTextBoxHeight;
+	//changing next question button colour to be darker if it is hovered over
+	answerTextBoxRight = answerTextBoxX + answerTextBoxWidth;
+	answerTextBoxBottom = answerTextBoxY + answerTextBoxHeight;
 
-		setAnswerTextBoxStuff = true;//indicates that the above variables can be referenced
 
-	}
+	
 	
 	if (textBoxEntered == true){
 		g.setColor(new Color(255, 255, 255));
