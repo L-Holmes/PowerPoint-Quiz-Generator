@@ -14,20 +14,8 @@ then when I am drawing to the screen, I will add the dashes and split words in t
 */
 
 
-/*
-alternative concept: 
--have a seperate array list that holds the: (newlineIndex, cumulativeLengthToThisIndex)
-
-int [2] newEntry = new int [2];
-splitInfo.add(newEntry)
-
-*/
-
-
 public class TextBox
 {
-	
-
 	//drawing surface
     private Graphics2D graphicsHandler;					//graphics 2d object used to draw everything to the screen
 
@@ -45,32 +33,33 @@ public class TextBox
 	private ArrayList<String> rightText = new ArrayList<String>(); //holds a 2d array of all of the text to the right of the cursor 
 
 	//text information for formatting
-	//for the outer arrayList: each entry represents a different line, with each index corresponding to the equivalent index within the [leftText] arrayList
-	//for the inner arrayList: each entry holds an array of size 2, which represents:
-	//     - (newlineIndex, cumulativeLengthToThisIndex) for deciding where to add a newline, to allow the text to fit latterly inside of the text box
+	//	for the outer arrayList: each entry represents a different line, with each index corresponding to the equivalent index within the [leftText] arrayList
+	//	for the inner arrayList: each entry holds an integer, which represents:
+	//     - 'newlineIndex' for deciding where to add a newline, to allow the text to fit latterly inside of the text box
+	//
+	//		*each 'line' is a line of text typed by the user, with seperate 'lines' seperated by the user clicking the 'enter' key on their keyboard (for a newline)
 	/*
-	e.g.
-	*each 'line' is a line of text typed by the user, with seperate lines seperated by a the user clicking the 'enter' key (for a newline)
-	outer{
-		inner (line 1): [5, 27], [10, 42]    //line1 was over 2 times longer than box width, so has a newline at index = 5 & index = 10, with respective string length totals of 27 & 42.
-		inner (line 2): [2, 16]              //line2 was longer than the box width, so has 1 newline at index = 2; with a cumulative string length up to that index of 16
-		inner (line 3): [-1, -1]             //line3 is shorter than the box width, or has not been initialised, so has the null values of -1
-	}
+		e.g.
+		outer{
+			inner (line 1): 5, 10    //line1 was over 2 times longer than box width, so has a newline at index = 5 & index = 10
+			inner (line 2): 2        //line2 was longer than the box width, so has 1 newline at index = 2
+			inner (line 3): -1       //line3 is shorter than the box width, or has not been initialised, so has the null values of -1
+		}
 	*/
-	ArrayList<ArrayList<int[]>> leftTextFormatInfo = new ArrayList<ArrayList<int[]>>(); //info with each index relating to the equivalent index within the leftText array list
-	ArrayList<ArrayList<int[]>> rightTextFormatInfo = new ArrayList<ArrayList<int[]>>();//info with each index relating to the equivalent index within the rightText array list
+	ArrayList<ArrayList<Integer>> leftTextFormatInfo = new ArrayList<ArrayList<Integer>>();  //info with each index relating to the equivalent index within the leftText array list
+	ArrayList<ArrayList<Integer>> rightTextFormatInfo = new ArrayList<ArrayList<Integer>>(); //info with each index relating to the equivalent index within the rightText array list
 
 
 	//colours
-	private Color textColour = new Color(0, 0, 0);		//colour of the text 
-	private Color boxColour = new Color(255, 255, 255); //colour of the text box background
+	private Color textColour = new Color(0, 0, 0);					  //colour of the text 
+	private Color boxColour = new Color(255, 255, 255); 			  //colour of the text box background
 	private Color hoveringOverBoxColour = new Color(235, 235, 235);   //colour of the box when the user is hovering their mouse cursor over it
 	private Color unselectedBoxColour = new Color(241, 241, 241);     //colour of the box when the user has not entered the text box
 	private Color boxOutlineColour = new Color(0, 0, 0);              //colour of the outline of the text box
 	private Color boxSelectedOutlineColour = new Color(245, 197, 22); //colour of the box outline when it is selected/entered      
 
-	//miscellaneous 
-	private boolean entered = false;					//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
+	//entered/exited the text box indicators 
+	private boolean entered = false;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
 
 	//cursor info
 	private boolean cursorInBox = false; 						//indicates whether the mouse cursor lies inside of the text box (true) or if it doesn't (false)
@@ -79,10 +68,19 @@ public class TextBox
 	//---INITIALISATION---
     public static void main(String[] args)
     {
-		//
 		System.out.println("main started ...");
+
+		System.out.println("... main ended");
     }
 
+	/**
+	 * initializes the TextBox object
+	 * @param graphicsObj = the graphics 2d object that will be used to draw to the screen
+	 * @param xCoord = the x coordinate of the top left corner of the text box
+	 * @param yCoord = the y coordinate of the top left corner of the text box
+	 * @param width  = the width of the text box
+	 * @param height = the height of the text box
+	 */
     public TextBox(Graphics2D graphicsObj, int xCoord, int yCoord, int width, int height)
     {
 		graphicsHandler = graphicsObj;
@@ -97,10 +95,17 @@ public class TextBox
 
     ///---TEXT ENTERING---
 
+
+	/**
+	 * handles the information regarding a user keyboard input
+	 * converts common special key inputs to easier-to-understand strings
+	 * passes on the typed key string to be further processed
+	 * @param typedKey = the string representation of the character that has been typed
+	 * @param extendedKeyCode = the extended key code of the typed key- which gives specific information about which key was pressed
+	 * 							used to identify special keys, which do not have a character/string representation
+	 */
     public void typeLetter(String typedKey, int extendedKeyCode)
     {
-		//
-		
 		if (extendedKeyCode == 8){
 			typedKey = "backspace";
 		}
@@ -110,7 +115,6 @@ public class TextBox
 		else if (extendedKeyCode == 16777383){
 			typedKey = "exit";
 		}
-
 
 		HandleTextEntered(typedKey);
 	}
@@ -129,11 +133,9 @@ public class TextBox
 				//resets the text box cursor 
 			}
 			else{
-				//
 				updateText(typedChar);
 			}
 		}	
-		
 	}
 
 	/**
@@ -142,7 +144,6 @@ public class TextBox
 	 */
 	public void updateText(String typedChar)
 	{
-		//
 		if (typedChar == "backspace"){
 			//find the last item in the array 
 			//ensure that the array is not empty
@@ -158,7 +159,7 @@ public class TextBox
 
 					//check if formatting info needs updating
 					//only for if the last line has got shorter and needs to remove a new line, so check after the last newline
-					updateLeftTextFormatInfo();
+					updateLeftTextFormatInfo(false);
 				}
 				else{
 					//remove the empty line
@@ -168,7 +169,6 @@ public class TextBox
 						//remove the last entry from the formatting
 						leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
 					}
-
 				}
 			}
 		}
@@ -176,11 +176,8 @@ public class TextBox
 			//add new entry for newline
 			leftText.add("");
 			//add the formatting info
-			ArrayList<int[]> thisLineInfo = new ArrayList<int[]>();   
-			int [] emptyEntry = new int [2];  
-			emptyEntry[0] = -1;
-			emptyEntry[1] = -1;  
-			thisLineInfo.add(emptyEntry); 
+			ArrayList<Integer> thisLineInfo = new ArrayList<Integer>(); 
+			thisLineInfo.add(-1);  
 			leftTextFormatInfo.add(thisLineInfo);
 		}
 		else{
@@ -192,7 +189,7 @@ public class TextBox
 
 				//check if formatting info needs updating
 				//only for if the last line has got longer and needs a new line, so check after the last newline
-				updateLeftTextFormatInfo();
+				updateLeftTextFormatInfo(true);
 			}
 
 
@@ -206,10 +203,137 @@ public class TextBox
 	 * 
 	 * checks only the string after the last new line of the last entry, as this is where the cursor would lie and 
 	 * thus the only position where the length of the line would change
+	 * 
+	 * @param longer = indicates whether the left text has got longer (true); or shorter (false)
 	 */
-	public void updateLeftTextFormatInfo()
+	public void updateLeftTextFormatInfo(boolean longer)
 	{
-		//
+		//go to the last entry of the left text
+		int leftTextSize = leftText.size();
+		String lastLine = leftText.get(leftTextSize - 1);
+
+		//get the info for the last newline of the last line (above)
+		int leftFormatInfoSize = leftTextFormatInfo.size();
+		ArrayList<Integer> formatInfoForEntireLine = leftTextFormatInfo.get(leftFormatInfoSize - 1);
+		int formatInfoForEntireLineSize = formatInfoForEntireLine.size(); //////////////is this right or is it length???
+		int lastNewLineFormatInfo = formatInfoForEntireLine.get(formatInfoForEntireLineSize - 1);
+
+		if (longer == true){
+			//-if text after the last new line is now longer than the text box width, add a new line-
+			checkLeftTextOverhangs(lastNewLineFormatInfo, lastLine, formatInfoForEntireLine);
+			
+		}
+		else{
+			//-if text after the penultimate new line is shorter than the text box width, remove the last new line (or change index to -1)-
+			checkLeftTextRemoveNewLine(lastNewLineFormatInfo, lastLine, formatInfoForEntireLineSize, formatInfoForEntireLine);
+		}
+	}
+
+	/**
+	 * checks if the last line before the cursor has got longer than the text box width.
+	 * If the line is longer, adds a new 'new line index' entry to the  leftTextFormatInfo arraylist
+	 * @param lastNewLineFormatInfo = the index of the last new line within the last line before the cursor
+	 * @param lastLine = the line of text, as typed by the user, that lies before the cursor (not including formatting new lines)
+	 * @param formatInfoForEntireLine = the arraylist containing the indexes of the formatting new line position for the lastLine text,
+	 * 									which allow for the text to fit laterally into the text box
+	 */
+	private void checkLeftTextOverhangs(int lastNewLineFormatInfo, String lastLine, ArrayList<Integer> formatInfoForEntireLine)
+	{
+		if (lastNewLineFormatInfo == - 1){
+			//--there are no new lines currently--
+
+			//check if the entire string is longer than the textbox width
+			int lastLineSize = graphicsHandler.getFontMetrics().stringWidth(lastLine);
+			if (lastLineSize > boxW){
+				//add new entry
+				int newSplitPosition = findOverHangEntry(lastLine, lastLineSize);
+				//add a new format entry, with the new split position
+				formatInfoForEntireLine.add(newSplitPosition);
+			}
+		}
+		else{
+			//--there are at least 1 new lines currently--
+
+			//get the string after the last new line, 
+			String afterLastNewLine = lastLine.substring(lastNewLineFormatInfo);
+			int afterLastNewLineSize = graphicsHandler.getFontMetrics().stringWidth(afterLastNewLine);
+
+			//check if that string is longer than the text box width
+			if (afterLastNewLineSize > boxW){
+				//if it is, add a new line entry at the overhang index
+				int newSplitPos = findOverHangEntry(afterLastNewLine, afterLastNewLineSize);
+				//add a new format entry, with the new split position
+				formatInfoForEntireLine.add(newSplitPos);
+			}	 
+		}
+	}
+
+	/**
+	 * checks if the last line before the cursor has got longer than the text box width.
+	 * If the line is longer, adds a new 'new line index' entry to the  leftTextFormatInfo arraylist
+	 * @param lastNewLineFormatInfo = the index of the last new line within the last line before the cursor
+	 * @param lastLine = the line of text, as typed by the user, that lies before the cursor (not including formatting new lines)
+	 * @param formatInfoForEntireLineSize = the number of items within the formatInfoForEntireLine arraylist
+	 * @param formatInfoForEntireLine = the arraylist containing the indexes of the formatting new line position for the lastLine text, 
+	 *                                  which allow for the text to fit laterally into the text box
+	 */
+	private void checkLeftTextRemoveNewLine(int lastNewLineFormatInfo, String lastLine,  int formatInfoForEntireLineSize, ArrayList<Integer> formatInfoForEntireLine)
+	{
+		if (lastNewLineFormatInfo != -1){
+			if (formatInfoForEntireLineSize > 1){
+				//--there is a penultimate new line--
+
+				int penultimateNewLineFormatInfo = formatInfoForEntireLine.get(formatInfoForEntireLineSize - 2);
+				//get all of the string after the penultimate new line point
+				String afterPenultimateNewLine = lastLine.substring(penultimateNewLineFormatInfo);
+				 
+				int afterPenultimateSize = graphicsHandler.getFontMetrics().stringWidth(afterPenultimateNewLine);
+				//check if that string is shorter than the text box width
+				if (afterPenultimateSize < boxW){
+					//if it is, remove the last new line entry
+					formatInfoForEntireLine.remove(formatInfoForEntireLineSize - 1);
+
+				}
+				
+
+			}
+			else{
+				//--just one new line--
+
+				//get the entire string (lastLine), check if it is shorter than the text box width
+				int entireStringSize = graphicsHandler.getFontMetrics().stringWidth(lastLine);
+				if (entireStringSize < boxW){
+					//if so, change the entry to -1 (meaning no new lines)
+					formatInfoForEntireLine.set(0, -1);
+
+				}
+
+				
+			}
+		}
+	}
+
+
+	/**
+	 * finds the index of the first character within the string
+	 * that overhangs out of the side of the textbox 
+	 * @param lastLine = string of the last line (as seen on screen in the textbox) that occurs before the cursor (including the formatting newlines) 
+	 * @param lastLineSize = the length (pixels) of the lastLine as calculated by graphics2d, which represents the horizontal distance spanned by this line
+	 * @return the index of the position that first extends past the width of the textbox
+	 */
+	private int findOverHangEntry(String lastLine, int lastLineSize)
+	{
+		int lastCharLength;
+		int reformattedLength = lastLineSize;  
+		int moveBack = 0; //starts at the last index
+		while (reformattedLength > boxW){
+			lastCharLength = graphicsHandler.getFontMetrics().stringWidth("" + lastLine.charAt(lastLine.length() - 1 - moveBack));
+			reformattedLength -= lastCharLength;
+			moveBack++;
+		}
+
+		int splitPos = lastLine.length() - 1 - moveBack;
+		return splitPos;
 	}
 
 	/**
@@ -349,14 +473,12 @@ public class TextBox
 
 	//---DRAWING STUFF---
 
-
 	/**
 	 * Calls all of the methods 
 	 * to draw the text box onto the screen
 	 */
 	public void drawTextBox()
     {
-		//
 		drawBox();
 		drawText();
 	}
@@ -366,7 +488,6 @@ public class TextBox
 	 */
 	public void drawBox()
 	{
-		
 		//drawing the main box
 		if (entered == true){
 			graphicsHandler.setColor(boxColour);
@@ -378,7 +499,6 @@ public class TextBox
 			graphicsHandler.setColor(unselectedBoxColour);
 		}
 	
-	
 		graphicsHandler.fillRect(boxX, boxY, boxW, boxH);
 	
 		//drawing outline 
@@ -388,7 +508,6 @@ public class TextBox
 			graphicsHandler.setStroke(new BasicStroke(2));
 		}
 		graphicsHandler.drawRect(boxX, boxY, boxW, boxH);
-		//
 	
 		graphicsHandler.setStroke(new BasicStroke(1));//resets the stroke back to default
 	
@@ -403,10 +522,3 @@ public class TextBox
 		//
 	}
 }
-
-
-
-
-///
-
-
