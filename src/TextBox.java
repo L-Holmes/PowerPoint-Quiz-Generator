@@ -366,10 +366,6 @@ public class TextBox
 	 */
 	public void updateLeftAndRightText(int x, int y)
 	{
-
-		///////////////////////need to adjust for whether the click was on the left text or the right text
-		/////also, consider for whitespace (empty space in textbox) and rounding down the last character before the white space starts
-
 		//--determines whether the leftText (left of the cursor) or rightText (right of the cursor) was clicked--
 		boolean clickedLeftText;
 		if (y > cursorY + cursorH){
@@ -395,17 +391,37 @@ public class TextBox
 
 		//--predicting the row number that the new cursor will lie in--
 		int yDiff = y - boxY;
-		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));////////////////////////////
+		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));
+
+		//if it is right, need to remove all of the left rows from the calc
+		if (clickedLeftText == false){
+			int topBoxToCursor = cursorY - boxY;
+			int leftRows = (int) Math.ceil(((double) topBoxToCursor / (double) avgCharHeight));
+			rowNum = rowNum - leftRows;
+		}
 
 		//--get the row at that number after the formatting (after newlines have been added to fit the text into the box)--
-		int [] rowAfterFormattingInfo = getRowAfterFormatting(rowNum);/////////////////////////////////
+		int [] rowAfterFormattingInfo; 
+		if (clickedLeftText == true){
+			rowAfterFormattingInfo = getRowAfterFormatting(rowNum, leftTextFormatInfo);
+		}
+		else{
+			rowAfterFormattingInfo = getRowAfterFormatting(rowNum, rightTextFormatInfo);
+		}
 		int newCursorRowIndex = rowAfterFormattingInfo[0];     
 		int newCursorFormatIndex = rowAfterFormattingInfo[1];
 		int substringStartIndex = rowAfterFormattingInfo[2];
 		int substringEndIndex = rowAfterFormattingInfo[3];
 
 		//---getting a string containing the single row that the user clicked---
-		String clickedLine = leftText.get(newCursorRowIndex);///////////////////////////
+		String clickedLine;
+		if (clickedLeftText == true){
+			clickedLine = leftText.get(newCursorRowIndex);
+		}
+		else{
+			clickedLine = rightText.get(newCursorRowIndex);
+		}
+		
 		String clickedSectionOfLine;
 		if (substringStartIndex != -1)
 		{
@@ -438,8 +454,8 @@ public class TextBox
 		for (int letterInd = 0; letterInd < clickedSectionOfLine.length(); letterInd++){
 			String letter = "" + clickedSectionOfLine.charAt(letterInd);
 			cumulTextLength += graphicsHandler.getFontMetrics().stringWidth(letter);
+			colNum = letterInd;
 			if (cumulTextLength > xDiff){
-				colNum = letterInd;
 				break;
 			}
 		}
@@ -475,7 +491,7 @@ public class TextBox
 	 *			-substringStartIndex = index of the character of the string (as found via the newCursorRowIndex), that starts the particular line
 	 *			-substringEndIndex = index of the character of the string (as found via the newCursorRowIndex), that ends the particular line
 	 */
-	private int [] getRowAfterFormatting(int rowNum)
+	private int [] getRowAfterFormatting(int rowNum, ArrayList<ArrayList<Integer>> formatInfo)
 	{
 		int totalFoundRows = 0;
 		ArrayList<Integer> lineInfo;
@@ -485,9 +501,9 @@ public class TextBox
 		int substringStartIndex = -1;
 		int substringEndIndex = -1;
 
-		for (int userTypedLineIndex = 0; userTypedLineIndex < leftTextFormatInfo.size(); userTypedLineIndex++){
+		for (int userTypedLineIndex = 0; userTypedLineIndex < formatInfo.size(); userTypedLineIndex++){
 			//for each line (lines seperated by a user typed 'newline' [enter key])
-			lineInfo = leftTextFormatInfo.get(userTypedLineIndex);
+			lineInfo = formatInfo.get(userTypedLineIndex);
 			totalFoundRows++;
 			for (int i = 0; i < lineInfo.size(); i++){
 				//for each formatting newline (which are added to fit the text latterally into the textbox)
