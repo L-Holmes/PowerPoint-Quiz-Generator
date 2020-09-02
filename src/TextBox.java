@@ -27,6 +27,12 @@ public class TextBox
 	private int boxRight;								//x coordinate of the bottom right corner coordinate of the box
 	private int boxBottom;								//y coordinate of the bottom right corner coordinate of the box
 
+	//blinking cursor
+	private int cursorX;								//x coordinate of the top left corner coordinate of the blinking cursor
+	private int cursorY;								//y coordinate of the top left corner coordinate of the blinking cursor
+	private int cursorW;								//width of the blinking cursor
+	private int cursorH;								//height of the blinking cursor
+
 
 	//text
 	private ArrayList<String> leftText = new ArrayList<String>();  //holds a 2d array of all of the text to the left of the cursor 
@@ -61,8 +67,9 @@ public class TextBox
 	//entered/exited the text box indicators 
 	private boolean entered = false;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
 
-	//cursor info
+	//mouse info
 	private boolean cursorInBox = false; 						//indicates whether the mouse cursor lies inside of the text box (true) or if it doesn't (false)
+
 
 
 	//---INITIALISATION---
@@ -359,42 +366,77 @@ public class TextBox
 	 */
 	public void updateLeftAndRightText(int x, int y)
 	{
-		//--getting the entire string--
-		String totalString = textBoxTextLeftOfCursor + textBoxTextRightOfCursor;
-		int totalStringLength = totalString.length();
 
-		//--getting the average character dimensions--
+		///////////////////////need to adjust for whether the click was on the left text or the right text
+		/////also, consider for whitespace (empty space in textbox) and rounding down the last character before the white space starts
+
+		//--determines whether the leftText (left of the cursor) or rightText (right of the cursor) was clicked--
+		boolean clickedLeftText;
+		if (y > cursorY + cursorH){
+			//right text
+			clickedLeftText = false;
+		}
+		else{
+			if ((y > cursorY) && (x > cursorX)){
+				//right text
+				clickedLeftText = false;
+			}
+			else{
+				//left text
+				clickedLeftText = true;
+			}
+		}
+
+
+		//--initialising the font & getting the average character height--
 		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
-		int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("t");
 		int avgCharHeight = graphicsHandler.getFontMetrics().getAscent();
 
-		//--predicting the number of rows & columns (each character representing a col.) that the new cursor will lie in--
+
+		//--predicting the row number that the new cursor will lie in--
 		int yDiff = y - boxY;
-		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight) + ((double)scrollAmount/(double)avgCharHeight));
+		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));////////////////////////////
+
+		//--get the row at that number after the formatting (after newlines have been added to fit the text into the box)--
+		int [] rowAfterFormattingInfo = getRowAfterFormatting(rowNum);/////////////////////////////////
+		int newCursorRowIndex = rowAfterFormattingInfo[0];     
+		int newCursorFormatIndex = rowAfterFormattingInfo[1];
+		int substringStartIndex = rowAfterFormattingInfo[2];
+		int substringEndIndex = rowAfterFormattingInfo[3];
+
+		//---getting a string containing the single row that the user clicked---
+		String clickedLine = leftText.get(newCursorRowIndex);///////////////////////////
+		String clickedSectionOfLine;
+		if (substringStartIndex != -1)
+		{
+			
+			if (substringEndIndex != -1){
+				//there is at least 2 formatting new lines for this line
+				clickedSectionOfLine = clickedLine.substring(substringStartIndex, substringEndIndex);
+			}
+			else{
+				//there is at least 1 formatting new line for this line
+				clickedSectionOfLine = clickedLine.substring(substringStartIndex);
+			}
+			
+		}
+		else{
+			//there are no formatting new lines for this line
+			clickedSectionOfLine = clickedLine;
+		}
+
+		//--finding the column number that the new click position lies in (each column = 1 character)--
 
 		int xDiff = x - boxX;
-		int colNum = 0;
 		
 		//calc col. num by going through all of the characters on the current line
 		//and getting a cumulative sum of the width
 		//until it reaches the character before the clicked position
-		String clickedRow;
-		boolean leftTextQuery;
-		//----------WHAT ABOUT WHERE THE LEFT AND RIGHT TEXT MEET?
-		if (rowNum <= leftText.length){
-			//think it is in the left text
-			clickedRow = leftText[rowNum];
-			leftTextQuery = true;
-		}
-		else{
-			//think it is in the right text
-			clickedRow = rightText[rowNum];
-			leftTextQuery = false;
-		}
 
+		int colNum = 0;
 		int cumulTextLength = 0;
-		for (int letterInd = 0; letterInd < clickedRow.length(); letterInd++){
-			String letter = "" + clickedRow.charAt(letterInd);
+		for (int letterInd = 0; letterInd < clickedSectionOfLine.length(); letterInd++){
+			String letter = "" + clickedSectionOfLine.charAt(letterInd);
 			cumulTextLength += graphicsHandler.getFontMetrics().stringWidth(letter);
 			if (cumulTextLength > xDiff){
 				colNum = letterInd;
@@ -402,54 +444,77 @@ public class TextBox
 			}
 		}
 
-		//--getting all of the string on the lines above & below the line that the cursor is suspected to be in--
-		int indexOfNewLineBeforeClickPos = ordinalIndexOf(totalString, "\n", rowNum - 1);
-		String stringAboveSelectedLine;
-		System.out.println("index of the newline before the click position: "+ indexOfNewLineBeforeClickPos);
-		if (indexOfNewLineBeforeClickPos != -1)
-		{
-			if (rowNum != 1){
-				//
-				stringAboveSelectedLine = totalString.substring(0, indexOfNewLineBeforeClickPos);
+		//NOW WE KNOW WHICH CHARACTER THE USER CLICKED
+
+		adjustCursorInformation();
+
+	}
+
+
+	/**
+	 * updates the left and right text arrays to 
+	 * 		have the correct strings to the left and right of the new cursor position
+	 * 
+	 * updates the format text info for the left and right respecively, to hold the new, correct
+	 * 		newline positions for each line of text
+	 * 
+	 * 
+	 */
+	private void adjustCursorInformation()
+	{
+		//
+	}
+
+	/**
+	 * returns information relating to the row that was clicked by the user in the process of selecting a new cursor position
+	 * @param rowNum = the number of rows of text that spans the vertical distance between the 
+	 * 				   newly selected cursor position and the top of the text box
+	 * @return = an integer array containing:
+	 * 			-newCursorRowIndex = index used on the [leftText] array, to find the line that the user clicked (for the new cursor placement)
+	 *			-newCursorFormatIndex = index used on the [leftTextFormatInfo] array, to find out which section of the split up line was clicked (since the line may have additional newlines for formatting purposes)
+	 *			-substringStartIndex = index of the character of the string (as found via the newCursorRowIndex), that starts the particular line
+	 *			-substringEndIndex = index of the character of the string (as found via the newCursorRowIndex), that ends the particular line
+	 */
+	private int [] getRowAfterFormatting(int rowNum)
+	{
+		int totalFoundRows = 0;
+		ArrayList<Integer> lineInfo;
+
+		int newCursorRowIndex = 0;
+		int newCursorFormatIndex = 0;
+		int substringStartIndex = -1;
+		int substringEndIndex = -1;
+
+		for (int userTypedLineIndex = 0; userTypedLineIndex < leftTextFormatInfo.size(); userTypedLineIndex++){
+			//for each line (lines seperated by a user typed 'newline' [enter key])
+			lineInfo = leftTextFormatInfo.get(userTypedLineIndex);
+			totalFoundRows++;
+			for (int i = 0; i < lineInfo.size(); i++){
+				//for each formatting newline (which are added to fit the text latterally into the textbox)
+				if (lineInfo.get(i) != 0){
+					totalFoundRows++;
+				}
+				if (totalFoundRows >= rowNum){
+					newCursorRowIndex = userTypedLineIndex;
+					newCursorFormatIndex = i;
+					if (lineInfo.get(newCursorFormatIndex) != -1){
+						substringStartIndex = lineInfo.get(newCursorFormatIndex);
+					}
+					if (lineInfo.size() - 1 > i){
+						substringEndIndex = lineInfo.get(newCursorFormatIndex + 1);
+					}
+					break;
+				}
 			}
-			else{
-				stringAboveSelectedLine = "";
-			}
-		}
-		else{
-			stringAboveSelectedLine = "";
 		}
 
-		System.out.println("string above selected line: "+ stringAboveSelectedLine);
+		int [] returnArr = new int [4];
+		returnArr[0] = newCursorRowIndex;
+		returnArr[1] = newCursorFormatIndex;
+		returnArr[2] = substringStartIndex;
+		returnArr[3] = substringEndIndex;
 
-		int indexOfNewLineAfterClickPos = ordinalIndexOf(totalString, "\n", rowNum);
-		System.out.println("index of the newline after the click position: "+ indexOfNewLineAfterClickPos);
-
-		String stringBelowSelectedLine; 
-		if (indexOfNewLineAfterClickPos != -1)
-		{
-			stringBelowSelectedLine = totalString.substring(indexOfNewLineAfterClickPos);
-		}
-		else{
-			stringBelowSelectedLine = "";
-		}
-
-
-
-		//--getting the suspected index of character that the cursor will lie after--
-		int totalCharsToLeft = stringAboveSelectedLine.length();
-		int splitPosition = totalCharsToLeft + colNum;
-
-		if (splitPosition> totalStringLength){
-			splitPosition = totalStringLength;
-		}
-		
-		//--creating the new strings from the left and right of the new cursor position--
-		String newLeftOfCursor = totalString.substring(0, splitPosition);
-		String newRightOfCursor = totalString.substring(splitPosition);
-
-		textBoxTextLeftOfCursor = newLeftOfCursor;
-		textBoxTextRightOfCursor = newRightOfCursor;
+		return returnArr;
 
 
 	}
