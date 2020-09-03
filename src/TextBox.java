@@ -462,7 +462,7 @@ public class TextBox
 
 		//NOW WE KNOW WHICH CHARACTER THE USER CLICKED
 
-		adjustCursorInformation();
+		adjustCursorInformation(clickedLeftText, colNum, newCursorRowIndex, newCursorFormatIndex, substringStartIndex, substringEndIndex);
 
 	}
 
@@ -474,11 +474,43 @@ public class TextBox
 	 * updates the format text info for the left and right respecively, to hold the new, correct
 	 * 		newline positions for each line of text
 	 * 
-	 * 
+	 * @param clickedLeftText = indicates (in reference to the new cursor position) whether the user clicked the text 
+	 * 							to the left of the cursor (true) or the text to the right of the cursor (false)
+	 * @param indexOfClickedCharWithinTheFormattedSectionOfTheLine = index of the character from the substring of text that was clicked 
+	 * 																 (substring is the part of the line that was formatted with newlines
+	 * 																  to fit into the text box, where the substring is the string unbroken
+	 * 																  by formatting newlines, that the user clicked) i.e. each substring
+	 * 																  takes up a single line at most, wheras the 'line' may span over 
+	 * 																  multiple lines after being formatted. 
+	 * @param clickedLineIndex = index used on the [leftText] array, to find the line that the user clicked (for the new cursor placement)
+	 * @param clickPointLineStartFormatIndex = index used on the [leftTextFormatInfo] array, to find out which section of the split up line 
+	 * 										   was clicked (since the line may have additional newlines for formatting purposes)
+	 * @param substringStartIndex = the index used on the entire line, to find the start of the substring that makes up the single line of 
+	 * 								text that the user clicked
+	 * @param substringEndIndex = the index used on the entire line, to find the end of the substring that makes up the single line of text
+	 * 							  that the user clicked
 	 */
-	private void adjustCursorInformation()
+	private void adjustCursorInformation(boolean clickedLeftText, int indexOfClickedCharWithinTheFormattedSectionOfTheLine, int clickedLineIndex, int clickPointLineStartFormatIndex, int substringStartIndex, int substringEndIndex)
 	{
-		//
+		/*
+		for the old left and right positions:
+			-merge everything from the right into the left side, and have as one line
+			-recheck breakpoints for old last formatting newline (for the left side) and everything after (so all of the new right side)
+
+		for the new click point:
+			-everything from the left (of the cursor position) to the start of the line, will be the last line entry in the leftText array
+			-the rest of the clicked line will become the first entry in the rightText array, and will be joined to the rest of the lines
+
+			-remove all formatting newline entries for the clicked line, for any indexes greater than the clicked position
+			-calculate new format entries for the right side of the line. 
+
+			-then combine this left with all of the previous left entries that occurred before the current line (alongside their
+			 pre-existing formatting information) to form the new left
+			-combine the new right start line with everything after the newly clicked line (and their formatting info) to get 
+			 the new right
+		*/
+
+		
 	}
 
 	/**
