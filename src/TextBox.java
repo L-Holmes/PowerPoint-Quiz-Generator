@@ -510,8 +510,102 @@ public class TextBox
 			 the new right
 		*/
 
+		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
+
+		//--merge lines to the immediate left and right of the old cursor position--
+
+		//-concatenate the last left and first right entries, to give the new last leftText entry-
+		String oldImmediateLeftLine = leftText.get(leftText.size() - 1);
+		String oldImmediateRightLine = leftText.get(0);
+		String newLine = oldImmediateLeftLine + oldImmediateRightLine;
+		leftText.set(leftText.size() - 1, newLine);
+
+		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
+		if (rightText.size() > 1){
+			rightText.remove(0);
+			rightTextFormatInfo.remove(0);
+		}
+		else{
+			rightText.set(0, "");
+			ArrayList<Integer> emptyRightInfo = new ArrayList<Integer>(); 
+			emptyRightInfo.add(-1);  
+			rightTextFormatInfo.set(0, emptyRightInfo);
+		}
+
+		//-recalculate the format info for the leftText's last entry-
+		//////////////////////////////////////////////////////////////////////////////
+
+		//---SECTION 2: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
+
+		String entireLine;
+		if (clickedLeftText == true){
+			entireLine = leftText.get(clickedLineIndex);
+			//-add all of the left lines to the right text, and remove from left text-
+			int swapLine = clickedLineIndex;
+			if (swapLine > leftText.size() - 1){
+				while (swapLine > leftText.size() - 1){
+					String leftTextEndLine = leftText.get(leftText.size() - 1);
+					ArrayList<Integer> leftTextEndLineFormatInfo = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
+	
+					//set the start of the right text to have that entry
+					rightText.add(0, leftTextEndLine);
+					rightTextFormatInfo.add(0, leftTextEndLineFormatInfo);
+	
+					//remove the last element of the left text
+					leftText.remove(leftText.size() - 1);
+					leftTextFormatInfo.remove(leftTextFormatInfo.size() -1);
+	
+					//go onto the above line
+					swapLine --;
+				}
+			}
+
+		}
+		else{
+			//user clicked the right text
+			entireLine = rightText.get(clickedLineIndex);
+
+			//-add all of the right lines to the left text, and remove from right text-
+			if (clickedLineIndex > 0){
+				for (int swapLine = 0; swapLine < clickedLineIndex; swapLine++){
+					String rightTextFirstLine = rightText.get(0);
+					ArrayList<Integer> rightTextFirstLineFormatInfo = rightTextFormatInfo.get(0);
+	
+					//set the end of the left text to have that entry
+					leftText.add(rightTextFirstLine);
+					leftTextFormatInfo.add(0, rightTextFirstLineFormatInfo);
+	
+					//remove the last element of the left text
+					rightText.remove(0);
+					rightTextFormatInfo.remove(0);
+				}
+				
+			}
+
+		}
 		
+		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
+		String leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+
+		//adding the left side to the end of the left text & formatting arrays
+		leftText.add(leftPortion);
+		ArrayList<Integer> lastLeftInfo = new ArrayList<Integer>(); 
+		lastLeftInfo.add(-1);  
+		leftTextFormatInfo.add(lastLeftInfo);
+
+		//adding the right side to the start of the right text & formatting arrays
+		rightText.add(0, rightPortion);
+		ArrayList<Integer> firstRightInfo = new ArrayList<Integer>(); 
+		firstRightInfo.add(-1);  
+		rightTextFormatInfo.add(0, firstRightInfo);
+
+		//-updating the formatting info for the newly added sections-
+		////////////////////////////////////////////////////////////////////
+		
+	
 	}
+
 
 	/**
 	 * returns information relating to the row that was clicked by the user in the process of selecting a new cursor position
