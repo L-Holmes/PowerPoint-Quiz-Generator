@@ -538,6 +538,8 @@ public class TextBox
 		//---SECTION 2: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		String entireLine;
+
+		////////////////////NEED TO FIND ENTIRE LINE BEFORE SECTION 1 IS COMPLETED?? WHAT IF SECTION 1 IS THE CLICKED LINE???
 		if (clickedLeftText == true){
 			entireLine = leftText.get(clickedLineIndex);
 			//-add all of the left lines to the right text, and remove from left text-
@@ -583,7 +585,7 @@ public class TextBox
 			}
 
 		}
-		
+
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
 		String leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
@@ -684,8 +686,9 @@ public class TextBox
 	 * Calls all of the methods 
 	 * to draw the text box onto the screen
 	 */
-	public void drawTextBox()
+	public void drawTextBox(Graphics2D updatedGraphicsHandle)
     {
+		graphicsHandler = updatedGraphicsHandle;
 		drawBox();
 		drawText();
 	}
@@ -695,6 +698,7 @@ public class TextBox
 	 */
 	public void drawBox()
 	{
+		System.out.println("drawinnn");
 		//drawing the main box
 		if (entered == true){
 			graphicsHandler.setColor(boxColour);
