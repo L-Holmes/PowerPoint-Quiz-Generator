@@ -13,6 +13,9 @@ have the lines be seperate entries into their repective array (left or right (of
 then when I am drawing to the screen, I will add the dashes and split words in the way that I desire
 */
 
+/*
+MAY NEED TO CHECK BY VALUE OR BY REFERENCE FOR UPDATING ARRAYS
+*/
 
 public class TextBox
 {
@@ -255,7 +258,7 @@ public class TextBox
 				//add new entry
 				int newSplitPosition = findOverHangEntry(lastLine, lastLineSize);
 				//add a new format entry, with the new split position
-				formatInfoForEntireLine.add(newSplitPosition);
+				formatInfoForEntireLine.set(0, newSplitPosition);
 			}
 		}
 		else{
@@ -510,6 +513,16 @@ public class TextBox
 			 the new right
 		*/
 
+		//---SECTION 0: GET THE ENTIRE LINE OF STRING THAT WAS CLICKED---
+		String entireLine;
+		if (clickedLeftText == true){
+			entireLine = leftText.get(clickedLineIndex);
+		}
+		else{
+			entireLine = rightText.get(clickedLineIndex);
+		}
+
+
 		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
 
 		//--merge lines to the immediate left and right of the old cursor position--
@@ -533,15 +546,25 @@ public class TextBox
 		}
 
 		//-recalculate the format info for the leftText's last entry-
-		//////////////////////////////////////////////////////////////////////////////
+		updateFormattingOnEntireLine(true, leftText.size() - 1, true);
 
-		//---SECTION 2: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
+		//---SECTION 2: REMOVING THE LEFT LINE IF IT WAS THE ONE THAT WAS CLICKED, AND REPLACING WITH THE NEW LEFT---
 
-		String entireLine;
+		
 
-		////////////////////NEED TO FIND ENTIRE LINE BEFORE SECTION 1 IS COMPLETED?? WHAT IF SECTION 1 IS THE CLICKED LINE???
+		/*
+		if the clicked line is the same as the old line,
+		remove the left index's last value that has just been added (as this is the new text that will be added at the end of sec. 2)
+
+		IF RIGHT TEXT IS EMPTY, NEED TO SET THE FIRST VALUE RATHER THAN ADD TO THE ZEROTH POSITION!!! SAME WITH LEFT!!!
+		*/
+
+		//---SECTION 3: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
+
+
 		if (clickedLeftText == true){
-			entireLine = leftText.get(clickedLineIndex);
+			//user clicked the left text
+
 			//-add all of the left lines to the right text, and remove from left text-
 			int swapLine = clickedLineIndex;
 			if (swapLine > leftText.size() - 1){
@@ -565,7 +588,6 @@ public class TextBox
 		}
 		else{
 			//user clicked the right text
-			entireLine = rightText.get(clickedLineIndex);
 
 			//-add all of the right lines to the left text, and remove from right text-
 			if (clickedLineIndex > 0){
@@ -603,10 +625,109 @@ public class TextBox
 		rightTextFormatInfo.add(0, firstRightInfo);
 
 		//-updating the formatting info for the newly added sections-
-		////////////////////////////////////////////////////////////////////
+		/*
+		-need to check if the last entry of the leftText has lengthened (may need multiple formatting newlines)
+		-need to check the first entry of the rightText for lengthening (may need multiple formatting newlines)
+		*/
+		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
+		updateFormattingOnEntireLine(false, 0, false);
 		
 	
 	}
+
+	/**
+	 * checks if the passed line string is longer than the text box width.
+	 * If the line is longer, adds a new 'new line index' entry to the  leftTextFormatInfo arraylist
+	 * -adds newlines until the remainder of the string left is shorter than the textbox width
+	 * 
+	 * @param leftTextQuery = determines whether the line being updated is from the left text (true) or the right text (false)
+	 * @param indexOfLineInTextArray = index within the [leftText/rightText] array, to get the line that is being updated
+	 * @param checkAfterLastFormattingEntry = determines whether the entire line will be looked at for formatting (false); or whether 
+	 * 										  only the substring of text after the last formatting index will be looked at (true)
+	 */
+	private void updateFormattingOnEntireLine(boolean leftTextQuery, int indexOfLineInTextArray, boolean checkAfterLastFormattingEntry)
+	{
+
+		//--get the string of characters that are being checked for being longer than the text box width--
+
+		String stringToCheck;
+		String entireString;
+		ArrayList<Integer> formatInfoForTheString;
+
+		if (leftTextQuery == true){
+			//left text
+			entireString = leftText.get(indexOfLineInTextArray);
+			formatInfoForTheString = leftTextFormatInfo.get(indexOfLineInTextArray);
+		}
+		else{
+			//right text
+			entireString = rightText.get(indexOfLineInTextArray);
+			formatInfoForTheString = rightTextFormatInfo.get(indexOfLineInTextArray);
+
+		}
+
+		stringToCheck = entireString;
+		
+
+		int lastFormattingEntry = formatInfoForTheString.get(formatInfoForTheString.size() -1); 
+		if (checkAfterLastFormattingEntry == true){
+			if (lastFormattingEntry != -1){
+				//
+				stringToCheck = stringToCheck.substring(lastFormattingEntry);
+			}
+		}
+		
+
+		//--add the new entries, until the remaining substring is shorter than the text box width (changed = false) --
+		boolean changed = true;
+		while (changed == true){
+			//
+			if (formatInfoForTheString.get(formatInfoForTheString.size() -1) == - 1){
+				//--there are no new lines currently--
+	
+				//check if the entire string is longer than the textbox width
+				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck);
+				if (stringToCheckSize > boxW){
+					//add new entry
+					int newSplitPosition = findOverHangEntry(stringToCheck, stringToCheckSize);
+					//add a new format entry, with the new split position
+					formatInfoForTheString.set(0, newSplitPosition);
+
+					//update the string to check to be the remainder of the string after the newly added newline
+					stringToCheck = entireString.substring(newSplitPosition);
+				}
+				else{
+					changed = false;
+				}
+				
+				
+			}
+			else{
+				//--there are at least 1 new lines currently--
+	
+				//get the string after the last new line, 
+				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck);
+	
+				//check if that string is longer than the text box width
+				if (stringToCheckSize > boxW){
+					//if it is, add a new line entry at the overhang index
+					int newSplitPos = findOverHangEntry(stringToCheck, stringToCheckSize);
+					//add a new format entry, with the new split position
+					formatInfoForTheString.add(newSplitPos);
+
+					//update the string to check to be the remainder of the string after the newly added newline
+					stringToCheck = entireString.substring(newSplitPos);
+				}
+				else{
+					changed = false;
+				}
+			}
+		}
+		
+	}
+
+	
+///////////////////////////////
 
 
 	/**
