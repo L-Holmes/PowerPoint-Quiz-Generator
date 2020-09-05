@@ -551,13 +551,27 @@ public class TextBox
 		//---SECTION 2: REMOVING THE LEFT LINE IF IT WAS THE ONE THAT WAS CLICKED, AND REPLACING WITH THE NEW LEFT---
 
 		
+		//-check if the clicked line is the same as the old line-
+		boolean clickedSameLine = false;
+		if (clickedLeftText == true){
+			//if the user clicked the last entry of the left, clicked the same line
+			if (clickedLineIndex == leftText.size() -1){
+				clickedSameLine = true;
+			}
+		}
+		else{
+			//if the user clicked the first entry of the right, clicked the same line
+			if (clickedLineIndex == 0){
+				clickedSameLine = true;
+			}
 
-		/*
-		if the clicked line is the same as the old line,
-		remove the left index's last value that has just been added (as this is the new text that will be added at the end of sec. 2)
+		}
 
-		IF RIGHT TEXT IS EMPTY, NEED TO SET THE FIRST VALUE RATHER THAN ADD TO THE ZEROTH POSITION!!! SAME WITH LEFT!!!
-		*/
+		//-if clicked the same line, remove the last index of the left text, as this is the old line, which will be replaced-
+		if (clickedSameLine == true){
+			leftText.remove(leftText.size() - 1);
+			leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
+		}
 
 		//---SECTION 3: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
@@ -851,6 +865,96 @@ public class TextBox
 	 */
 	public void drawText()
 	{
-		//
+		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+		graphicsHandler.setColor(textColour);
+
+		int textHeight = graphicsHandler.getFontMetrics().getAscent();
+		int textY = boxY - textHeight;
+		int textX = boxX;
+
+		//-draw each line in the left text-
+		for (int i = 0; i < leftText.size(); i++){
+			
+
+			String line = leftText.get(i);
+			ArrayList<Integer> formattingEntriesForLine = leftTextFormatInfo.get(i);
+
+			int startSplitIndex = 0;    
+			int endSplitIndex;
+
+			String toDrawString;
+			//-formatting the lines to fit into the text box and drawing them-
+			for (int j = 0; j < formattingEntriesForLine.size(); j++){
+				//move the drawing position down to the next line
+				textY += textHeight;
+				//
+				endSplitIndex = formattingEntriesForLine.get(j);
+				if (endSplitIndex == -1){
+					//no additional formatting newlines
+					//draw from startIndex to the end of the line
+					toDrawString = line.substring(startSplitIndex);
+					graphicsHandler.drawString(toDrawString, textX, textY);
+					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
+					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
+
+					break;
+
+				}
+				else{
+					//draw between the two newline points
+					toDrawString = line.substring(startSplitIndex, endSplitIndex);
+					graphicsHandler.drawString(toDrawString, textX, textY);
+
+				}
+				//update the start to be the end so you don't redraw the previous section of text
+				startSplitIndex = endSplitIndex;
+
+			}
+
+		}
+
+		//-draw each line in the right text-
+		for (int rightTextIndex = 0; rightTextIndex < leftText.size(); rightTextIndex++){
+
+			String line = rightText.get(rightTextIndex);
+			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
+
+			int startSplitIndex = 0;    
+			int endSplitIndex;
+
+			String toDrawString;
+			//-formatting the lines to fit into the text box and drawing them-
+			for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
+				//
+				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
+				if (endSplitIndex == -1){
+					//no additional formatting newlines
+					//draw from startIndex to the end of the line
+					toDrawString = line.substring(startSplitIndex);
+					graphicsHandler.drawString(toDrawString, textX, textY);
+					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
+					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
+
+					break;
+
+				}
+				else{
+					//draw between the two newline points
+					toDrawString = line.substring(startSplitIndex, endSplitIndex);
+					graphicsHandler.drawString(toDrawString, textX, textY);
+
+				}
+				//update the start to be the end so you don't redraw the previous section of text
+				startSplitIndex = endSplitIndex;
+
+				//make the text start at the beggining of the text box for everyline after the first
+				textX = boxX;
+				//move the drawing position down to the next line
+				textY += textHeight;
+
+			}
+
+		}
+		
 	}
 }
