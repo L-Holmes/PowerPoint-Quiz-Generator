@@ -101,6 +101,11 @@ public class TextBox
 
 		leftText.add("");
 		rightText.add("");
+
+		ArrayList<Integer> emptyEntry = new ArrayList<Integer>();
+		emptyEntry.add(-1);
+		leftTextFormatInfo.add(emptyEntry);
+		rightTextFormatInfo.add(emptyEntry);
     }
 
     ///---TEXT ENTERING---
@@ -872,12 +877,15 @@ public class TextBox
 		int textY = boxY - textHeight;
 		int textX = boxX;
 
+
 		//-draw each line in the left text-
 		for (int i = 0; i < leftText.size(); i++){
-			
 
 			String line = leftText.get(i);
+
 			ArrayList<Integer> formattingEntriesForLine = leftTextFormatInfo.get(i);
+
+
 
 			int startSplitIndex = 0;    
 			int endSplitIndex;
@@ -912,6 +920,7 @@ public class TextBox
 			}
 
 		}
+
 
 		//-draw each line in the right text-
 		for (int rightTextIndex = 0; rightTextIndex < leftText.size(); rightTextIndex++){
