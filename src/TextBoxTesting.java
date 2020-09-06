@@ -17,9 +17,11 @@ import java.io.IOException;
 
 public class TextBoxTesting {
     public static void main(String[] args){
-        //
+		//
+		System.out.println("{{{ starting application }}} \n");
         TestingWindowHandle application = new TestingWindowHandle();
-        application.run();
+		application.run();
+		System.out.println("\n.. application ended ..");
     }
 }
 
@@ -75,6 +77,8 @@ class TestingWindowHandle extends JFrame {
 		pack();
 		repaint();
 		setVisible(true);
+
+		this.addKeyListener(panelMain);
 	}
 
 	/**
@@ -253,7 +257,8 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 
 				//--DRAWING THE REST OF THE PAGE--
                 if (setTextBox == false){
-                    typingTextBox  = new TextBox(g, 10, 10, 500, 500);
+					typingTextBox  = new TextBox(g, 10, 10, 500, 500);
+					System.out.println(" created new text box ");
                     setTextBox = true;
                 }
                 typingTextBox.drawTextBox(g);
@@ -295,6 +300,7 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
     /** Called whenever the mouse clicks.
         * Could be replaced with setting the value of a JLabel, etc. */
     public void mouseClicked(MouseEvent e) {
+
         Point p = e.getPoint();
         double pointXCoord = p.getX();
         double pointYCoord = p.getY();
@@ -319,17 +325,24 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 			typedKey = "exit";
 		}
 
+		/////
+		System.out.println("key typed");
+		typingTextBox.typeLetter(typedKey, e.getExtendedKeyCode());
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("key 1");
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
+		System.out.println("key 2");
+
 	}
 
 }

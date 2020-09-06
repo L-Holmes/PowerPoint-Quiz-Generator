@@ -753,6 +753,8 @@ public class TextBox
 	 * returns information relating to the row that was clicked by the user in the process of selecting a new cursor position
 	 * @param rowNum = the number of rows of text that spans the vertical distance between the 
 	 * 				   newly selected cursor position and the top of the text box
+	 * @param formatInfo = the format info for either the entire leftText or rightText
+	 * 
 	 * @return = an integer array containing:
 	 * 			-newCursorRowIndex = index used on the [leftText] array, to find the line that the user clicked (for the new cursor placement)
 	 *			-newCursorFormatIndex = index used on the [leftTextFormatInfo] array, to find out which section of the split up line was clicked (since the line may have additional newlines for formatting purposes)
@@ -765,7 +767,7 @@ public class TextBox
 		ArrayList<Integer> lineInfo;
 
 		int newCursorRowIndex = 0;
-		int newCursorFormatIndex = 0;
+		int newCursorFormatIndex = -1;
 		int substringStartIndex = -1;
 		int substringEndIndex = -1;
 
@@ -773,12 +775,30 @@ public class TextBox
 			//for each line (lines seperated by a user typed 'newline' [enter key])
 			lineInfo = formatInfo.get(userTypedLineIndex);
 			totalFoundRows++;
+
+			//-if the part of the line before the first formatting newline 
+			// is the row that the user clicked-
+			if (totalFoundRows >= rowNum){
+				//found the row that the user clicked
+
+				newCursorRowIndex = userTypedLineIndex;
+				substringStartIndex = 0;
+				
+				if (lineInfo.size() > 0){
+					substringEndIndex = lineInfo.get(0);
+				}
+				break;
+			}
+			//
+
 			for (int i = 0; i < lineInfo.size(); i++){
 				//for each formatting newline (which are added to fit the text latterally into the textbox)
-				if (lineInfo.get(i) != 0){
+				if (lineInfo.get(i) != -1){
+					//increment by 1 since found a position for a newline within the text
 					totalFoundRows++;
 				}
 				if (totalFoundRows >= rowNum){
+					//found the row that the user clicked
 					newCursorRowIndex = userTypedLineIndex;
 					newCursorFormatIndex = i;
 					if (lineInfo.get(newCursorFormatIndex) != -1){
@@ -838,7 +858,6 @@ public class TextBox
 	 */
 	public void drawBox()
 	{
-		System.out.println("drawinnn");
 		//drawing the main box
 		if (entered == true){
 			graphicsHandler.setColor(boxColour);
