@@ -374,13 +374,17 @@ public class TextBox
 	 */
 	public void updateLeftAndRightText(int x, int y)
 	{
+		//-SECTION 1: DETERMINE WHETHER THE NEW CURSOR POSITION IS BEFORE OR AFTER THE CURRENT POSITION AND SET THE FONT-
+
 		//--determines whether the leftText (left of the cursor) or rightText (right of the cursor) was clicked--
 		boolean clickedLeftText;
 		if (y > cursorY + cursorH){
+			//if the click position is below the bottom of the current cursor position
 			//right text
 			clickedLeftText = false;
 		}
 		else{
+			//new click position is on the line of the current cursor position or higher up
 			if ((y > cursorY) && (x > cursorX)){
 				//right text
 				clickedLeftText = false;
@@ -394,16 +398,18 @@ public class TextBox
 
 		//--initialising the font & getting the average character height--
 		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+
+		//-SECTION 2: GETTING INFORMATION ABOUT THE ROW THAT THE USER CLICKED-
+
 		int avgCharHeight = graphicsHandler.getFontMetrics().getAscent();
-
-
 		//--predicting the row number that the new cursor will lie in--
 		int yDiff = y - boxY;
 		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));
 
 		//if it is right, need to remove all of the left rows from the calc
 		if (clickedLeftText == false){
-			int topBoxToCursor = cursorY - boxY;
+			int topBoxToCursor = cursorY - boxY; 
+			//number of rows above the cursor
 			int leftRows = (int) Math.ceil(((double) topBoxToCursor / (double) avgCharHeight));
 			rowNum = rowNum - leftRows;
 		}
@@ -420,6 +426,8 @@ public class TextBox
 		int newCursorFormatIndex = rowAfterFormattingInfo[1];
 		int substringStartIndex = rowAfterFormattingInfo[2];
 		int substringEndIndex = rowAfterFormattingInfo[3];
+
+		//-SECTION 3: GETTING A STRING OF THE ROW THAT WAS CLICKED-
 
 		//---getting a string containing the single row that the user clicked---
 		String clickedLine;
@@ -449,8 +457,9 @@ public class TextBox
 			clickedSectionOfLine = clickedLine;
 		}
 
-		//--finding the column number that the new click position lies in (each column = 1 character)--
+		//-SECTION 4: FINDING THE COLUMN THAT THE USER CLICKED-
 
+		//--finding the column number that the new click position lies in (each column = 1 character)--
 		int xDiff = x - boxX;
 		
 		//calc col. num by going through all of the characters on the current line
@@ -463,12 +472,14 @@ public class TextBox
 			String letter = "" + clickedSectionOfLine.charAt(letterInd);
 			cumulTextLength += graphicsHandler.getFontMetrics().stringWidth(letter);
 			colNum = letterInd;
-			if (cumulTextLength > xDiff){
+			if (cumulTextLength >= xDiff){
 				break;
 			}
 		}
 
-		//NOW WE KNOW WHICH CHARACTER THE USER CLICKED
+		//now we know which character was clicked.
+
+		//-SECTION 5: UPDATE THE ARRAYLISTS TO HOLD THE NEW CURSOR POSITION-
 
 		adjustCursorInformation(clickedLeftText, colNum, newCursorRowIndex, newCursorFormatIndex, substringStartIndex, substringEndIndex);
 
@@ -758,9 +769,6 @@ public class TextBox
 	}
 
 	
-///////////////////////////////
-
-
 	/**
 	 * returns information relating to the row that was clicked by the user in the process of selecting a new cursor position
 	 * @param rowNum = the number of rows of text that spans the vertical distance between the 
