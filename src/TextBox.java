@@ -352,6 +352,81 @@ public class TextBox
 	}
 
 	/**
+	 * finds the index of the first character within the string
+	 * that overhangs out of the side of the textbox 
+	 * @param lastLine = string of the last line (as seen on screen in the textbox) that occurs before the cursor (including the formatting newlines) 
+	 * @param lastLineSize = the length (pixels) of the lastLine as calculated by graphics2d, which represents the horizontal distance spanned by this line
+	 * @param averageCharWidth = the average width of a character in the font that the user is typing in
+	 * @param lineStartDistFromBoxStart = distance that the line of text starts from to the x coordinate of the left side of the text box
+	 * @return the index of the position that first extends past the width of the textbox
+	 */
+	private int findOverHangEntryFromAvgCharWidth(String lastLine, int lastLineSize, int averageCharWidth, int lineStartDistFromBoxStart)
+	{
+		/*
+		if the string is longer than the box width,
+		it estimates (using the averageCharWidth)
+		the index that will be the first character to overhang.
+
+		Then ensure that this is the first overhanging character by checking characters to the immediate left 
+		or right of the split position, and finding the one closest to the box width.
+		*/
+
+		//
+		int widthToFit = boxW - lineStartDistFromBoxStart;
+		int splitPos = lastLine.length() - 1;
+		if (lastLineSize > widthToFit){
+			//
+			int estimatedOverHangPoint = lastLineSize / averageCharWidth;
+			int lengthUpToEstimatePoint = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, estimatedOverHangPoint));
+			if (lengthUpToEstimatePoint > widthToFit){
+				//remove the last character, check again
+				splitPos = estimatedOverHangPoint;
+
+				//-loop through the characters moving left until the text is shorter than the box width-
+				boolean foundOverHang = false;
+				while (foundOverHang == false){
+					splitPos--;
+					if (splitPos > -1){
+						
+						int shorterEstimateLength = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, estimatedOverHangPoint));
+						if (shorterEstimateLength < widthToFit){
+							splitPos ++; //moves back onto the first character that overhangs
+							foundOverHang = true;
+						}
+					}
+					else{
+						foundOverHang = true;
+					}
+				}
+				
+			}
+			else{
+				//add the next character to the string length total, check again
+				splitPos = estimatedOverHangPoint;
+
+				//-loop through the characters moving right until the text is longer than the box width-
+				boolean foundOverHang = false;
+				while (foundOverHang == false){
+					splitPos++;
+					if (splitPos < lastLine.length()){
+						
+						int longerEstimateLength = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, estimatedOverHangPoint));
+						if (longerEstimateLength > widthToFit){
+							foundOverHang = true;
+						}
+					}
+					else{
+						foundOverHang = true;
+					}
+				}
+			}	
+		}
+		
+
+		return splitPos;
+	}
+
+	/**
 	 * removes the last character of a string and returns the result
 	 * @param str = the string to be shortened
 	 */
@@ -690,11 +765,13 @@ public class TextBox
 	private void updateFormattingOnEntireLine(boolean leftTextQuery, int indexOfLineInTextArray, boolean checkAfterLastFormattingEntry)
 	{
 
+
 		//--get the string of characters that are being checked for being longer than the text box width--
 
 		String stringToCheck;
 		String entireString;
 		ArrayList<Integer> formatInfoForTheString;
+		int textStartRelativeToBoxX = 0; //how many pixels are there inbetween the left side of the text box and the start of the text?
 
 		if (leftTextQuery == true){
 			//left text
@@ -705,6 +782,22 @@ public class TextBox
 			//right text
 			entireString = rightText.get(indexOfLineInTextArray);
 			formatInfoForTheString = rightTextFormatInfo.get(indexOfLineInTextArray);
+
+			//if first entry of right text
+			if (indexOfLineInTextArray == 0){
+				//need to account for the line not starting at the beginning of the text box since it comes straight after the end of the left text
+				ArrayList<Integer> lastFormatInfoForTheleftText = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
+				int lastFormatNewLineForTheLeftText = lastFormatInfoForTheleftText.get(lastFormatInfoForTheleftText.size() - 1);
+				String lastLineFromLeftText;
+				if (lastFormatNewLineForTheLeftText != -1){
+					//
+					lastLineFromLeftText = leftText.get(leftText.size() -1).substring(lastFormatNewLineForTheLeftText);
+				}
+				else{
+					lastLineFromLeftText = leftText.get(leftText.size() -1);
+				}
+				textStartRelativeToBoxX = graphicsHandler.getFontMetrics().stringWidth(lastLineFromLeftText);
+			}
 
 		}
 
@@ -728,10 +821,15 @@ public class TextBox
 				//--there are no new lines currently--
 	
 				//check if the entire string is longer than the textbox width
-				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck);
+				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
 				if (stringToCheckSize > boxW){
 					//add new entry
-					int newSplitPosition = findOverHangEntry(stringToCheck, stringToCheckSize);
+					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
+					int newSplitPosition = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize, avgCharWidth, textStartRelativeToBoxX);
+					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
+					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
+						newSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
+					}
 					//add a new format entry, with the new split position
 					formatInfoForTheString.set(0, newSplitPosition);
 
@@ -748,12 +846,17 @@ public class TextBox
 				//--there are at least 1 new lines currently--
 	
 				//get the string after the last new line, 
-				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck);
+				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
 	
 				//check if that string is longer than the text box width
 				if (stringToCheckSize > boxW){
 					//if it is, add a new line entry at the overhang index
-					int newSplitPos = findOverHangEntry(stringToCheck, stringToCheckSize);
+					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
+					int newSplitPos = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize, avgCharWidth, textStartRelativeToBoxX);
+					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
+					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
+						newSplitPos += formatInfoForTheString.get(formatInfoForTheString.size() -1);
+					}
 					//add a new format entry, with the new split position
 					formatInfoForTheString.add(newSplitPos);
 
@@ -764,6 +867,9 @@ public class TextBox
 					changed = false;
 				}
 			}
+
+			//cannot be on the first line after first iteration, so text must begin at the start of the text box X.
+			textStartRelativeToBoxX = 0;
 		}
 		
 	}
