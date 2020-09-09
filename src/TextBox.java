@@ -42,6 +42,7 @@ public class TextBox
 	private ArrayList<String> rightText = new ArrayList<String>(); //holds a 2d array of all of the text to the right of the cursor 
 
 	//text information for formatting
+	//a newline is inserted directly before the character at the index.
 	//	for the outer arrayList: each entry represents a different line, with each index corresponding to the equivalent index within the [leftText] arrayList
 	//	for the inner arrayList: each entry holds an integer, which represents:
 	//     - 'newlineIndex' for deciding where to add a newline, to allow the text to fit latterly inside of the text box
@@ -131,7 +132,7 @@ public class TextBox
 			typedKey = "exit";
 		}
 
-		HandleTextEntered(typedKey);
+		handleTextEntered(typedKey);
 	}
 	
 	/**
@@ -139,7 +140,7 @@ public class TextBox
 	 * characters to the left [of the cursor] string
 	 * @param typedChar character / string (for special characters) of the typed input to the text box
 	 */
-	public void HandleTextEntered(String typedChar)
+	public void handleTextEntered(String typedChar)
 	{
 		if (entered == true){
 			if (typedChar == "exit"){
@@ -230,7 +231,7 @@ public class TextBox
 		//get the info for the last newline of the last line (above)
 		int leftFormatInfoSize = leftTextFormatInfo.size();
 		ArrayList<Integer> formatInfoForEntireLine = leftTextFormatInfo.get(leftFormatInfoSize - 1);
-		int formatInfoForEntireLineSize = formatInfoForEntireLine.size(); //////////////is this right or is it length???
+		int formatInfoForEntireLineSize = formatInfoForEntireLine.size(); 
 		int lastNewLineFormatInfo = formatInfoForEntireLine.get(formatInfoForEntireLineSize - 1);
 
 		if (longer == true){
@@ -309,8 +310,6 @@ public class TextBox
 					formatInfoForEntireLine.remove(formatInfoForEntireLineSize - 1);
 
 				}
-				
-
 			}
 			else{
 				//--just one new line--
@@ -376,7 +375,7 @@ public class TextBox
 		int splitPos = lastLine.length() - 1;
 		if (lastLineSize > widthToFit){
 			//
-			int estimatedOverHangPoint = lastLineSize / averageCharWidth;
+			int estimatedOverHangPoint = widthToFit / averageCharWidth;
 			int lengthUpToEstimatePoint = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, estimatedOverHangPoint));
 			if (lengthUpToEstimatePoint > widthToFit){
 				//remove the last character, check again
@@ -400,7 +399,7 @@ public class TextBox
 				}
 				
 			}
-			else{
+			else if (lengthUpToEstimatePoint < widthToFit){
 				//add the next character to the string length total, check again
 				splitPos = estimatedOverHangPoint;
 
@@ -419,6 +418,9 @@ public class TextBox
 						foundOverHang = true;
 					}
 				}
+			}
+			else{
+				splitPos = estimatedOverHangPoint;
 			}	
 		}
 		
