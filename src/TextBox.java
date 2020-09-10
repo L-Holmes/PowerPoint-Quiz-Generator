@@ -69,7 +69,7 @@ public class TextBox
 	private Color boxSelectedOutlineColour = new Color(245, 197, 22); //colour of the box outline when it is selected/entered      
 
 	//entered/exited the text box indicators 
-	private boolean entered = false;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
+	private boolean entered = true;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
 
 	//mouse info
 	private boolean cursorInBox = false; 						//indicates whether the mouse cursor lies inside of the text box (true) or if it doesn't (false)
@@ -122,6 +122,7 @@ public class TextBox
 	 */
     public void typeLetter(String typedKey, int extendedKeyCode)
     {
+
 		if (extendedKeyCode == 8){
 			typedKey = "backspace";
 		}
@@ -257,14 +258,34 @@ public class TextBox
 	{
 		if (lastNewLineFormatInfo == - 1){
 			//--there are no new lines currently--
-
 			//check if the entire string is longer than the textbox width
 			int lastLineSize = graphicsHandler.getFontMetrics().stringWidth(lastLine);
 			if (lastLineSize > boxW){
 				//add new entry
 				int newSplitPosition = findOverHangEntry(lastLine, lastLineSize);
+				//add the split position to the last newline entry to get the 'cumulative' newline index
 				//add a new format entry, with the new split position
-				formatInfoForEntireLine.set(0, newSplitPosition);
+				//formatInfoForEntireLine.set(0, newSplitPosition);******
+				/*
+				here I copy across the contents of the last line as when I used my previous method (see below)
+				it would change both the left and the right text format infos.
+				original method:
+				leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
+				*/
+				ArrayList<Integer> currentLeftTextFormatForLastLine = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
+				ArrayList<Integer> newEntry = new ArrayList<Integer>();
+				for (Integer foo: currentLeftTextFormatForLastLine) {
+					newEntry.add((Integer)foo);
+				}
+				//get the cumulative split position by adding to the previous new line entry index
+				if (currentLeftTextFormatForLastLine.get(currentLeftTextFormatForLastLine.size() -1) != -1){
+					newSplitPosition += currentLeftTextFormatForLastLine.get(currentLeftTextFormatForLastLine.size() -1);
+				}
+
+				newEntry.set(newEntry.size() -1, newSplitPosition);
+				leftTextFormatInfo.set(leftTextFormatInfo.size() - 1, newEntry);
+				
+				//end of fix method
 			}
 		}
 		else{
@@ -278,6 +299,12 @@ public class TextBox
 			if (afterLastNewLineSize > boxW){
 				//if it is, add a new line entry at the overhang index
 				int newSplitPos = findOverHangEntry(afterLastNewLine, afterLastNewLineSize);
+
+				//get the cumulative split position by adding to the previous new line entry index
+				if (formatInfoForEntireLine.get(formatInfoForEntireLine.size() -1) != -1){
+					newSplitPos += formatInfoForEntireLine.get(formatInfoForEntireLine.size() -1);
+				}
+
 				//add a new format entry, with the new split position
 				formatInfoForEntireLine.add(newSplitPos);
 			}	 
@@ -316,12 +343,11 @@ public class TextBox
 
 				//get the entire string (lastLine), check if it is shorter than the text box width
 				int entireStringSize = graphicsHandler.getFontMetrics().stringWidth(lastLine);
-				if (entireStringSize < boxW){
+				if (entireStringSize <= boxW){
 					//if so, change the entry to -1 (meaning no new lines)
 					formatInfoForEntireLine.set(0, -1);
 
 				}
-
 				
 			}
 		}
@@ -346,7 +372,7 @@ public class TextBox
 			moveBack++;
 		}
 
-		int splitPos = lastLine.length() - 1 - moveBack;
+		int splitPos = lastLine.length() - 1 - Math.max(0, (moveBack -1));
 		return splitPos;
 	}
 
@@ -1017,13 +1043,13 @@ public class TextBox
 	 */
 	public void drawText()
 	{
+
 		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
 		graphicsHandler.setColor(textColour);
 
 		int textHeight = graphicsHandler.getFontMetrics().getAscent();
-		int textY = boxY - textHeight;
+		int textY = boxY - (textHeight*0);
 		int textX = boxX;
-
 
 		//-draw each line in the left text-
 		for (int i = 0; i < leftText.size(); i++){
@@ -1031,7 +1057,6 @@ public class TextBox
 			String line = leftText.get(i);
 
 			ArrayList<Integer> formattingEntriesForLine = leftTextFormatInfo.get(i);
-
 
 
 			int startSplitIndex = 0;    
@@ -1047,7 +1072,7 @@ public class TextBox
 				if (endSplitIndex == -1){
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
-					toDrawString = line.substring(startSplitIndex);
+					toDrawString = line;
 					graphicsHandler.drawString(toDrawString, textX, textY);
 					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
@@ -1060,6 +1085,15 @@ public class TextBox
 					toDrawString = line.substring(startSplitIndex, endSplitIndex);
 					graphicsHandler.drawString(toDrawString, textX, textY);
 
+					//if on the last index, also draw to the end of the line
+					if (j == formattingEntriesForLine.size() - 1){
+						System.out.println("drawing the last section");
+						textY += textHeight;
+						toDrawString = line.substring(endSplitIndex);
+						graphicsHandler.drawString(toDrawString, textX, textY);
+					}
+					//
+
 				}
 				//update the start to be the end so you don't redraw the previous section of text
 				startSplitIndex = endSplitIndex;
@@ -1068,10 +1102,8 @@ public class TextBox
 
 		}
 
-
 		//-draw each line in the right text-
 		for (int rightTextIndex = 0; rightTextIndex < leftText.size(); rightTextIndex++){
-
 			String line = rightText.get(rightTextIndex);
 			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
 
@@ -1084,6 +1116,7 @@ public class TextBox
 				//
 				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
 				if (endSplitIndex == -1){
+
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
 					toDrawString = line.substring(startSplitIndex);
@@ -1091,13 +1124,16 @@ public class TextBox
 					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
 
+
 					break;
 
 				}
 				else{
+					
 					//draw between the two newline points
 					toDrawString = line.substring(startSplitIndex, endSplitIndex);
 					graphicsHandler.drawString(toDrawString, textX, textY);
+
 
 				}
 				//update the start to be the end so you don't redraw the previous section of text
@@ -1108,9 +1144,49 @@ public class TextBox
 				//move the drawing position down to the next line
 				textY += textHeight;
 
+
+
 			}
 
 		}
+
 		
+	}
+
+	//--FOR TESTING PURPOSES--
+	/**
+	 * outputs all of the contents of the arrays lists
+	 * that contain the text and the info about formatting the text
+	 */
+	public void seeAllArrayContents()
+    {
+		System.out.println("\n printing all array contents:");
+		System.out.println("-------------------------------");
+		System.out.println("left text array:");
+		for (int i = 0; i < leftText.size(); i++){
+			System.out.println("	item: " + i+ ") = " + leftText.get(i));
+		}
+		System.out.println("left text formatting array:");
+		for (int j = 0; j < leftTextFormatInfo.size(); j++){
+			System.out.println("	for line number: " + j);
+			for (int k = 0; k < leftTextFormatInfo.get(j).size(); k++){
+				System.out.println("		entry #" + k+ " = "+ leftTextFormatInfo.get(j).get(k));
+			}
+		}
+
+
+		System.out.println("right text array:");
+		for (int l = 0; l < rightText.size(); l++){
+			System.out.println("	item: " + l+ ") = " + rightText.get(l));
+		}
+		System.out.println("right text formatting array:");
+		for (int m = 0; m < rightTextFormatInfo.size(); m++){
+			System.out.println("	for line number: " + m);
+			for (int n = 0; n < rightTextFormatInfo.get(m).size(); n++){
+				System.out.println("		entry #" + n+ " = "+ rightTextFormatInfo.get(m).get(n));
+			}
+		}
+		System.out.println("-------------------------------");
+
 	}
 }

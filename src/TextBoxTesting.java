@@ -328,20 +328,19 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 		/////
 		System.out.println("key typed");
 		typingTextBox.typeLetter(typedKey, e.getExtendedKeyCode());
+		typingTextBox.seeAllArrayContents();
 
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("key 1");
 
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println("key 2");
 
 	}
 
