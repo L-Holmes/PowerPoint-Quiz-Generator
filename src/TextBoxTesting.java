@@ -328,7 +328,7 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 		/////
 		System.out.println("key typed");
 		typingTextBox.typeLetter(typedKey, e.getExtendedKeyCode());
-		typingTextBox.seeAllArrayContents();
+		
 
 	}
 

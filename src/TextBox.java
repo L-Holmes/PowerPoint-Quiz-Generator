@@ -189,7 +189,7 @@ public class TextBox
 				}
 			}
 		}
-		else if (typedChar == "enter"){
+		else if (typedChar == "enter"){			
 			//add new entry for newline
 			leftText.add("");
 			//add the formatting info
@@ -1056,6 +1056,7 @@ public class TextBox
 		int textY = boxY - (textHeight*0);
 		int textX = boxX;
 
+		
 		//-draw each line in the left text-
 		for (int i = 0; i < leftText.size(); i++){
 
@@ -1068,6 +1069,7 @@ public class TextBox
 			int endSplitIndex;
 
 			String toDrawString;
+			
 			//-formatting the lines to fit into the text box and drawing them-
 			for (int j = 0; j < formattingEntriesForLine.size(); j++){
 				//move the drawing position down to the next line
@@ -1079,8 +1081,11 @@ public class TextBox
 					//draw from startIndex to the end of the line
 					toDrawString = line;
 					graphicsHandler.drawString(toDrawString, textX, textY);
-					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
-					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
+					if (i == leftText.size()-1){
+						//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
+						textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
+					}
+					
 
 					break;
 
@@ -1092,7 +1097,6 @@ public class TextBox
 
 					//if on the last index, also draw to the end of the line
 					if (j == formattingEntriesForLine.size() - 1){
-						System.out.println("drawing the last section");
 						textY += textHeight;
 						toDrawString = line.substring(endSplitIndex);
 						graphicsHandler.drawString(toDrawString, textX, textY);
@@ -1108,7 +1112,8 @@ public class TextBox
 		}
 
 		//-draw each line in the right text-
-		for (int rightTextIndex = 0; rightTextIndex < leftText.size(); rightTextIndex++){
+		for (int rightTextIndex = 0; rightTextIndex < rightText.size(); rightTextIndex++){
+
 			String line = rightText.get(rightTextIndex);
 			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
 
@@ -1121,6 +1126,7 @@ public class TextBox
 				//
 				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
 				if (endSplitIndex == -1){
+					
 
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
@@ -1129,24 +1135,27 @@ public class TextBox
 					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
 
+					
 
 					break;
 
 				}
 				else{
 					
+
 					//draw between the two newline points
 					toDrawString = line.substring(startSplitIndex, endSplitIndex);
 					graphicsHandler.drawString(toDrawString, textX, textY);
 
 					//if on the last index, also draw to the end of the line
 					if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
-						System.out.println("drawing the last section");
 						textY += textHeight;
 						toDrawString = line.substring(endSplitIndex);
 						graphicsHandler.drawString(toDrawString, textX, textY);
 					}
 					//
+					
+
 
 
 				}
@@ -1157,13 +1166,14 @@ public class TextBox
 				textX = boxX;
 				//move the drawing position down to the next line
 				textY += textHeight;
+				
+
 
 
 
 			}
 
 		}
-
 		
 	}
 
