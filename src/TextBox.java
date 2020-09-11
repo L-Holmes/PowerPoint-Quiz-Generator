@@ -1124,7 +1124,7 @@ public class TextBox
 
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
-					toDrawString = line.substring(startSplitIndex);
+					toDrawString = line;
 					graphicsHandler.drawString(toDrawString, textX, textY);
 					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
@@ -1138,6 +1138,15 @@ public class TextBox
 					//draw between the two newline points
 					toDrawString = line.substring(startSplitIndex, endSplitIndex);
 					graphicsHandler.drawString(toDrawString, textX, textY);
+
+					//if on the last index, also draw to the end of the line
+					if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
+						System.out.println("drawing the last section");
+						textY += textHeight;
+						toDrawString = line.substring(endSplitIndex);
+						graphicsHandler.drawString(toDrawString, textX, textY);
+					}
+					//
 
 
 				}
@@ -1211,7 +1220,7 @@ public class TextBox
 		here I copy across the contents of the last line as when I used my previous method (see below)
 		it would change both the left and the right text format infos.
 		original method:
-		leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
+		leftTextFormatInfo.get(outerIndex).set(innerIndex, newValue);
 		*/
 		//
 		if (isLeft){
