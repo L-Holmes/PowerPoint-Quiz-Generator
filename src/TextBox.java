@@ -237,12 +237,12 @@ public class TextBox
 
 		if (longer == true){
 			//-if text after the last new line is now longer than the text box width, add a new line-
-			checkLeftTextOverhangs(lastNewLineFormatInfo, lastLine, formatInfoForEntireLine);
+			checkLeftTextOverhangs(lastNewLineFormatInfo, lastLine, formatInfoForEntireLine,leftFormatInfoSize - 1 );
 			
 		}
 		else{
 			//-if text after the penultimate new line is shorter than the text box width, remove the last new line (or change index to -1)-
-			checkLeftTextRemoveNewLine(lastNewLineFormatInfo, lastLine, formatInfoForEntireLineSize, formatInfoForEntireLine);
+			checkLeftTextRemoveNewLine(lastNewLineFormatInfo, lastLine, formatInfoForEntireLineSize, formatInfoForEntireLine, true);
 		}
 	}
 
@@ -253,8 +253,9 @@ public class TextBox
 	 * @param lastLine = the line of text, as typed by the user, that lies before the cursor (not including formatting new lines)
 	 * @param formatInfoForEntireLine = the arraylist containing the indexes of the formatting new line position for the lastLine text,
 	 * 									which allow for the text to fit laterally into the text box
+	 * @param lineNumber = the index used on the leftTextFormatInfo to get the formatting information for the lastLine.
 	 */
-	private void checkLeftTextOverhangs(int lastNewLineFormatInfo, String lastLine, ArrayList<Integer> formatInfoForEntireLine)
+	private void checkLeftTextOverhangs(int lastNewLineFormatInfo, String lastLine, ArrayList<Integer> formatInfoForEntireLine, int lineNumber)
 	{
 		if (lastNewLineFormatInfo == - 1){
 			//--there are no new lines currently--
@@ -265,25 +266,19 @@ public class TextBox
 				int newSplitPosition = findOverHangEntry(lastLine, lastLineSize);
 				//add the split position to the last newline entry to get the 'cumulative' newline index
 				//add a new format entry, with the new split position
-				//formatInfoForEntireLine.set(0, newSplitPosition);******
-				/*
-				here I copy across the contents of the last line as when I used my previous method (see below)
-				it would change both the left and the right text format infos.
-				original method:
-				leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
-				*/
+
+				//
+				int lastFormatEntry = leftTextFormatInfo.get(lineNumber).size() - 1;
+				//
 				ArrayList<Integer> currentLeftTextFormatForLastLine = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
-				ArrayList<Integer> newEntry = new ArrayList<Integer>();
-				for (Integer foo: currentLeftTextFormatForLastLine) {
-					newEntry.add((Integer)foo);
-				}
 				//get the cumulative split position by adding to the previous new line entry index
 				if (currentLeftTextFormatForLastLine.get(currentLeftTextFormatForLastLine.size() -1) != -1){
 					newSplitPosition += currentLeftTextFormatForLastLine.get(currentLeftTextFormatForLastLine.size() -1);
 				}
 
-				newEntry.set(newEntry.size() -1, newSplitPosition);
-				leftTextFormatInfo.set(leftTextFormatInfo.size() - 1, newEntry);
+				setNewFormattingEntry(true, lineNumber, lastFormatEntry, newSplitPosition);
+
+				//
 				
 				//end of fix method
 			}
@@ -306,7 +301,8 @@ public class TextBox
 				}
 
 				//add a new format entry, with the new split position
-				formatInfoForEntireLine.add(newSplitPos);
+				//formatInfoForEntireLine.add(newSplitPos);
+				addNewFormattingEntry(true, lineNumber, newSplitPos);
 			}	 
 		}
 	}
@@ -320,7 +316,7 @@ public class TextBox
 	 * @param formatInfoForEntireLine = the arraylist containing the indexes of the formatting new line position for the lastLine text, 
 	 *                                  which allow for the text to fit laterally into the text box
 	 */
-	private void checkLeftTextRemoveNewLine(int lastNewLineFormatInfo, String lastLine,  int formatInfoForEntireLineSize, ArrayList<Integer> formatInfoForEntireLine)
+	private void checkLeftTextRemoveNewLine(int lastNewLineFormatInfo, String lastLine,  int formatInfoForEntireLineSize, ArrayList<Integer> formatInfoForEntireLine, boolean isLeft)
 	{
 		if (lastNewLineFormatInfo != -1){
 			if (formatInfoForEntireLineSize > 1){
@@ -345,7 +341,11 @@ public class TextBox
 				int entireStringSize = graphicsHandler.getFontMetrics().stringWidth(lastLine);
 				if (entireStringSize <= boxW){
 					//if so, change the entry to -1 (meaning no new lines)
-					formatInfoForEntireLine.set(0, -1);
+					//formatInfoForEntireLine.set(0, -1);
+					if (isLeft){
+						setNewFormattingEntry(isLeft, leftTextFormatInfo.size() - 1, 0, -1);
+					}
+
 
 				}
 				
@@ -653,6 +653,7 @@ public class TextBox
 			ArrayList<Integer> emptyRightInfo = new ArrayList<Integer>(); 
 			emptyRightInfo.add(-1);  
 			rightTextFormatInfo.set(0, emptyRightInfo);
+			
 		}
 
 		//-recalculate the format info for the leftText's last entry-
@@ -715,6 +716,7 @@ public class TextBox
 				//set the start of the right text to have that entry
 				rightText.add(0, leftTextEndLine);
 				rightTextFormatInfo.add(0, leftTextEndLineFormatInfo);
+				
 
 				//remove the last element of the left text
 				leftText.remove(leftText.size() - 1);
@@ -859,7 +861,8 @@ public class TextBox
 						newSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
 					}
 					//add a new format entry, with the new split position
-					formatInfoForTheString.set(0, newSplitPosition);
+					//formatInfoForTheString.set(0, newSplitPosition);
+					setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, 0, newSplitPosition);
 
 					//update the string to check to be the remainder of the string after the newly added newline
 					stringToCheck = entireString.substring(newSplitPosition);
@@ -886,7 +889,9 @@ public class TextBox
 						newSplitPos += formatInfoForTheString.get(formatInfoForTheString.size() -1);
 					}
 					//add a new format entry, with the new split position
-					formatInfoForTheString.add(newSplitPos);
+					//formatInfoForTheString.add(newSplitPos);
+					addNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, newSplitPos);
+					
 
 					//update the string to check to be the remainder of the string after the newly added newline
 					stringToCheck = entireString.substring(newSplitPos);
@@ -1154,6 +1159,7 @@ public class TextBox
 	}
 
 	//--FOR TESTING PURPOSES--
+
 	/**
 	 * outputs all of the contents of the arrays lists
 	 * that contain the text and the info about formatting the text
@@ -1189,4 +1195,94 @@ public class TextBox
 		System.out.println("-------------------------------");
 
 	}
+
+	//--FOR THE ISSUE WITH ADDING/SETTING NEW ENTRIES--
+
+	/**
+	 * sets a new formatting index value to either the leftTextFormatInfo or rightTextFormatInfo
+	 * @param isLeft = determines whether the leftTextFormatInfo (true) or the rightTextFormatInfo (false) is being editted
+	 * @param outerIndex = the index representing each line within array list
+	 * @param innerIndex = index representing the formatting values for a given line
+	 * @param newValue = the value that will be added to the array list
+	 */
+	public void setNewFormattingEntry(boolean isLeft, int outerIndex, int innerIndex, int newValue)
+	{
+		/*
+		here I copy across the contents of the last line as when I used my previous method (see below)
+		it would change both the left and the right text format infos.
+		original method:
+		leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
+		*/
+		//
+		if (isLeft){
+			ArrayList<Integer> formattingForTheGivenLine = leftTextFormatInfo.get(outerIndex);
+			ArrayList<Integer> newEntry = new ArrayList<Integer>();
+			//creates a copy of the formatting entries for the given line
+			for (Integer newlineIndex : formattingForTheGivenLine) {
+				newEntry.add((Integer)newlineIndex);
+			}
+			//replaces the new 'set' value
+			newEntry.set(innerIndex, newValue);
+			//updates the left text format info array list
+			leftTextFormatInfo.set(outerIndex, newEntry);
+		}
+		else{
+			ArrayList<Integer> formattingForTheGivenLine = rightTextFormatInfo.get(outerIndex);
+			ArrayList<Integer> newEntry = new ArrayList<Integer>();
+			//creates a copy of the formatting entries for the given line
+			for (Integer newlineIndex : formattingForTheGivenLine) {
+				newEntry.add((Integer)newlineIndex);
+			}
+			//replaces the new 'set' value
+			newEntry.set(innerIndex, newValue);
+			//updates the right text format info array list
+			rightTextFormatInfo.set(outerIndex, newEntry);
+			
+		}
+		
+		
+	}
+
+	/**
+	 * adds a new formatting index value to either the leftTextFormatInfo or rightTextFormatInfo
+	 * @param isLeft = determines whether the leftTextFormatInfo (true) or the rightTextFormatInfo (false) is being editted
+	 * @param outerIndex = the index representing each line within array list
+	 * @param newValue = the value that will be added to the array list
+	 */
+	public void addNewFormattingEntry(boolean isLeft, int outerIndex, int newValue)
+	{
+		/*
+		here I copy across the contents of the last line as when I used my previous method (see below)
+		it would change both the left and the right text format infos.
+		original method:
+		leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
+		*/
+		//
+		if (isLeft){
+			ArrayList<Integer> formattingForTheGivenLine = leftTextFormatInfo.get(outerIndex);
+			ArrayList<Integer> newEntry = new ArrayList<Integer>();
+			//creates a copy of the formatting entries for the given line
+			for (Integer newlineIndex : formattingForTheGivenLine) {
+				newEntry.add((Integer)newlineIndex);
+			}
+			//adds the new value
+			newEntry.add(newValue);
+			//updates the left text format info array list
+			leftTextFormatInfo.set(outerIndex, newEntry);
+		}
+		else{
+			ArrayList<Integer> formattingForTheGivenLine = rightTextFormatInfo.get(outerIndex);
+			ArrayList<Integer> newEntry = new ArrayList<Integer>();
+			//creates a copy of the formatting entries for the given line
+			for (Integer newlineIndex : formattingForTheGivenLine) {
+				newEntry.add((Integer)newlineIndex);
+			}
+			//adds the new value
+			newEntry.add(newValue);
+			//updates the right text format info array list
+			rightTextFormatInfo.set(outerIndex, newEntry);
+		}
+	}
+
+	//** not sure about remove stuff? (think this is only for the backspace stuff (?))
 }
