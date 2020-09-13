@@ -302,8 +302,11 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
     public void mouseClicked(MouseEvent e) {
 
         Point p = e.getPoint();
-        double pointXCoord = p.getX();
-        double pointYCoord = p.getY();
+        int pointXCoord = (int)p.getX();
+		int pointYCoord = (int)p.getY();
+		
+		//
+		typingTextBox.updateLeftAndRightText(pointXCoord, pointYCoord);
 
         
     }
@@ -326,7 +329,6 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 		}
 
 		/////
-		System.out.println("key typed");
 		typingTextBox.typeLetter(typedKey, e.getExtendedKeyCode());
 		
 

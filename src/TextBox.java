@@ -477,6 +477,7 @@ public class TextBox
 	 */
 	public void updateLeftAndRightText(int x, int y)
 	{
+		System.out.println("starting update left & right method");
 		//-SECTION 1: DETERMINE WHETHER THE NEW CURSOR POSITION IS BEFORE OR AFTER THE CURRENT POSITION AND SET THE FONT-
 
 		//--determines whether the leftText (left of the cursor) or rightText (right of the cursor) was clicked--
@@ -485,19 +486,27 @@ public class TextBox
 			//if the click position is below the bottom of the current cursor position
 			//right text
 			clickedLeftText = false;
+
+			System.out.println("y = " + y + " is > cursorY = "+ cursorY+" + cursorH = "+ cursorH );
+
 		}
 		else{
 			//new click position is on the line of the current cursor position or higher up
 			if ((y > cursorY) && (x > cursorX)){
 				//right text
 				clickedLeftText = false;
+				System.out.println("y = " + y + " is > cursorY = "+ cursorY+" && x = "+ x+" > cursorX = " + cursorX );
 			}
 			else{
 				//left text
 				clickedLeftText = true;
+				System.out.println("y = " + y + " is either or: < cursorY = "+ cursorY+" OR x = "+ x+" < cursorX = " + cursorX );
+
 			}
 		}
 
+		System.out.println("clicked left text = " + clickedLeftText);
+ 
 
 		//--initialising the font & getting the average character height--
 		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
@@ -509,6 +518,8 @@ public class TextBox
 		int yDiff = y - boxY;
 		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));
 
+
+
 		//if it is right, need to remove all of the left rows from the calc
 		if (clickedLeftText == false){
 			int topBoxToCursor = cursorY - boxY; 
@@ -516,6 +527,9 @@ public class TextBox
 			int leftRows = (int) Math.ceil(((double) topBoxToCursor / (double) avgCharHeight));
 			rowNum = rowNum - leftRows;
 		}
+
+		System.out.println("row that the cursor lies in = " + rowNum);
+
 
 		//--get the row at that number after the formatting (after newlines have been added to fit the text into the box)--
 		int [] rowAfterFormattingInfo; 
@@ -529,6 +543,12 @@ public class TextBox
 		int newCursorFormatIndex = rowAfterFormattingInfo[1];
 		int substringStartIndex = rowAfterFormattingInfo[2];
 		int substringEndIndex = rowAfterFormattingInfo[3];
+
+		System.out.println("row index = " + newCursorRowIndex);
+		System.out.println("format index = " + newCursorFormatIndex);
+		System.out.println("sub start index = " + substringStartIndex);
+		System.out.println("sub end index = " + substringEndIndex);
+
 
 		//-SECTION 3: GETTING A STRING OF THE ROW THAT WAS CLICKED-
 
@@ -560,6 +580,9 @@ public class TextBox
 			clickedSectionOfLine = clickedLine;
 		}
 
+		System.out.println("clicked section of line = :" + substringEndIndex+":");
+
+
 		//-SECTION 4: FINDING THE COLUMN THAT THE USER CLICKED-
 
 		//--finding the column number that the new click position lies in (each column = 1 character)--
@@ -579,6 +602,8 @@ public class TextBox
 				break;
 			}
 		}
+
+		System.out.println("column clicked = " + colNum);
 
 		//now we know which character was clicked.
 
@@ -633,6 +658,7 @@ public class TextBox
 		*/
 
 
+		System.out.println("	adjusting the cursor info");
 		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
 
 		//--merge lines to the immediate left and right of the old cursor position--
@@ -642,6 +668,10 @@ public class TextBox
 		String oldImmediateRightLine = rightText.get(0);
 		String newLine = oldImmediateLeftLine + oldImmediateRightLine;
 		leftText.set(leftText.size() - 1, newLine);
+
+		System.out.println("	newLine = :" + newLine+":");
+		System.out.println("	set the last entry of left text to be the new line:");
+		seeAllArrayContents();
 
 		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
 		if (rightText.size() > 1){
@@ -656,8 +686,15 @@ public class TextBox
 			
 		}
 
+		System.out.println("	removed the first right text entry:");
+		seeAllArrayContents();
+
+
 		//-recalculate the format info for the leftText's last entry-
 		updateFormattingOnEntireLine(true, leftText.size() - 1, true);
+
+		System.out.println("	updated formatting for the last entry of left text:");
+		seeAllArrayContents();
 
 		//---SECTION 2: GET THE ENTIRE LINE OF STRING THAT WAS CLICKED---
 		String entireLine;
@@ -677,6 +714,8 @@ public class TextBox
 			}
 		}
 
+		System.out.println("	got the entire line that was clicked = :" + entireLine +":");
+
 		//---SECTION 3: REMOVING THE ENTIRE LINE THAT WAS CLICKED, SO IT CAN BE REPLACED WITH THE UPDATED LEFT/RIGHT SPLIT IN SECTION 5---
 
 		if (clickedLeftText == true){
@@ -690,6 +729,9 @@ public class TextBox
 			rightText.remove(clickedLineIndex);
 			rightTextFormatInfo.remove(clickedLineIndex);
 		}
+
+		System.out.println("	removed the entire line that was clicked:");
+		seeAllArrayContents();
 
 
 		//---SECTION 4: MOVE LINES FROM LEFT TEXT TO RIGHT TEXT (OR VICE VERSA), IN ORDER TO FIT THE NEWLY CLICKED POSITION---
@@ -753,11 +795,17 @@ public class TextBox
 
 		}
 
+		System.out.println("	moved lines left to right and vice versa:");
+		seeAllArrayContents();
+
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
 		String leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+
+		System.out.println("left portion = :" + leftPortion+":");
+		System.out.println("right portion = :" + rightPortion + ":");
 
 		//adding the left side to the end of the left text & formatting arrays
 		leftText.add(leftPortion);
@@ -771,6 +819,9 @@ public class TextBox
 		firstRightInfo.add(-1);  
 		rightTextFormatInfo.add(0, firstRightInfo);
 
+		System.out.println("	added left side to end of left & right side to start of right:");
+		seeAllArrayContents();
+
 		//-updating the formatting info for the newly added sections-
 		/*
 		-need to check if the last entry of the leftText has lengthened (may need multiple formatting newlines)
@@ -778,7 +829,11 @@ public class TextBox
 		*/
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
+
+		System.out.println("	updated formatting:");
+		seeAllArrayContents();
 		
+		System.out.println("\n\n");
 	
 	}
 
@@ -998,6 +1053,19 @@ public class TextBox
 		return cursorInBox;
 	}
 
+	/**
+	 * updates the coordinates for the top left corner of the blinking cursor
+	 * (which typically lies at the end of the left text)
+	 * @param newX = the new x coordinate for the cursor
+	 * @param newY = the new y coordinate for the cursor
+	 */
+	public void updateCursorPosition(int newX, int newY)
+	{
+		cursorX = newX;
+		cursorY = newY;
+	}
+
+
 
 	//---DRAWING STUFF---
 
@@ -1084,6 +1152,7 @@ public class TextBox
 					if (i == leftText.size()-1){
 						//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 						textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
+						updateCursorPosition(textX, textY);
 					}
 					
 
