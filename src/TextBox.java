@@ -719,15 +719,26 @@ public class TextBox
 		//---SECTION 3: REMOVING THE ENTIRE LINE THAT WAS CLICKED, SO IT CAN BE REPLACED WITH THE UPDATED LEFT/RIGHT SPLIT IN SECTION 5---
 
 		if (clickedLeftText == true){
+			System.out.println("I am sensing that the left text has been clicked; removing index: "+ clickedLineIndex);
+
 			//remove the clicked entry from the leftText
 			leftText.remove(clickedLineIndex);
 			leftTextFormatInfo.remove(clickedLineIndex);
 
 		}
 		else{
-			//remove the clicked entry from the rightText
-			rightText.remove(clickedLineIndex);
-			rightTextFormatInfo.remove(clickedLineIndex);
+			System.out.println("BOI that right text hath been clicked; removing index: "+ clickedLineIndex);
+			if (clickedLineIndex != 0){
+				//remove the clicked entry from the rightText
+				rightText.remove(clickedLineIndex);
+				rightTextFormatInfo.remove(clickedLineIndex);
+			}
+			else{
+				//if the index = 0, then the first right text has been merged into the last left text by the previous sections
+				leftText.remove(leftText.size() - 1);
+				leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
+			}
+			
 		}
 
 		System.out.println("	removed the entire line that was clicked:");
@@ -1059,10 +1070,11 @@ public class TextBox
 	 * @param newX = the new x coordinate for the cursor
 	 * @param newY = the new y coordinate for the cursor
 	 */
-	public void updateCursorPosition(int newX, int newY)
+	public void updateCursorPosition(int newX, int newY, int tempH)
 	{
 		cursorX = newX;
 		cursorY = newY;
+		cursorH = tempH;
 	}
 
 
@@ -1152,7 +1164,7 @@ public class TextBox
 					if (i == leftText.size()-1){
 						//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
 						textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
-						updateCursorPosition(textX, textY);
+						updateCursorPosition(textX, textY - textHeight, textHeight);
 					}
 					
 
