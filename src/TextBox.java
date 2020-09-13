@@ -17,6 +17,8 @@ then when I am drawing to the screen, I will add the dashes and split words in t
 MAY NEED TO CHECK BY VALUE OR BY REFERENCE FOR UPDATING ARRAYS
 */
 
+//when the text length increases or decreases, also need to update the first entry for the right text (info)
+
 public class TextBox
 {
 	//drawing surface
@@ -244,6 +246,10 @@ public class TextBox
 			//-if text after the penultimate new line is shorter than the text box width, remove the last new line (or change index to -1)-
 			checkLeftTextRemoveNewLine(lastNewLineFormatInfo, lastLine, formatInfoForEntireLineSize, formatInfoForEntireLine, true);
 		}
+
+		//also need to update the first right text entry, as this will also need the new lines re-positioning if it overhangs/underhangs
+		updateFormattingOnEntireLine(false, 0, false);
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	}
 
 	/**
@@ -277,8 +283,6 @@ public class TextBox
 				}
 
 				setNewFormattingEntry(true, lineNumber, lastFormatEntry, newSplitPosition);
-
-				//
 				
 				//end of fix method
 			}
@@ -940,6 +944,8 @@ public class TextBox
 
 		}
 
+		System.out.println("		%entire string  = "+ entireString+"&");
+
 		stringToCheck = entireString;
 		
 
@@ -951,13 +957,63 @@ public class TextBox
 			}
 		}
 		
+		System.out.println("		%1");
+
+
+
+		/////////////////
+		//the following while loop is desined in a way that we 
+		//need to remove all of the current entries first
+		if (checkAfterLastFormattingEntry == false)
+		{
+			//
+			if (leftTextQuery){
+				System.out.println("erm.... this is the left");
+				//remove all of the entries apart form the first one
+				for (int i = formatInfoForTheString.size() - 1; i > 0; i--){
+					leftTextFormatInfo.get(indexOfLineInTextArray).remove(i);
+				}
+				//set the first entry to equal zero
+				setNewFormattingEntry(true, indexOfLineInTextArray, 0, -1);
+			}
+			else{
+				//remove all of the entries apart form the first one
+				System.out.println("removing entries");
+				for (int i = formatInfoForTheString.size() - 1; i > 0; i--){
+					rightTextFormatInfo.get(indexOfLineInTextArray).remove(i);
+					System.out.println("removed item at index: " + i);
+				}
+				//set the first entry to equal zero
+				setNewFormattingEntry(false, indexOfLineInTextArray, 0, -1);
+				System.out.println("set new value for the first entry as -1");
+
+			}
+			System.out.println("		%removed the formatting entry that is being changed");
+			seeAllArrayContents();
+		}
+
+
+		
 
 		//--add the new entries, until the remaining substring is shorter than the text box width (changed = false) --
 		boolean changed = true;
 		while (changed == true){
-			//
+
+			//need to update the format info for reference, since it is not a point:
+			if (leftTextQuery == true){
+				formatInfoForTheString = leftTextFormatInfo.get(indexOfLineInTextArray);
+			}
+			else{
+				formatInfoForTheString = rightTextFormatInfo.get(indexOfLineInTextArray);
+			}
+			
+
+
 			if (formatInfoForTheString.get(formatInfoForTheString.size() -1) == - 1){
 				//--there are no new lines currently--
+
+				System.out.println("		%1.1");
+
 	
 				//check if the entire string is longer than the textbox width
 				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
@@ -966,17 +1022,30 @@ public class TextBox
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPosition = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize, avgCharWidth, textStartRelativeToBoxX);
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
+					int cumulativeSplitPosition = newSplitPosition;
 					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
-						newSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
+						cumulativeSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
 					}
 					//add a new format entry, with the new split position
-					//formatInfoForTheString.set(0, newSplitPosition);
-					setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, 0, newSplitPosition);
+					//formatInfoForTheString.set(0, cumulativeSplitPosition);
+					if (checkAfterLastFormattingEntry == false){
+						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, 0, cumulativeSplitPosition);
+						//update the string to check to be the remainder of the string after the newly added newline
+						stringToCheck = entireString.substring(cumulativeSplitPosition);
+					}
+					else{
+						addNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, cumulativeSplitPosition);
+						//update the string to check to be the remainder of the string after the newly added newline
+						
+						//since the 'entireString' is already a substring, don't need to use the cumulative index
+						stringToCheck = entireString.substring(newSplitPosition);
 
-					//update the string to check to be the remainder of the string after the newly added newline
-					stringToCheck = entireString.substring(newSplitPosition);
+					}
+
+					
 				}
 				else{
+					
 					changed = false;
 				}
 				
@@ -984,26 +1053,41 @@ public class TextBox
 			}
 			else{
 				//--there are at least 1 new lines currently--
-	
+				System.out.println("		%1.2");
+
 				//get the string after the last new line, 
 				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
-	
+				System.out.println("		%1.21");
+
 				//check if that string is longer than the text box width
 				if (stringToCheckSize > boxW){
+					System.out.println("		%1.22");
+
 					//if it is, add a new line entry at the overhang index
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPos = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize, avgCharWidth, textStartRelativeToBoxX);
+					System.out.println("		%1.23  new split pos: " + newSplitPos);
+
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
+					seeAllArrayContents();
 					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
-						newSplitPos += formatInfoForTheString.get(formatInfoForTheString.size() -1);
+						int prevNLIndex = formatInfoForTheString.get(formatInfoForTheString.size() -1);
+						System.out.println("preNLIndex = " + prevNLIndex);
+						newSplitPos += prevNLIndex;
 					}
+					System.out.println("		%1.24");
+
 					//add a new format entry, with the new split position
 					//formatInfoForTheString.add(newSplitPos);
 					addNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, newSplitPos);
 					
+					System.out.println("		%1.25,   split position = " + newSplitPos);
+					System.out.println("		% entire string length: " + entireString.length());
 
 					//update the string to check to be the remainder of the string after the newly added newline
 					stringToCheck = entireString.substring(newSplitPos);
+					System.out.println("		%1.26");
+
 				}
 				else{
 					changed = false;
@@ -1013,6 +1097,8 @@ public class TextBox
 			//cannot be on the first line after first iteration, so text must begin at the start of the text box X.
 			textStartRelativeToBoxX = 0;
 		}
+		System.out.println("		%2");
+
 		
 	}
 
@@ -1374,16 +1460,31 @@ public class TextBox
 			leftTextFormatInfo.set(outerIndex, newEntry);
 		}
 		else{
+
+			System.out.println("@@@is right;; before:@@@");
+			System.out.println("outer index = " + outerIndex);
+
+			seeAllArrayContents();
 			ArrayList<Integer> formattingForTheGivenLine = rightTextFormatInfo.get(outerIndex);
+			System.out.println("first item = " + formattingForTheGivenLine.get(0));
 			ArrayList<Integer> newEntry = new ArrayList<Integer>();
 			//creates a copy of the formatting entries for the given line
 			for (Integer newlineIndex : formattingForTheGivenLine) {
 				newEntry.add((Integer)newlineIndex);
+				System.out.println("added: " + newlineIndex);
 			}
 			//replaces the new 'set' value
 			newEntry.set(innerIndex, newValue);
+			System.out.println("set index: " + innerIndex + " as " + newValue);
+
 			//updates the right text format info array list
 			rightTextFormatInfo.set(outerIndex, newEntry);
+
+			System.out.println("set the new values as the right text at: " + outerIndex);
+			System.out.println("@@@@after: ");
+			seeAllArrayContents();
+			System.out.println("@@@@ end of this");
+
 			
 		}
 		
