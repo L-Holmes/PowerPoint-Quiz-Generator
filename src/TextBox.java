@@ -562,7 +562,7 @@ public class TextBox
 		}
 		
 		String clickedSectionOfLine;
-		if (substringStartIndex != -1)
+		if (substringStartIndex != 0)
 		{
 			
 			if (substringEndIndex != -1){
@@ -580,13 +580,43 @@ public class TextBox
 			clickedSectionOfLine = clickedLine;
 		}
 
-		System.out.println("clicked section of line = :" + substringEndIndex+":");
+		System.out.println("clicked section of line = :" + clickedSectionOfLine+":");
 
 
 		//-SECTION 4: FINDING THE COLUMN THAT THE USER CLICKED-
 
 		//--finding the column number that the new click position lies in (each column = 1 character)--
 		int xDiff = x - boxX;
+
+		System.out.println("xDiff: " + xDiff);
+
+		//-if on the first line of the right text, need to remove all of the left characters that are also on this line-
+		if ((clickedLeftText == false) && (newCursorRowIndex == 0)){
+			//
+			String leftTextAlsoOnThisLine;
+
+			//get the last index of the last entry of the left text
+			ArrayList<Integer> lastLeftEntry = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
+			int lastIndexForLastLeft = lastLeftEntry.get(lastLeftEntry.size() - 1);
+			//if not equal to 0, get the substring of everything after the last index
+			if (lastIndexForLastLeft != -1){
+				leftTextAlsoOnThisLine = leftText.get(leftText.size() - 1).substring(lastIndexForLastLeft);
+			}
+			//else get the entire line
+			else{
+				leftTextAlsoOnThisLine = leftText.get(leftText.size() - 1);
+			}
+
+			System.out.println("[[ text also on this line :" + leftTextAlsoOnThisLine+":");
+			System.out.println("[[ length of this text :" + graphicsHandler.getFontMetrics().stringWidth(leftTextAlsoOnThisLine)+":");
+
+
+			//then get the length using graphics 2d and take this away from the xDiff.
+			xDiff = Math.max(0, xDiff - graphicsHandler.getFontMetrics().stringWidth(leftTextAlsoOnThisLine));
+
+			System.out.println("[[ xDiff after :" + xDiff);
+
+		}
 		
 		//calc col. num by going through all of the characters on the current line
 		//and getting a cumulative sum of the width
@@ -596,7 +626,10 @@ public class TextBox
 		int cumulTextLength = 0;
 		for (int letterInd = 0; letterInd < clickedSectionOfLine.length(); letterInd++){
 			String letter = "" + clickedSectionOfLine.charAt(letterInd);
+			System.out.println("**letter = "+letter+"**");
 			cumulTextLength += graphicsHandler.getFontMetrics().stringWidth(letter);
+			System.out.println("**cumulTextLength = "+cumulTextLength+"**");
+
 			colNum = letterInd;
 			if (cumulTextLength >= xDiff){
 				break;
@@ -659,6 +692,8 @@ public class TextBox
 
 
 		System.out.println("	adjusting the cursor info");
+		
+
 		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
 
 		//--merge lines to the immediate left and right of the old cursor position--
@@ -672,6 +707,14 @@ public class TextBox
 		System.out.println("	newLine = :" + newLine+":");
 		System.out.println("	set the last entry of left text to be the new line:");
 		seeAllArrayContents();
+
+		//-adjusting the column index if needed-
+		//if the user clicked the first right line, need to add on the length of the left section to the index
+		//since later on in this method, the old right of the cursor text is merged with the last left entry,
+		//so will need to adjust the column information to reflect this
+		if ((clickedLeftText == false) && (clickedLineIndex == 0)){
+			indexOfClickedCharWithinTheFormattedSectionOfTheLine += oldImmediateLeftLine.length();
+		}
 
 		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
 		if (rightText.size() > 1){
@@ -992,7 +1035,7 @@ public class TextBox
 		ArrayList<Integer> lineInfo;
 
 		int newCursorRowIndex = 0;
-		int newCursorFormatIndex = -1;
+		int newCursorFormatIndex = 0;
 		int substringStartIndex = -1;
 		int substringEndIndex = -1;
 
@@ -1001,15 +1044,19 @@ public class TextBox
 			lineInfo = formatInfo.get(userTypedLineIndex);
 			totalFoundRows++;
 
+			System.out.println("-- on line num. " + userTypedLineIndex);
+
 			//-if the part of the line before the first formatting newline 
 			// is the row that the user clicked-
 			if (totalFoundRows >= rowNum){
 				//found the row that the user clicked
+				System.out.println("-- found the row");
 
 				newCursorRowIndex = userTypedLineIndex;
 				substringStartIndex = 0;
 				
 				if (lineInfo.size() > 0){
+					//get the first newline position
 					substringEndIndex = lineInfo.get(0);
 				}
 				break;
