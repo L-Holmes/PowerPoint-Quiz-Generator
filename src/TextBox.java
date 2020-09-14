@@ -1339,8 +1339,10 @@ public class TextBox
 			for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
 				//
 				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
+				System.out.println("££££ end split index = " + endSplitIndex);
 				if (endSplitIndex == -1){
-					
+					System.out.println("££££ -1");
+
 
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
@@ -1355,17 +1357,40 @@ public class TextBox
 
 				}
 				else{
-					
+					System.out.println("££££ !-1");
+
 
 					//draw between the two newline points
-					toDrawString = line.substring(startSplitIndex, endSplitIndex);
-					graphicsHandler.drawString(toDrawString, textX, textY);
+					if (endSplitIndex != 0){
+						toDrawString = line.substring(startSplitIndex, endSplitIndex- 1);
+						graphicsHandler.drawString(toDrawString, textX, textY);
+
+						System.out.println("££££ just drawn :" + toDrawString+ ":");
+					}
+					
+
 
 					//if on the last index, also draw to the end of the line
 					if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
+						//reset the x back to the start of the line
+						textX = boxX;
+						//output the rest of the string
+						System.out.println("££££££££££ also on the last index");
 						textY += textHeight;
-						toDrawString = line.substring(endSplitIndex);
+						if (endSplitIndex != 0){
+							toDrawString = line.substring(endSplitIndex-1);
+							
+						}
+						else{
+							toDrawString = line;
+						}
 						graphicsHandler.drawString(toDrawString, textX, textY);
+						System.out.println("££££££just drawn :" + toDrawString+":");
+
+						
+					}
+					else{
+						System.out.println("££££ not on the last index, next index = " +formattingEntriesForLine.get(rightTextFormatIndex + 1));
 					}
 					//
 					
