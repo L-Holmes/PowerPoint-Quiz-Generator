@@ -13,9 +13,7 @@ have the lines be seperate entries into their repective array (left or right (of
 then when I am drawing to the screen, I will add the dashes and split words in the way that I desire
 */
 
-/*
-issue where the right text glitches out when the left text reaches the end of the line
-*/
+
 
 //when the text length increases or decreases, also need to update the first entry for the right text (info)
 
@@ -709,10 +707,7 @@ public class TextBox
 			 the new right
 		*/
 
-
 		
-		
-
 		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
 
 		//--merge lines to the immediate left and right of the old cursor position--
@@ -724,8 +719,6 @@ public class TextBox
 		leftText.set(leftText.size() - 1, newLine);
 
 		
-		
-		seeAllArrayContents();
 
 		//-adjusting the column index if needed-
 		//if the user clicked the first right line, need to add on the length of the left section to the index
@@ -755,7 +748,6 @@ public class TextBox
 		updateFormattingOnEntireLine(true, leftText.size() - 1, true);
 
 		
-
 		//---SECTION 2: GET THE ENTIRE LINE OF STRING THAT WAS CLICKED---
 		String entireLine;
 		if (clickedLeftText == true){
@@ -775,7 +767,6 @@ public class TextBox
 		}
 
 		
-
 		//---SECTION 3: REMOVING THE ENTIRE LINE THAT WAS CLICKED, SO IT CAN BE REPLACED WITH THE UPDATED LEFT/RIGHT SPLIT IN SECTION 5---
 
 		if (clickedLeftText == true){
@@ -803,7 +794,7 @@ public class TextBox
 
 		
 
-
+		
 		//---SECTION 4: MOVE LINES FROM LEFT TEXT TO RIGHT TEXT (OR VICE VERSA), IN ORDER TO FIT THE NEWLY CLICKED POSITION---
 
 		/*
@@ -866,15 +857,13 @@ public class TextBox
 		}
 
 
-
+		
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
 		String leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 
-		
-		
 
 		//adding the left side to the end of the left text & formatting arrays
 		leftText.add(leftPortion);
@@ -898,7 +887,7 @@ public class TextBox
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
 
-		
+		seeAllArrayContents();
 	
 	}
 
@@ -1064,7 +1053,6 @@ public class TextBox
 					int newSplitPos = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize - textStartRelativeToBoxX, avgCharWidth, textStartRelativeToBoxX);
 
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
-					seeAllArrayContents();
 					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
 						int prevNLIndex = formatInfoForTheString.get(formatInfoForTheString.size() -1);
 						newSplitPos += prevNLIndex;
@@ -1322,11 +1310,14 @@ public class TextBox
 
 		}
 
+		
+
 		//-draw each line in the right text-
 		for (int rightTextIndex = 0; rightTextIndex < rightText.size(); rightTextIndex++){
 
 			String line = rightText.get(rightTextIndex);
 			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
+
 
 			int startSplitIndex = 0;    
 			int endSplitIndex;
@@ -1343,10 +1334,12 @@ public class TextBox
 					//draw from startIndex to the end of the line
 					toDrawString = line;
 					graphicsHandler.drawString(toDrawString, textX, textY);
-					//update the x to be at the end of this text, since we are next drawing the right text (which starts at the end of the left)
-					textX +=  graphicsHandler.getFontMetrics().stringWidth(toDrawString);
 
 					
+					//need to update this stuff here, since it wouldn't be updated after breaking out of the loop
+					startSplitIndex = endSplitIndex;
+					textX = boxX;
+					textY += textHeight;
 
 					break;
 
@@ -1386,6 +1379,7 @@ public class TextBox
 
 
 				}
+
 				//update the start to be the end so you don't redraw the previous section of text
 				startSplitIndex = endSplitIndex;
 
