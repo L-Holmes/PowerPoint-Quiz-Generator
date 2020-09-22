@@ -683,6 +683,8 @@ public class TextBox
 		System.out.println("end-----------------------");
 
 
+		//when 0th position of the right text is clicked, the cursor goes to the beginning- why?
+
 		//now we know which character was clicked.
 
 		//-SECTION 5: UPDATE THE ARRAYLISTS TO HOLD THE NEW CURSOR POSITION-
@@ -753,7 +755,8 @@ public class TextBox
 		//since later on in this method, the old right of the cursor text is merged with the last left entry,
 		//so will need to adjust the column information to reflect this
 		if ((clickedLeftText == false) && (clickedLineIndex == 0)){
-			indexOfClickedCharWithinTheFormattedSectionOfTheLine += oldImmediateLeftLine.length();
+			indexOfClickedCharWithinTheFormattedSectionOfTheLine += oldImmediateLeftLine.length() + 1;
+			System.out.println("updated the index to: " + indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		}
 
 		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
@@ -904,6 +907,10 @@ public class TextBox
 			rightPortion = entireLine;
 		}
 
+		System.out.println("got the left Portion of :"+leftPortion);
+		System.out.println("got the right portion of :"+rightPortion);
+
+		
 
 
 		//adding the left side to the end of the left text & formatting arrays
