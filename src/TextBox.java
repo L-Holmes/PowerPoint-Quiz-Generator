@@ -890,16 +890,20 @@ public class TextBox
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
 		String leftPortion;
+		String rightPortion;
 		//this is if the user wants to type at the very start of the line
 		if (indexOfClickedCharWithinTheFormattedSectionOfTheLine>-1){
 			//
 			leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+			rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+
 		}
 		else{
 			//
 			leftPortion = "";
+			rightPortion = entireLine;
 		}
-		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+
 
 
 		//adding the left side to the end of the left text & formatting arrays
