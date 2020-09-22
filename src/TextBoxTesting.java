@@ -19,7 +19,17 @@ click detection issues
 
 I think that trying to click onto a formatted line does not work.
 
-also formatting not updating properly but I am not sure of the context behind this
+also formatting not updating properly but I am not sure of the context behind this- 
+the distance of the last left + first right should equal the prev. length
+
+
+
+
+for
+xxxxxxxx
+yyyyyyyyyyyyyyyyyyyyyy
+yyyyyy||yyyyyyyyyyyyyyyy
+yyyyyyyyy|
 */
 
 
