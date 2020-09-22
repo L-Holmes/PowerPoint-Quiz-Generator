@@ -592,7 +592,7 @@ public class TextBox
 				}
 
 				//end of the substring
-				substringEndIndex = rightText.get(newCursorRowIndex).length() - 1;
+				substringEndIndex = rightText.get(newCursorRowIndex).length();
 			}
 		}
 		
@@ -787,21 +787,21 @@ public class TextBox
 		//since later on in this method, the old right of the cursor text is merged with the last left entry,
 		//so will need to adjust the column information to reflect this
 		if ((clickedLeftText == false) && (clickedLineIndex == 0)){
+			System.out.println("old immediate left line :" + oldImmediateLeftLine+":");
+			System.out.println("old left leng = " + oldImmediateLeftLine.length());
+			System.out.println("old immediate right line :" + oldImmediateRightLine+":");
+			System.out.println("old right leng = " + oldImmediateRightLine.length());
+			System.out.println(" before ind = " + indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+
 			indexOfClickedCharWithinTheFormattedSectionOfTheLine += oldImmediateLeftLine.length() + 1;
 		}
 
 		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
-		if (rightText.size() > 1){
+		if (rightText.size() > 0){
 			rightText.remove(0);
 			rightTextFormatInfo.remove(0);
 		}
-		else{
-			rightText.set(0, "");
-			ArrayList<Integer> emptyRightInfo = new ArrayList<Integer>(); 
-			emptyRightInfo.add(-1);  
-			rightTextFormatInfo.set(0, emptyRightInfo);
-			
-		}
+		
 
 		
 
@@ -824,11 +824,9 @@ public class TextBox
 				entireLine = leftText.get(leftText.size() -1);
 			}
 			else{
-				System.out.println("2.1");
-				System.out.println("right text size - 1 = " + (rightText.size() - 1));
-				seeAllArrayContents();
+				
+				
 				entireLine = rightText.get(clickedLineIndex-1);
-				System.out.println("2.2");
 
 			}
 		}
@@ -913,7 +911,7 @@ public class TextBox
 				leftText.add(rightTextFirstLine);
 				leftTextFormatInfo.add(rightTextFirstLineFormatInfo);
 
-				//remove the last element of the left text
+				//remove the last element of the right text
 				rightText.remove(0);
 				rightTextFormatInfo.remove(0);
 				
@@ -923,7 +921,6 @@ public class TextBox
 
 		}
 
-
 		System.out.println("5");
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
@@ -931,10 +928,24 @@ public class TextBox
 		String leftPortion;
 		String rightPortion;
 		//this is if the user wants to type at the very start of the line
+		System.out.println("********** index : " + indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		if (indexOfClickedCharWithinTheFormattedSectionOfTheLine>-1){
 			//
-			leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
-			rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+			if (indexOfClickedCharWithinTheFormattedSectionOfTheLine <= entireLine.length() - 1){
+				leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine + 1);
+			}
+			else{
+				leftPortion = "";
+			}
+
+			System.out.println("mid");
+
+			if (indexOfClickedCharWithinTheFormattedSectionOfTheLine < entireLine.length() - 2){
+				rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine + 1);
+			}
+			else{
+				rightPortion = "";
+			}
 
 		}
 		else{
@@ -943,6 +954,9 @@ public class TextBox
 			rightPortion = entireLine;
 		}
 
+		System.out.println("entire line ::" + entireLine+"::");
+		System.out.println("entire line length: " + entireLine.length());
+		System.out.println("indexOfClickedCharWithinTheFormattedSectionOfTheLine: " + indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 		System.out.println("got the left Portion of :"+leftPortion);
 		System.out.println("got the right portion of :"+rightPortion);
 

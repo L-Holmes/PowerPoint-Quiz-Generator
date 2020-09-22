@@ -17,9 +17,16 @@ import java.io.IOException;
 /*
 click detection issues
 
+I think that trying to click onto a formatted line does not work.
+
 also formatting not updating properly but I am not sure of the context behind this
 */
 
+/*
+this is the line|
+
+this is the next
+*/
 
 public class TextBoxTesting {
     public static void main(String[] args){
