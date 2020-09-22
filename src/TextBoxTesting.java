@@ -13,30 +13,11 @@ import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
+
 /*
-had two right text entries, when clicked start of new right section, both of 
-the entries got combined together
+click detection issues
 
-left
-...
-right start
-next right line...
-
-
-I think that it is an issue with when I re-combine the left to the right, I combine the text with the line
-before rather than combining with just the line
-
-leftleftleft
-right1right1right1
-after2after2after2|
-
-gets previous as: after2after2after2
-then combines to the end of the left (as it is supposed to do) to give
-leftleftleft
-right1right1right1|after2after2after2
-
-instead of adding a newline
-
+also formatting not updating properly but I am not sure of the context behind this
 */
 
 

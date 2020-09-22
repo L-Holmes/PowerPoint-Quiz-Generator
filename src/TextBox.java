@@ -498,7 +498,16 @@ public class TextBox
 	 */
 	public void updateLeftAndRightText(int x, int y)
 	{
+		//--initialising the font--
+		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+
 		//-SECTION 1: DETERMINE WHETHER THE NEW CURSOR POSITION IS BEFORE OR AFTER THE CURRENT POSITION AND SET THE FONT-
+
+		System.out.println("\n\n -----------------start");
+		System.out.println("x coord clicked = " + x);
+		System.out.println("y coord clicked = " + y);
+		System.out.println("avg char height = " + graphicsHandler.getFontMetrics().getAscent());
+		System.out.println("avg char width = " + graphicsHandler.getFontMetrics().stringWidth("a"));
 
 		//--determines whether the leftText (left of the cursor) or rightText (right of the cursor) was clicked--
 		boolean clickedLeftText;
@@ -524,19 +533,19 @@ public class TextBox
 			}
 		}
 
-		
+		System.out.println("was left text clicked? " + clickedLeftText);
  
-
-		//--initialising the font & getting the average character height--
-		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
 
 		//-SECTION 2: GETTING INFORMATION ABOUT THE ROW THAT THE USER CLICKED-
 
 		int avgCharHeight = graphicsHandler.getFontMetrics().getAscent();
 		//--predicting the row number that the new cursor will lie in--
-		int yDiff = y - boxY;
-		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));
+		int yDiff = y - boxY;														//y distance from the top of the box to the clicked position
+		int rowNum = (int) Math.ceil(((double) yDiff / (double) avgCharHeight));	//predicted number of rows down (from the top of the box) that the user clicked
 
+
+		System.out.println("y dist from box top = " + yDiff);
+		System.out.println("number of rows down = " + rowNum);
 
 
 		//if it is right, need to remove all of the left rows from the calc
@@ -545,6 +554,8 @@ public class TextBox
 			//number of rows above the cursor
 			int leftRows = (int) Math.ceil(((double) topBoxToCursor / (double) avgCharHeight));
 			rowNum = rowNum - leftRows;
+
+			System.out.println("removed left rows to get new row number of: " + rowNum);
 		}
 
 		
@@ -565,7 +576,10 @@ public class TextBox
 
 		
 		
-		
+		System.out.println("row index = " + newCursorRowIndex);
+		System.out.println("format index = " + newCursorFormatIndex);
+		System.out.println("substring start index = " + substringStartIndex);
+		System.out.println("substring end index = " + substringEndIndex);
 		
 
 
@@ -579,6 +593,8 @@ public class TextBox
 		else{
 			clickedLine = rightText.get(newCursorRowIndex);
 		}
+
+		System.out.println("entire line that was clicked :" + clickedLine+":");
 		
 		String clickedSectionOfLine;
 		if (substringStartIndex != 0)
@@ -599,13 +615,15 @@ public class TextBox
 			clickedSectionOfLine = clickedLine;
 		}
 
+		System.out.println("clicked section of line :" + clickedSectionOfLine + ":");
 
 
 		//-SECTION 4: FINDING THE COLUMN THAT THE USER CLICKED-
 
 		//--finding the column number that the new click position lies in (each column = 1 character)--
-		int xDiff = x - boxX;
+		int xDiff = x - boxX;																					//x distance from box left to clicked position
 
+		System.out.println("x distance from box left to clicked position = " + xDiff);
 
 		//-if on the first line of the right text, need to remove all of the left characters that are also on this line-
 		if ((clickedLeftText == false) && (newCursorRowIndex == 0)){
@@ -624,15 +642,11 @@ public class TextBox
 				leftTextAlsoOnThisLine = leftText.get(leftText.size() - 1);
 			}
 
-			
-			
-
-
 			//then get the length using graphics 2d and take this away from the xDiff.
 			xDiff = Math.max(0, xDiff - graphicsHandler.getFontMetrics().stringWidth(leftTextAlsoOnThisLine));
 
-			
 
+			System.out.println("clicked the first line of the right text so removed all left characters to get an xDiff of: " + xDiff);
 		}
 		
 		//calc col. num by going through all of the characters on the current line
@@ -641,6 +655,7 @@ public class TextBox
 
 		int colNum = 0;
 		int cumulTextLength = 0;
+		int previousLength = 0;
 		for (int letterInd = 0; letterInd < clickedSectionOfLine.length(); letterInd++){
 			String letter = "" + clickedSectionOfLine.charAt(letterInd);
 			
@@ -649,11 +664,24 @@ public class TextBox
 
 			colNum = letterInd;
 			if (cumulTextLength >= xDiff){
+				//difference between length up to this character and length up to previous character
+				int diffOfLengths = cumulTextLength - previousLength;
+				int midWayPoint = previousLength + diffOfLengths/2;
+				if (xDiff < midWayPoint){
+					//clicked point is closer to the previous character
+					colNum--;
+				}
+				
 				break;
 			}
+
+			//
+			previousLength = cumulTextLength;
 		}
 
-		
+		System.out.println("found the column number of: " + colNum);
+		System.out.println("end-----------------------");
+
 
 		//now we know which character was clicked.
 
@@ -861,7 +889,16 @@ public class TextBox
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
-		String leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+		String leftPortion;
+		//this is if the user wants to type at the very start of the line
+		if (indexOfClickedCharWithinTheFormattedSectionOfTheLine>-1){
+			//
+			leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine);
+		}
+		else{
+			//
+			leftPortion = "";
+		}
 		String rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine);
 
 
@@ -887,7 +924,6 @@ public class TextBox
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
 
-		seeAllArrayContents();
 	
 	}
 
