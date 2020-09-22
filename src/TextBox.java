@@ -618,7 +618,7 @@ public class TextBox
 		System.out.println("entire line that was clicked :" + clickedLine+":");
 		
 		String clickedSectionOfLine;
-		if (substringStartIndex <= 0)
+		if (substringStartIndex > -1)
 		{
 			if (substringEndIndex != -1){
 				//there is at least 2 formatting new lines for this line
@@ -631,8 +631,9 @@ public class TextBox
 			
 		}
 		else{
-			//there are no formatting new lines for this line
-			clickedSectionOfLine = clickedLine;
+			//function couldn't find the line
+			clickedSectionOfLine = "";
+			System.out.println("ERRORORORORO");
 		}
 
 		System.out.println("clicked section of line :" + clickedSectionOfLine + ":");
@@ -929,10 +930,15 @@ public class TextBox
 		String rightPortion;
 		//this is if the user wants to type at the very start of the line
 		System.out.println("********** index : " + indexOfClickedCharWithinTheFormattedSectionOfTheLine);
-		if (indexOfClickedCharWithinTheFormattedSectionOfTheLine>-1){
+
+		//
+		int indexOfClickPositionWithinEntireLine = substringStartIndex + indexOfClickedCharWithinTheFormattedSectionOfTheLine;
+
+		//if the user did not click at the beginning of the entire line
+		if (indexOfClickPositionWithinEntireLine>-1){
 			//
-			if (indexOfClickedCharWithinTheFormattedSectionOfTheLine <= entireLine.length() - 1){
-				leftPortion = entireLine.substring(0, indexOfClickedCharWithinTheFormattedSectionOfTheLine + 1);
+			if (indexOfClickPositionWithinEntireLine <= entireLine.length() - 1){
+				leftPortion = entireLine.substring(0, indexOfClickPositionWithinEntireLine + 1);
 			}
 			else{
 				leftPortion = "";
@@ -940,8 +946,8 @@ public class TextBox
 
 			System.out.println("mid");
 
-			if (indexOfClickedCharWithinTheFormattedSectionOfTheLine < entireLine.length() - 2){
-				rightPortion = entireLine.substring(indexOfClickedCharWithinTheFormattedSectionOfTheLine + 1);
+			if (indexOfClickPositionWithinEntireLine < entireLine.length() - 2){
+				rightPortion = entireLine.substring(indexOfClickPositionWithinEntireLine + 1);
 			}
 			else{
 				rightPortion = "";
@@ -1227,12 +1233,14 @@ public class TextBox
 					substringEndIndex = lineInfo.get(0);
 				}
 				foundTheRightLine = true;
+				System.out.println("!round the right line, of index: " + newCursorRowIndex);
+
 				break;
 			}
 			//
 
 			for (int i = 0; i < lineInfo.size(); i++){
-				System.out.println("inner for index: " + i);
+				System.out.println("	-inner for index: " + i);
 
 				//for each formatting newline (which are added to fit the text latterally into the textbox)
 				if (lineInfo.get(i) != -1){
@@ -1251,6 +1259,11 @@ public class TextBox
 						substringEndIndex = lineInfo.get(newCursorFormatIndex + 1);
 					}
 					foundTheRightLine = true;
+					System.out.println("	found the right line, of index: " + newCursorRowIndex);
+					System.out.println("	found the num of rows down to be: " + newCursorFormatIndex);
+					System.out.println("	start index is: " + substringStartIndex);
+					System.out.println("	end index is: " + substringEndIndex);
+
 					break;
 				}
 			}
