@@ -1200,11 +1200,19 @@ public class TextBox
 		int substringStartIndex = -1;
 		int substringEndIndex = -1;
 
+		boolean foundTheRightLine = false;
+
 		for (int userTypedLineIndex = 0; userTypedLineIndex < formatInfo.size(); userTypedLineIndex++){
 			//for each line (lines seperated by a user typed 'newline' [enter key])
+
+			if (foundTheRightLine == true){
+				break;
+			}
+
 			lineInfo = formatInfo.get(userTypedLineIndex);
 			totalFoundRows++;
 
+			System.out.println("outer for index: " + userTypedLineIndex);
 
 			//-if the part of the line before the first formatting newline 
 			// is the row that the user clicked-
@@ -1218,16 +1226,20 @@ public class TextBox
 					//get the first newline position
 					substringEndIndex = lineInfo.get(0);
 				}
+				foundTheRightLine = true;
 				break;
 			}
 			//
 
 			for (int i = 0; i < lineInfo.size(); i++){
+				System.out.println("inner for index: " + i);
+
 				//for each formatting newline (which are added to fit the text latterally into the textbox)
 				if (lineInfo.get(i) != -1){
 					//increment by 1 since found a position for a newline within the text
 					totalFoundRows++;
 				}
+				System.out.println("- 	total found rows: " + totalFoundRows);
 				if (totalFoundRows >= rowNum){
 					//found the row that the user clicked
 					newCursorRowIndex = userTypedLineIndex;
@@ -1238,6 +1250,7 @@ public class TextBox
 					if (lineInfo.size() - 1 > i){
 						substringEndIndex = lineInfo.get(newCursorFormatIndex + 1);
 					}
+					foundTheRightLine = true;
 					break;
 				}
 			}
