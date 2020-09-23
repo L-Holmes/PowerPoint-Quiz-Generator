@@ -25,11 +25,9 @@ the distance of the last left + first right should equal the prev. length
 
 
 
-for
-xxxxxxxx
-yyyyyyyyyyyyyyyyyyyyyy
-yyyyyy||yyyyyyyyyyyyyyyy
-yyyyyyyyy|
+issue:
+not removing the first -1 for the formatting, so the 
+drawText method is skipping over everything else
 */
 
 

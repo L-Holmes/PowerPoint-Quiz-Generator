@@ -413,12 +413,7 @@ public class TextBox
 
 			int lengthUpToEstimatePoint = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, estimatedOverHangPoint + 1));
 			
-			System.out.println("				%%%width to fit: " + widthToFit);
-			System.out.println("				%%%estimed overhang point: " + estimatedOverHangPoint);
-			System.out.println("				%%%length up to point = " + lengthUpToEstimatePoint);
-			System.out.println("				%%%for the string:" + lastLine.substring(0, estimatedOverHangPoint + 1)+":");
-			System.out.println("				%%%text box width:" + boxW);
-			System.out.println("				%%%width to fit:" + widthToFit);
+			
 
 			if (lengthUpToEstimatePoint > widthToFit){
 				//remove the last character, check again
@@ -429,7 +424,6 @@ public class TextBox
 				boolean foundOverHang = false;
 				while (foundOverHang == false){
 					splitPos--;
-					System.out.println("				%%%moved split pos down");
 
 					if (splitPos > -1){
 						int shorterEstimateLength = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, splitPos + 1));
@@ -458,7 +452,6 @@ public class TextBox
 				boolean foundOverHang = false;
 				while (foundOverHang == false){
 					splitPos++;
-					System.out.println("				%%%moved split pos up");
 
 					if (splitPos < lastLine.length()){
 						int longerEstimateLength = graphicsHandler.getFontMetrics().stringWidth(lastLine.substring(0, splitPos + 1));
@@ -761,9 +754,7 @@ public class TextBox
 		*/
 
 
-		System.out.println("\n\n-----------------------");
-		System.out.println("contents before: ");
-		seeAllArrayContents();
+		
 
 
 		//---SECTION 1: UPDATE THE LINES WHERE THE OLD CURSOR POSITION WAS LOCATED---
@@ -968,11 +959,12 @@ public class TextBox
 		-need to check the first entry of the rightText for lengthening (may need multiple formatting newlines)
 		*/
 		
-		System.out.println("updating the formatting for the left text:±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±§\n\n\n");
+		System.out.println("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+		seeAllArrayContents();
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
-		System.out.println("updating the formatting for the right text:");
 		updateFormattingOnEntireLine(false, 0, false);
-		System.out.println("contents after: ");
+		System.out.println("***after***:");
 		seeAllArrayContents();
 	
 	}
@@ -989,13 +981,7 @@ public class TextBox
 	 */
 	private void updateFormattingOnEntireLine(boolean leftTextQuery, int indexOfLineInTextArray, boolean checkAfterLastFormattingEntry)
 	{
-
-		//32
-
-		System.out.println("***left text query = " + leftTextQuery);
-		System.out.println("***index of line in text array = " + indexOfLineInTextArray);
-		System.out.println("***check after last formatting entry = " + checkAfterLastFormattingEntry);
-
+		System.out.println("is left? " + leftTextQuery);
 		//--get the string of characters that are being checked for being longer than the text box width--
 
 		String stringToCheck;
@@ -1015,7 +1001,6 @@ public class TextBox
 
 			//if first entry of right text
 			if (indexOfLineInTextArray == 0){
-				System.out.println("***on the first entry of right text so doing some special stuff");
 				//need to account for the line not starting at the beginning of the text box since it comes straight after the end of the left text
 				ArrayList<Integer> lastFormatInfoForTheleftText = leftTextFormatInfo.get(leftTextFormatInfo.size() - 1);
 				int lastFormatNewLineForTheLeftText = lastFormatInfoForTheleftText.get(lastFormatInfoForTheleftText.size() - 1);
@@ -1029,14 +1014,12 @@ public class TextBox
 				else{
 					lastLineFromLeftText = leftText.get(leftText.size() -1);
 				}
-				System.out.println("***last line from left text :" + lastLineFromLeftText+":"); 
 
 				textStartRelativeToBoxX = graphicsHandler.getFontMetrics().stringWidth(lastLineFromLeftText);
 			}
 
 		}
 
-		System.out.println("***entire string :" + entireString + ":");
 
 
 		stringToCheck = entireString;
@@ -1047,7 +1030,6 @@ public class TextBox
 			if (lastFormattingEntry != -1){
 				//
 				stringToCheck = stringToCheck.substring(lastFormattingEntry);
-				System.out.println("***updated the string to check");
 			}
 		}
 		
@@ -1055,11 +1037,10 @@ public class TextBox
 
 
 		/////////////////
-		//the following while loop is desined in a way that we 
+		//the upcoming while loop is desined in a way that we 
 		//need to remove all of the current entries first
 		if (checkAfterLastFormattingEntry == false)
 		{
-			System.out.println("***checking the entire line");
 			//
 			if (leftTextQuery){
 				//remove all of the entries apart form the first one
@@ -1080,7 +1061,6 @@ public class TextBox
 
 			}
 
-			System.out.println("***just reset all of the formatting entries for the line(s)");
 
 		}
 
@@ -1090,7 +1070,6 @@ public class TextBox
 		//--add the new entries, until the remaining substring is shorter than the text box width (changed = false) --
 		boolean changed = true;
 		while (changed == true){
-			System.out.println("	***adding new formatting entry....");
 			//need to update the format info for reference, since it is not a point:
 
 			if (leftTextQuery == true){
@@ -1101,24 +1080,20 @@ public class TextBox
 			}
 
 			if (formatInfoForTheString.get(formatInfoForTheString.size() -1) == - 1){
+				//if the last entry is -1
 				//--there are no new lines currently--
-				System.out.println("		***no newlines currently");
 
 				//check if the entire string is longer than the textbox width
 				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
 
 				if (stringToCheckSize > boxW){
-					System.out.println("		***string is bigger than the box width");
-					System.out.println("		***bumping up by: " + textStartRelativeToBoxX);
-					System.out.println("		***entire string :" + stringToCheck+":");
-					System.out.println("		***entire string size :" + stringToCheckSize+":");
+					
 
 
 					//add new entry
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPosition = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize - textStartRelativeToBoxX, avgCharWidth, textStartRelativeToBoxX);
 					
-					System.out.println("		***got new split position of: " + newSplitPosition);
 
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
 					int cumulativeSplitPosition = newSplitPosition;
@@ -1126,27 +1101,22 @@ public class TextBox
 						cumulativeSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
 					}
 
-					System.out.println("		***got cumulative split pos of: " + cumulativeSplitPosition);
 
 
-					//add a new format entry, with the new split position
-					//formatInfoForTheString.set(0, cumulativeSplitPosition);
+					//set the -1 format entry as the new split position
+					
 					if (checkAfterLastFormattingEntry == false){
-						System.out.println("		***looking at the entire line, so setting the new formatting entry "); //this could be an issue
-						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, 0, cumulativeSplitPosition);
+						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray,0,  cumulativeSplitPosition);
 						//update the string to check to be the remainder of the string after the newly added newline
 						stringToCheck = entireString.substring(cumulativeSplitPosition);
-						System.out.println("		***got a new string to check being :"+stringToCheck+":");
 
 					}
 					else{
-						System.out.println("		***looking at the end of the line, so adding the new formatting entry ");
-						addNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, cumulativeSplitPosition);
+						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray,0,  cumulativeSplitPosition);
 						//update the string to check to be the remainder of the string after the newly added newline
 						
 						//since the 'entireString' is already a substring, don't need to use the cumulative index
 						stringToCheck = entireString.substring(newSplitPosition);
-						System.out.println("		***got a new string to check being :"+stringToCheck+":");
 
 					}
 
@@ -1161,20 +1131,17 @@ public class TextBox
 			}
 			else{
 				//--there are at least 1 new lines currently--
-				System.out.println("		***at least 1 new lines");
 
 				//get the string after the last new line, 
 				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
 
 				//check if that string is longer than the text box width
 				if (stringToCheckSize > boxW){
-					System.out.println("		***string is bigger than the box width");
 
 					//if it is, add a new line entry at the overhang index
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPos = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize - textStartRelativeToBoxX, avgCharWidth, textStartRelativeToBoxX);
 
-					System.out.println("		***got new split position of: " + newSplitPos);
 
 					
 
@@ -1184,22 +1151,14 @@ public class TextBox
 						newSplitPos += prevNLIndex;
 					}
 
-					System.out.println("		***got cumulative split pos of: " + newSplitPos);
-
-
-					System.out.println("		***adding a new entry");
-
 
 					//add a new format entry, with the new split position
-					//formatInfoForTheString.add(newSplitPos);
 					addNewFormattingEntry(leftTextQuery, indexOfLineInTextArray, newSplitPos);
 					
-
 
 					//update the string to check to be the remainder of the string after the newly added newline
 					stringToCheck = entireString.substring(newSplitPos);
 
-					System.out.println("		***got a new substring being :" + stringToCheck +":");
 
 
 				}
@@ -1464,7 +1423,6 @@ public class TextBox
 			String line = rightText.get(rightTextIndex);
 			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
 
-
 			int startSplitIndex = 0;    
 			int endSplitIndex;
 
@@ -1473,9 +1431,8 @@ public class TextBox
 			for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
 				//
 				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
+
 				if (endSplitIndex == -1){
-
-
 					//no additional formatting newlines
 					//draw from startIndex to the end of the line
 					toDrawString = line;
@@ -1494,11 +1451,10 @@ public class TextBox
 
 
 					//draw between the two newline points
-					if (endSplitIndex != 0){
-						toDrawString = line.substring(startSplitIndex, endSplitIndex);
-						graphicsHandler.drawString(toDrawString, textX, textY);
+					//if (endSplitIndex != 0){
+					toDrawString = line.substring(startSplitIndex, endSplitIndex);
+					graphicsHandler.drawString(toDrawString, textX, textY);
 
-					}
 					
 
 
@@ -1508,21 +1464,19 @@ public class TextBox
 						textX = boxX;
 						//output the rest of the string
 						textY += textHeight;
-						if (endSplitIndex != 0){
-							toDrawString = line.substring(endSplitIndex);
-							
+						//if (endSplitIndex != 0){
+						toDrawString = line.substring(endSplitIndex);
+						/*	
 						}
 						else{
 							toDrawString = line;
 						}
+						*/
 						graphicsHandler.drawString(toDrawString, textX, textY);
 
-						
 					}
 					
 					
-
-
 
 				}
 
@@ -1534,8 +1488,6 @@ public class TextBox
 				//move the drawing position down to the next line
 				textY += textHeight;
 				
-
-
 
 
 			}
