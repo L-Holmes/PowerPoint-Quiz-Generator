@@ -26,8 +26,20 @@ the distance of the last left + first right should equal the prev. length
 
 
 issue:
-not removing the first -1 for the formatting, so the 
-drawText method is skipping over everything else
+when I remove an entry, need to update the formatting for the entire line e.g.
+
+end of a line
+|this line that spans the entire width of the text box
+last line following on
+
+goes to:
+end of a line|this line that spans the entire [width of the text box] <- square brackets section is cut off since the formatting was not updated
+last line following on
+
+
+issue 2:
+when I click in the whitespace below the last character, the last line is deleted
+
 */
 
 

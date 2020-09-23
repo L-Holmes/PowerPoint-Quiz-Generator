@@ -185,6 +185,10 @@ public class TextBox
 
 						//remove the last entry from the formatting
 						leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
+
+						//update the first entry of the right text
+						//since it has moved up onto the line before the one that was deleted
+						updateFormattingOnEntireLine(false, 0, false);
 					}
 				}
 			}
@@ -959,13 +963,9 @@ public class TextBox
 		-need to check the first entry of the rightText for lengthening (may need multiple formatting newlines)
 		*/
 		
-		System.out.println("\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
-		seeAllArrayContents();
+		
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
-		System.out.println("***after***:");
-		seeAllArrayContents();
 	
 	}
 
@@ -981,7 +981,6 @@ public class TextBox
 	 */
 	private void updateFormattingOnEntireLine(boolean leftTextQuery, int indexOfLineInTextArray, boolean checkAfterLastFormattingEntry)
 	{
-		System.out.println("is left? " + leftTextQuery);
 		//--get the string of characters that are being checked for being longer than the text box width--
 
 		String stringToCheck;
