@@ -757,7 +757,7 @@ public class TextBox
 			 the new right
 		*/
 
-
+		
 		
 
 
@@ -778,8 +778,12 @@ public class TextBox
 		//since later on in this method, the old right of the cursor text is merged with the last left entry,
 		//so will need to adjust the column information to reflect this
 		if ((clickedLeftText == false) && (clickedLineIndex == 0)){
-
 			indexOfClickedCharWithinTheFormattedSectionOfTheLine += oldImmediateLeftLine.length() + 1;
+
+			//if there is no right text, the index will be moved outside of the range of the string character count
+			if (oldImmediateRightLine.length() == 0){
+				indexOfClickedCharWithinTheFormattedSectionOfTheLine--;
+			}
 		}
 
 		//-remove the first right text entry; replace with the second right text entry (if exists), or set as blank string-
@@ -914,9 +918,10 @@ public class TextBox
 		//
 		int indexOfClickPositionWithinEntireLine = substringStartIndex + indexOfClickedCharWithinTheFormattedSectionOfTheLine;
 
+
 		//if the user did not click at the beginning of the entire line
 		if (indexOfClickPositionWithinEntireLine>-1){
-			//
+			//if the index is between 0 and the end of the line
 			if (indexOfClickPositionWithinEntireLine <= entireLine.length() - 1){
 				leftPortion = entireLine.substring(0, indexOfClickPositionWithinEntireLine + 1);
 			}
@@ -924,7 +929,7 @@ public class TextBox
 				leftPortion = "";
 			}
 
-
+			//if the index is between 0 and the penultimate character
 			if (indexOfClickPositionWithinEntireLine < entireLine.length() - 2){
 				rightPortion = entireLine.substring(indexOfClickPositionWithinEntireLine + 1);
 			}
@@ -966,6 +971,7 @@ public class TextBox
 		
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
+
 	
 	}
 
@@ -982,7 +988,6 @@ public class TextBox
 	private void updateFormattingOnEntireLine(boolean leftTextQuery, int indexOfLineInTextArray, boolean checkAfterLastFormattingEntry)
 	{
 		//--get the string of characters that are being checked for being longer than the text box width--
-
 		String stringToCheck;
 		String entireString;
 		ArrayList<Integer> formatInfoForTheString;
@@ -1005,24 +1010,18 @@ public class TextBox
 				int lastFormatNewLineForTheLeftText = lastFormatInfoForTheleftText.get(lastFormatInfoForTheleftText.size() - 1);
 				String lastLineFromLeftText;
 				if (lastFormatNewLineForTheLeftText != -1){
-					//
-					
 					lastLineFromLeftText = leftText.get(leftText.size() -1).substring(lastFormatNewLineForTheLeftText);
 					
 				}
 				else{
 					lastLineFromLeftText = leftText.get(leftText.size() -1);
 				}
-
 				textStartRelativeToBoxX = graphicsHandler.getFontMetrics().stringWidth(lastLineFromLeftText);
 			}
 
 		}
 
-
-
 		stringToCheck = entireString;
-		
 
 		int lastFormattingEntry = formatInfoForTheString.get(formatInfoForTheString.size() -1); 
 		if (checkAfterLastFormattingEntry == true){
@@ -1032,15 +1031,10 @@ public class TextBox
 			}
 		}
 		
-
-
-
-		/////////////////
 		//the upcoming while loop is desined in a way that we 
-		//need to remove all of the current entries first
+		//need to remove all of the current entries first (which we do in this section)
 		if (checkAfterLastFormattingEntry == false)
 		{
-			//
 			if (leftTextQuery){
 				//remove all of the entries apart form the first one
 				for (int i = formatInfoForTheString.size() - 1; i > 0; i--){
@@ -1048,7 +1042,6 @@ public class TextBox
 				}
 				//set the first entry to equal -1
 				setNewFormattingEntry(true, indexOfLineInTextArray, 0, -1);
-
 			}
 			else{
 				//remove all of the entries apart form the first one
@@ -1059,18 +1052,12 @@ public class TextBox
 				setNewFormattingEntry(false, indexOfLineInTextArray, 0, -1);
 
 			}
-
-
 		}
-
-
-		
 
 		//--add the new entries, until the remaining substring is shorter than the text box width (changed = false) --
 		boolean changed = true;
 		while (changed == true){
 			//need to update the format info for reference, since it is not a point:
-
 			if (leftTextQuery == true){
 				formatInfoForTheString = leftTextFormatInfo.get(indexOfLineInTextArray);
 			}
@@ -1086,21 +1073,15 @@ public class TextBox
 				int stringToCheckSize = graphicsHandler.getFontMetrics().stringWidth(stringToCheck) + textStartRelativeToBoxX;
 
 				if (stringToCheckSize > boxW){
-					
-
-
 					//add new entry
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPosition = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize - textStartRelativeToBoxX, avgCharWidth, textStartRelativeToBoxX);
 					
-
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
 					int cumulativeSplitPosition = newSplitPosition;
 					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
 						cumulativeSplitPosition += formatInfoForTheString.get(formatInfoForTheString.size() -1);
 					}
-
-
 
 					//set the -1 format entry as the new split position
 					
@@ -1108,7 +1089,6 @@ public class TextBox
 						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray,0,  cumulativeSplitPosition);
 						//update the string to check to be the remainder of the string after the newly added newline
 						stringToCheck = entireString.substring(cumulativeSplitPosition);
-
 					}
 					else{
 						setNewFormattingEntry(leftTextQuery, indexOfLineInTextArray,0,  cumulativeSplitPosition);
@@ -1116,17 +1096,11 @@ public class TextBox
 						
 						//since the 'entireString' is already a substring, don't need to use the cumulative index
 						stringToCheck = entireString.substring(newSplitPosition);
-
 					}
-
-					
 				}
 				else{
-					
 					changed = false;
 				}
-				
-				
 			}
 			else{
 				//--there are at least 1 new lines currently--
@@ -1141,9 +1115,6 @@ public class TextBox
 					int avgCharWidth = graphicsHandler.getFontMetrics().stringWidth("a");
 					int newSplitPos = findOverHangEntryFromAvgCharWidth(stringToCheck, stringToCheckSize - textStartRelativeToBoxX, avgCharWidth, textStartRelativeToBoxX);
 
-
-					
-
 					//add new split position to the previous entry in the formatting to get the correct (cumulative) index
 					if (formatInfoForTheString.get(formatInfoForTheString.size() -1) != -1){
 						int prevNLIndex = formatInfoForTheString.get(formatInfoForTheString.size() -1);
@@ -1157,8 +1128,6 @@ public class TextBox
 
 					//update the string to check to be the remainder of the string after the newly added newline
 					stringToCheck = entireString.substring(newSplitPos);
-
-
 
 				}
 				else{
@@ -1199,7 +1168,6 @@ public class TextBox
 
 		for (int userTypedLineIndex = 0; userTypedLineIndex < formatInfo.size(); userTypedLineIndex++){
 			//for each line (lines seperated by a user typed 'newline' [enter key])
-
 			if (foundTheRightLine == true){
 				break;
 			}
@@ -1212,7 +1180,6 @@ public class TextBox
 			// is the row that the user clicked-
 			if (totalFoundRows >= rowNum){
 				//found the row that the user clicked
-
 				newCursorRowIndex = userTypedLineIndex;
 				substringStartIndex = 0;
 				
@@ -1224,10 +1191,8 @@ public class TextBox
 
 				break;
 			}
-			//
 
 			for (int i = 0; i < lineInfo.size(); i++){
-
 				//for each formatting newline (which are added to fit the text latterally into the textbox)
 				if (lineInfo.get(i) != -1){
 					//increment by 1 since found a position for a newline within the text
@@ -1340,7 +1305,6 @@ public class TextBox
 	 */
 	public void drawText()
 	{
-
 		graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
 		graphicsHandler.setColor(textColour);
 
@@ -1348,14 +1312,11 @@ public class TextBox
 		int textY = boxY - (textHeight*0);
 		int textX = boxX;
 
-		
 		//-draw each line in the left text-
 		for (int i = 0; i < leftText.size(); i++){
-
 			String line = leftText.get(i);
 
 			ArrayList<Integer> formattingEntriesForLine = leftTextFormatInfo.get(i);
-
 
 			int startSplitIndex = 0;    
 			int endSplitIndex;
@@ -1366,7 +1327,7 @@ public class TextBox
 			for (int j = 0; j < formattingEntriesForLine.size(); j++){
 				//move the drawing position down to the next line
 				textY += textHeight;
-				//
+				
 				endSplitIndex = formattingEntriesForLine.get(j);
 				if (endSplitIndex == -1){
 					//no additional formatting newlines
@@ -1382,9 +1343,7 @@ public class TextBox
 						updateCursorPosition(textX, textY - textHeight, textHeight);
 					}
 					
-
 					break;
-
 				}
 				else{
 					//draw between the two newline points
@@ -1404,17 +1363,13 @@ public class TextBox
 							updateCursorPosition(textX, textY - textHeight, textHeight);
 						}
 					}
-					//
-
+					
 				}
 				//update the start index to be the end index so you don't redraw the previous section of text
 				startSplitIndex = endSplitIndex;
-
 			}
 
 		}
-
-		
 
 		//-draw each line in the right text-
 		for (int rightTextIndex = 0; rightTextIndex < rightText.size(); rightTextIndex++){
@@ -1428,7 +1383,6 @@ public class TextBox
 			String toDrawString;
 			//-formatting the lines to fit into the text box and drawing them-
 			for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
-				//
 				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
 
 				if (endSplitIndex == -1){
@@ -1437,25 +1391,18 @@ public class TextBox
 					toDrawString = line;
 					graphicsHandler.drawString(toDrawString, textX, textY);
 
-					
 					//need to update this stuff here, since it wouldn't be updated after breaking out of the loop
 					startSplitIndex = endSplitIndex;
 					textX = boxX;
 					textY += textHeight;
 
 					break;
-
 				}
 				else{
-
-
 					//draw between the two newline points
 					//if (endSplitIndex != 0){
 					toDrawString = line.substring(startSplitIndex, endSplitIndex);
 					graphicsHandler.drawString(toDrawString, textX, textY);
-
-					
-
 
 					//if on the last index, also draw to the end of the line
 					if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
@@ -1463,22 +1410,10 @@ public class TextBox
 						textX = boxX;
 						//output the rest of the string
 						textY += textHeight;
-						//if (endSplitIndex != 0){
 						toDrawString = line.substring(endSplitIndex);
-						/*	
-						}
-						else{
-							toDrawString = line;
-						}
-						*/
 						graphicsHandler.drawString(toDrawString, textX, textY);
-
 					}
-					
-					
-
 				}
-
 				//update the start to be the end so you don't redraw the previous section of text
 				startSplitIndex = endSplitIndex;
 
@@ -1486,9 +1421,6 @@ public class TextBox
 				textX = boxX;
 				//move the drawing position down to the next line
 				textY += textHeight;
-				
-
-
 			}
 
 		}
