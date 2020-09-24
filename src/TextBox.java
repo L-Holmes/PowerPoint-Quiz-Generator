@@ -1,9 +1,4 @@
-
-import javax.imageio.ImageIO;
-import javax.swing.*;//used for gui generation
-
 import java.awt.*;//used for layout managers
-import java.awt.image.*;
 import java.util.ArrayList;
 
 /*
@@ -14,8 +9,9 @@ then when I am drawing to the screen, I will add the dashes and split words in t
 */
 
 
+//if the next character typed would cause the text to span downward
+//further than the text box height, enter a backspace to undo the typed info
 
-//when the text length increases or decreases, also need to update the first entry for the right text (info)
 
 public class TextBox
 {
@@ -1170,7 +1166,7 @@ public class TextBox
 		graphicsHandler.setColor(textColour);
 
 		int textHeight = graphicsHandler.getFontMetrics().getAscent();
-		int textY = boxY - (textHeight*0);
+		int textY = boxY;
 		int textX = boxX;
 
 		//-draw each line in the left text-
@@ -1232,59 +1228,82 @@ public class TextBox
 
 		}
 
+		boolean exceededTextBoxHeight = false;
+
 		//-draw each line in the right text-
 		for (int rightTextIndex = 0; rightTextIndex < rightText.size(); rightTextIndex++){
+			if (exceededTextBoxHeight == false){
+				String line = rightText.get(rightTextIndex);
+				ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
 
-			String line = rightText.get(rightTextIndex);
-			ArrayList<Integer> formattingEntriesForLine = rightTextFormatInfo.get(rightTextIndex);
+				int startSplitIndex = 0;    
+				int endSplitIndex;
 
-			int startSplitIndex = 0;    
-			int endSplitIndex;
+				String toDrawString;
+				//-formatting the lines to fit into the text box and drawing them-
+				for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
+					endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
 
-			String toDrawString;
-			//-formatting the lines to fit into the text box and drawing them-
-			for (int rightTextFormatIndex = 0; rightTextFormatIndex < formattingEntriesForLine.size(); rightTextFormatIndex++){
-				endSplitIndex = formattingEntriesForLine.get(rightTextFormatIndex);
-
-				if (endSplitIndex == -1){
-					//no additional formatting newlines
-					//draw from startIndex to the end of the line
-					toDrawString = line;
-					graphicsHandler.drawString(toDrawString, textX, textY);
-
-					//need to update this stuff here, since it wouldn't be updated after breaking out of the loop
-					startSplitIndex = endSplitIndex;
-					textX = boxX;
-					textY += textHeight;
-
-					break;
-				}
-				else{
-					//draw between the two newline points
-					//if (endSplitIndex != 0){
-					toDrawString = line.substring(startSplitIndex, endSplitIndex);
-					graphicsHandler.drawString(toDrawString, textX, textY);
-
-					//if on the last index, also draw to the end of the line
-					if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
-						//reset the x back to the start of the line
+					//if the text height has been exceeded, do not draw the text
+					//-prevent the user from typing when the end of the text box has been reached-
+					if (textY <= (boxY + boxH)){
+						if (endSplitIndex == -1){
+							//no additional formatting newlines
+							//draw from startIndex to the end of the line
+							toDrawString = line;
+							graphicsHandler.drawString(toDrawString, textX, textY);
+	
+							//need to update this stuff here, since it wouldn't be updated after breaking out of the loop
+							startSplitIndex = endSplitIndex;
+							textX = boxX;
+							textY += textHeight;
+	
+							break;
+						}
+						else{
+							//draw between the two newline points
+							//if (endSplitIndex != 0){
+							toDrawString = line.substring(startSplitIndex, endSplitIndex);
+							graphicsHandler.drawString(toDrawString, textX, textY);
+	
+							//if on the last index, also draw to the end of the line
+							if (rightTextFormatIndex == formattingEntriesForLine.size() - 1){
+								//reset the x back to the start of the line
+								textX = boxX;
+								//output the rest of the string
+								textY += textHeight;
+								toDrawString = line.substring(endSplitIndex);
+								graphicsHandler.drawString(toDrawString, textX, textY);
+							}
+						}
+						//update the start to be the end so you don't redraw the previous section of text
+						startSplitIndex = endSplitIndex;
+	
+						//make the text start at the beggining of the text box for everyline after the first
 						textX = boxX;
-						//output the rest of the string
+						//move the drawing position down to the next line
 						textY += textHeight;
-						toDrawString = line.substring(endSplitIndex);
-						graphicsHandler.drawString(toDrawString, textX, textY);
+					}
+					else{
+						//exceeded
+						exceededTextBoxHeight = true;
+						break;
 					}
 				}
-				//update the start to be the end so you don't redraw the previous section of text
-				startSplitIndex = endSplitIndex;
-
-				//make the text start at the beggining of the text box for everyline after the first
-				textX = boxX;
-				//move the drawing position down to the next line
-				textY += textHeight;
 			}
-
+			else{
+				//prevents any drawing after the text box height has been exceeded
+				break;
+			}
+			
 		}
+
+		if (exceededTextBoxHeight == true){
+			//if exceeded, initiate a backspace to remove the character that caused the overflow
+			this.typeLetter("backspace", 8);
+		}
+
+		
 		
 	}
 
