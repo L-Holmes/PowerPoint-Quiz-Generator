@@ -35,6 +35,8 @@ public class TextBox
 	private int cursorY;								//y coordinate of the top left corner coordinate of the blinking cursor
 	private int cursorW;								//width of the blinking cursor
 	private int cursorH;								//height of the blinking cursor
+	private int blinkingCursorCount = 0;				//when > 10, the cursor is drawn- creates a blinking effect; 
+														//incremented every time drawTextBox is called
 
 
 	//text
@@ -66,7 +68,8 @@ public class TextBox
 	private Color hoveringOverBoxColour = new Color(235, 235, 235);   //colour of the box when the user is hovering their mouse cursor over it
 	private Color unselectedBoxColour = new Color(241, 241, 241);     //colour of the box when the user has not entered the text box
 	private Color boxOutlineColour = new Color(0, 0, 0);              //colour of the outline of the text box
-	private Color boxSelectedOutlineColour = new Color(245, 197, 22); //colour of the box outline when it is selected/entered      
+	private Color boxSelectedOutlineColour = new Color(245, 197, 22); //colour of the box outline when it is selected/entered     
+	private Color cursorColour = new Color (0, 0, 0); 				  //colour of the typing cursor 
 
 	//entered/exited the text box indicators 
 	private boolean entered = true;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
@@ -1267,6 +1270,7 @@ public class TextBox
 		graphicsHandler = updatedGraphicsHandle;
 		drawBox();
 		drawText();
+		drawTypingCursor();
 	}
 
 	/**
@@ -1427,6 +1431,43 @@ public class TextBox
 		
 	}
 
+
+	/**
+	 * draws the the cursor used for typing at 
+	 * the point that it is positioned within the text box
+	 */
+	public void drawTypingCursor()
+	{
+		//drawing the main box
+		if (entered == true){
+
+			if (blinkingCursorCount > 10){
+				//
+				blinkingCursorCount++;
+				if (blinkingCursorCount== 25){
+					blinkingCursorCount = 0;
+				}
+				
+				//-draw the cursor-
+				graphicsHandler.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+				cursorH = graphicsHandler.getFontMetrics().getAscent();
+				cursorW = (int) (cursorH / 4.5);
+
+				graphicsHandler.setColor(cursorColour);
+				graphicsHandler.fillRect(cursorX, cursorY, cursorW, (cursorH + (cursorH/6)));  //make height slightly bigger to overhang slightly at either side
+		
+			}
+			else{	
+				blinkingCursorCount++;
+			}
+		}
+		else{
+			System.out.println("not entered");
+		}
+		
+		
+	}
+
 	//--FOR TESTING PURPOSES--
 
 	/**
@@ -1557,5 +1598,4 @@ public class TextBox
 		}
 	}
 
-	//** not sure about remove stuff? (think this is only for the backspace stuff (?))
 }
