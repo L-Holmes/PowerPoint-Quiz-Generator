@@ -1050,7 +1050,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					//if the user is already in the text box and wants to change their cursor position
 					if (textBoxEntered == true){
 						//update the text box
-						typingTextBox.updateLeftAndRightText(pointXCoord, pointYCoord);
+						typingTextBox.updateLeftAndRightText((int) clickedXCoord, (int) clickedYCoord);
 					}
 					typingTextBox.setEntered(true);
 					textBoxEntered = true;

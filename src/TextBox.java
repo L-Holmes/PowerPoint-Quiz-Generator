@@ -1368,11 +1368,6 @@ public class TextBox
 			
 			
 		}
-		else{
-			System.out.println("not entered");
-		}
-		
-		
 	}
 
 	//--FOR TESTING PURPOSES--
