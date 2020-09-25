@@ -23,8 +23,6 @@ public class TextBox
 	private int boxY;									//y coordinate of the top left corner coordinate of the box
 	private int boxW;									//width of the box
 	private int boxH;									//height of the box
-	private int boxRight;								//x coordinate of the bottom right corner coordinate of the box
-	private int boxBottom;								//y coordinate of the bottom right corner coordinate of the box
 
 	//blinking cursor
 	private int cursorX;								//x coordinate of the top left corner coordinate of the blinking cursor
@@ -71,7 +69,7 @@ public class TextBox
 	private Color cursorColour = new Color (0, 0, 0); 				  //colour of the typing cursor 
 
 	//entered/exited the text box indicators 
-	private boolean entered = true;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
+	private boolean entered = false;							//indicates whether the user has clicked the text box in order to type (true) or if they have exited the text box and cannot type in it (false)
 
 	//mouse info
 	private boolean cursorInBox = false; 						//indicates whether the mouse cursor lies inside of the text box (true) or if it doesn't (false)
@@ -107,7 +105,13 @@ public class TextBox
 		emptyEntry.add(-1);
 		leftTextFormatInfo.add(emptyEntry);
 		rightTextFormatInfo.add(emptyEntry);
-    }
+	}
+	
+	//---SETTING THE ENTERED VARIABLE---
+	public void setEntered(boolean isEntered)
+	{
+		entered = isEntered;
+	}
 
     ///---TEXT ENTERING---
 
@@ -705,6 +709,7 @@ public class TextBox
 			}
 		}
 
+
 		//---SECTION 3: REMOVING THE ENTIRE LINE THAT WAS CLICKED, SO IT CAN BE REPLACED WITH THE UPDATED LEFT/RIGHT SPLIT IN SECTION 5---
 		if (clickedLeftText == true){
 			//remove the clicked entry from the leftText
@@ -782,6 +787,8 @@ public class TextBox
 			}
 		}
 
+		
+
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
@@ -794,6 +801,9 @@ public class TextBox
 			//if the index is between 0 and the end of the line
 			if (indexOfClickPositionWithinEntireLine <= entireLine.length() - 1){
 				leftPortion = entireLine.substring(0, indexOfClickPositionWithinEntireLine + 1);
+			}
+			else if (indexOfClickPositionWithinEntireLine == entireLine.length()){
+				leftPortion = entireLine;
 			}
 			else{
 				leftPortion = "";
@@ -829,6 +839,10 @@ public class TextBox
 		//-updating the formatting info for the newly added sections-
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
+
+
+
+		
 	}
 
 	/**
@@ -1314,7 +1328,7 @@ public class TextBox
 	 */
 	public void drawTypingCursor()
 	{
-		//drawing the main box
+		//only draw the cursor if the user is in the text box
 		if (entered == true){
 
 			//-for the solid cursor, just after the user has typed

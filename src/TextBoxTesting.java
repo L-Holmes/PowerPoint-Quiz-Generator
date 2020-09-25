@@ -258,6 +258,7 @@ class TestingClickPanel extends JPanel implements MouseListener, KeyListener  {
 				//--DRAWING THE REST OF THE PAGE--
                 if (setTextBox == false){
 					typingTextBox  = new TextBox(g, 10, 10, 500, 500);
+					typingTextBox.setEntered(true);
 					System.out.println(" created new text box ");
                     setTextBox = true;
                 }
