@@ -1,6 +1,6 @@
 /*
 Requires pdf file;
--questions slides are labled with: (Q)
+-questions slides are labled with: '(Q)'  (excluding the speach marks & inside a text box)
 -must have at least 1 question slide
 -answer slides must occur directly after their corresponding question slide
 -can only have 1 slide for each question 
@@ -37,3 +37,11 @@ public class Main {
     }
 
 }
+
+/**
+ * what I am currently doing:
+ *  seperating click panel into 2 seperate pages- I have got the start page one to a non-crashing state
+ *  need to do the same with the quiz page
+ * 
+ * I think I need to make click panel call getters and setter on the quiz page instead now.
+ */

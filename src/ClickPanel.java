@@ -32,15 +32,20 @@ the ones that the user actually added thenselves
 // https://stackoverflow.com/questions/27678603/how-to-check-mouse-click-in-2d-graphics-java
 // accessed: 12/05/2020
 
+/**
+ * @author Lindon Holmes
+ * sections:
+ * 
+ */
 class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 
 	//Initialising drawing surface here
-	Graphics2D drawingSurface;
-	BufferedImage i;
-	Graphics2D g;
+	private Graphics2D drawingSurface;
+	private BufferedImage i;
+	private Graphics2D g;
 
 	// JFrame object
-	WindowHandle thisWindow;
+	private WindowHandle thisWindow;
 
 	// used to close the window
 	private boolean exiting = false;
@@ -49,285 +54,62 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	private boolean rendered = false;
 
 	//location of the powerpoint
-	String slideImgLocation = "images/"; // converted images from pdf document are saved here
-	String slidePDFLocation = "test_pp.pdf";
-	boolean slideImageUpdated;
+	private String slideImgLocation = "images/"; // converted images from pdf document are saved here
+	private String slidePDFLocation = "test_pp.pdf";
+	private boolean slideImageUpdated;
 
 	//new slide stuff
-	int imagePageNumber = 1; 
+	private int imagePageNumber = 1; 
 	
 
 	//slide thread handler
 	//UpdateSlideThread slideThreadHandler;
-	boolean setSlideThread = false;
+	private boolean setSlideThread = false;
 
 	//mouse coordinate stuff
-	Point currentPointerPosition;
-	int pointXCoord;
-	int pointYCoord;
+	private Point currentPointerPosition;
+	private int pointXCoord;
+	private int pointYCoord;
 
-	boolean setCoordinateStuff;
+	private boolean setCoordinateStuff;
 
-	//drawing the start page handler stuff ++++++++++++++++++++++++++++++++++++++++
+	//drawing the start page handler stuff 
 	private ClickPanelDrawStartPage startPageDrawer;
-	private boolean startPageDrawerSet = false;
+	private boolean startPageDrawerSet = false;	
 
-	//next question button details 
-	boolean nextQuestionClicked;
-
-	//forward page button details
-	boolean forwardPageButtonClicked;
-
-	//backward page button details
-	boolean backwardPageButtonClicked;
-
-	//tick button details
-	boolean tickButtonClicked;
-
-	//'X' button details
-	boolean xButtonClicked;
+	//drawing the quiz page
+	private ClickPanelDrawQuizPage quizPageDrawer;
+	private boolean quizPageDrawerSet = false;
 
 	//text box details
-	boolean textBoxEntered; 
+	private boolean textBoxEntered; 
 
 	//text box scroll stuff
-	int scrollAmount;
-	boolean canScroll;
+	private int scrollAmount;
+	private boolean canScroll;
 
 	//question stuff
-	int questionsComplete;
-	int currentQuestion;
-	boolean currentQuestionComplete;
-	boolean needToConfirmCorrectness;
+	private int questionsComplete;
+	private int currentQuestion;
+	private boolean currentQuestionComplete;
+	private boolean needToConfirmCorrectness;
 
 	//pdf handler
-	ConvertPDFPagesToImages pdfHandler;
-	boolean pdfHandlerSet;
+	private ConvertPDFPagesToImages pdfHandler;
+	private boolean pdfHandlerSet;
 
 	//indicator text stuff
-	boolean mostRecentSlide;
-	boolean displayNoMoreSlidesText;
-	boolean firstSlide;
-
-
-	//---DRAWING STUFF START---
+	private boolean mostRecentSlide;
+	private boolean displayNoMoreSlidesText;
+	private boolean firstSlide;
 
 	//--page indicator--
-	String currentPage;
+	private String currentPage;
 
 	//--setting the window dimensions--
-	int windowWidth;
-	int windowHeight;
-	boolean setWindowDimensions;
-
-	//--drawing title string stuff--
-	String titleString;
-	int titleTextWidth;
-	int titleTextHeight;
-	int titleTextX;
-	int titleTextY;
-
-	boolean setTitleDrawingStuff;
-
-	//--drawing the slide image--
-	File slideImg;
-	String introImgLocation; 
-	File introImg;
-	BufferedImage img;
-	int slideImageWidth;
-	int slideImageHeight;
-	int slideWidth;
-	int slideHeight;
-	BufferedImage resizedImg;
-	int imgTopLeftX;
-	int imgTopLeftY;
-
-	boolean setSlideDrawingStuff;
-
-	//--slide additional/relative dimensions--
-	int slideTopY;
-	int slideLeftX ;
-	int slideBottom;
-	int distSlideBottomToScreenBottom;
-
-	boolean setSlideAdditionalDimensions;
-
-	//--drawing the questions complete text stuff--
-	String questionsCompleteFullString;	
-	int questionsCompleteTextWidth;
-	int questionsCompleteTextHeight;
-	int questionsCompleteTextX;
-	int questionsCompleteTextY;
-
-	boolean setQuestionsCompleteTextStuff;
-
-	//--drawing the current question text--
-	String currentQuestionFullString;
-	int currentQuestionTextWidth;
-	int currentQuestionTextHeight;
-	int currentQuestionTextX;
-	int currentQuestionTextY;
-
-	boolean setCurrentQuestionTextStuff;
-
-	//--drawing the button spacing stuff--
-	int buttonSpacing;
-	int buttonWidth;
-	int buttonHeight;
-
-	boolean setButtonSpacingStuff;
-
-	//--drawing the back page button--
-	int backPageButtonX;
-	int backPageButtonY;
-	int backPageButtonRight;
-	int backPageButtonBottom;
-
-	boolean setBackPageButtonStuff;
-
-	//--drawing the arrow on the back page button--
-	int backPageArrowCentreX;
-	int backPageArrowCentreY;
-	int arrowHeight;
-	int backPageArrowTopStartX;
-	int backPageArrowTopStartY;
-	int backPageArrowTopEndX;
-	int backPageArrowTopEndY;
-	int backPageArrowBottomStartX;
-	int backPageArrowBottomStartY;
-	int backPageArrowBottomEndX;
-	int backPageArrowBottomEndY;
-
-	boolean setBackPageButtonArrowStuff;
-
-	//--drawing the forward page button--
-	int forwardPageButtonX;
-	int forwardPageButtonY;
-	int nextPageButtonRight;
-	int nextPageButtonBottom;
-
-	boolean setForwardPageButtonStuff;
-
-	//--drawing the arrow on the forward page button--
-	int forwardPageArrowCentreX;
-	int forwardPageArrowCentreY;
-	int forwardPageArrowTopStartX;
-	int forwardPageArrowTopStartY;
-	int forwardPageArrowTopEndX;
-	int forwardPageArrowTopEndY;
-	int forwardPageArrowBottomStartX;
-	int forwardPageArrowBottomStartY;
-	int forwardPageArrowBottomEndX;
-	int forwardPageArrowBottomEndY;
-
-	boolean setForwardPageButtonArrowStuff;
-
-	//--drawing the next question button--
-	int nextQuestionButtonX;
-	int nextQuestionButtonY;
-	int nextQuestionButtonRight;
-	int nextQuestionButtonBottom;
-	int stringWidth;
-	int stringHeight;
-	int nextQuestionButtonTextX;
-	int nextQuestionButtonTextY;
-
-	boolean setNextQuestionButtonStuff;
-
-	//--drawing the red 'X' button--
-	String redXButtonImgLocation; 
-	File redXButtonImg;
-	BufferedImage redXBimg;
-	int redXButtonWidth;
-	int redXButtonHeight;
-	BufferedImage redXBimgResized;
-	int redXButtonSpacing;
-	int redXButtonX;
-	int redXButtonY; 
-	int redXButtonRight;
-	int redXButtonBottom ;
-	double redXBrightness;
-	RescaleOp redXBrightnessRescaleOp;
-	int redXOutlineX;
-	int redXOutlineY;
-	int redXOutlineW;
-	int redXOutlineH;
-
-	boolean setRedXStuff;
-
-	//--drawing the green tick button--
-	String greenTickButtonImgLocation; 
-	File greenTickButtonImg;
-	BufferedImage greenTickBimg;
-	int greenTickButtonWidth;
-	int greenTickButtonHeight;
-	BufferedImage greenTickBimgResized;
-	int greenTickButtonSpacing;
-	int greenTickButtonX;
-	int greenTickButtonY; 
-	int greenTickButtonRight;
-	int greenTickButtonBottom ;
-	double greenTickBrightness;
-	RescaleOp greenTickBrightnessRescaleOp;
-	int greenTickOutlineX;
-	int greenTickOutlineY;
-	int greenTickOutlineW;
-	int greenTickOutlineH;
-
-	boolean setGreenTickStuff;
-
-	//--drawing the done question tick--
-	String doneTickImgLocation; 
-	File doneTickImg;
-	BufferedImage doneTickBimg;
-	int doneTickWidth;
-	int doneTickHeight;
-	BufferedImage doneTickBimgResized;
-	
-
-	boolean setDoneQuestionTickStuff;
-
-	//--drawing the error text--
-	String errorTextString;
-	int errorTextStringWidth ;
-	int errorTextStringHeight;
-	int errorTextStringX;
-	int errorTextStringY;
-
-	boolean setErrorTextStuff;
-
-	//--drawing the back to menu button--
-	int backToMenuButtonX;
-	int backToMenuButtonY;
-	int backToMenuButtonRight;
-	int backToMenuButtonBottom;
-	boolean backToMenuButtonClicked;
-	String backToMenuButtonText;
-	int backToMenuButtonTextX;
-	int backToMenuButtonTextY;
-	int backToMenuButtonTextWidth;
-	int backToMenuButtonTextHeight;
-
-
-	boolean setBackToMenuButtonStuff;
-
-	//--drawing the answer text box--
-	private TextBox typingTextBox;
-	int textBoxSpacing;
-	int textBoxWidth;
-	int textBoxHeight;
-	int textBoxX;
-	int textBoxY; 
-	int textBoxRight;
-	int textBoxBottom;
-
-	boolean setTextBoxStuff;
-							
-	
-	//---}}---
-
-	//---DRAWING THE START PAGE START---
-
+	private int windowWidth;
+	private int windowHeight;
+	private boolean setWindowDimensions;
 
 	/**
 	 * initialisation for the creation of the click panel object
@@ -338,7 +120,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 		// Add mouse Listener
 		addMouseListener(this);
-		//
 
 		setPreferredSize(new Dimension(width, height));
 		initializeDefaultValueVariables();
@@ -356,29 +137,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		//
 		setCoordinateStuff = false;
 
-		//next question button details 
-		
-		nextQuestionClicked = false;
-
-		//forward page button details
-		
-		forwardPageButtonClicked = false;
-
-
-		//backward page button details		
-		backwardPageButtonClicked = false;
-
-		//tick button details
-		tickButtonClicked = false;
-
-		//'X' button details
-		xButtonClicked = false;
-
 		//text box details
 	
 		textBoxEntered = false; 
-
-		
 
 		scrollAmount = 0;
 		canScroll = false;
@@ -394,28 +155,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		displayNoMoreSlidesText = false;
 		firstSlide = false;
 
-
 		currentPage = "1";
 
 		//set stuff
 		setWindowDimensions = false;
-		setTitleDrawingStuff = false;
-		setSlideDrawingStuff = false;
-		setSlideAdditionalDimensions = false ;
-		setQuestionsCompleteTextStuff = false;
-		setCurrentQuestionTextStuff = false;
-		setButtonSpacingStuff = false;
-		setBackPageButtonStuff = false;
-		setBackPageButtonArrowStuff = false;
-		setForwardPageButtonStuff = false;
-		setForwardPageButtonArrowStuff = false;
-		setNextQuestionButtonStuff = false;
-		setRedXStuff = false;
-		setGreenTickStuff = false;
-		setDoneQuestionTickStuff = false;
-		setErrorTextStuff = false;
-		setBackToMenuButtonStuff = false;
-		setTextBoxStuff = false;
+		
 		
 	}
 
@@ -623,11 +367,15 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 				//--DRAWING THE REST OF THE PAGE--
 				if (currentPage == "2"){
-					drawQuiz();
+					if (quizPageDrawerSet == false){
+						quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight);
+						quizPageDrawerSet = true;
+					}
+					quizPageDrawer.drawQuiz(g, slidePDFLocation, pointXCoord, pointYCoord);
+					
 				}
 				else if (currentPage == "1"){
-					//
-					//drawStartPage();++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+					
 					if (startPageDrawerSet == false){
 						startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight);
 						startPageDrawerSet = true;
@@ -644,26 +392,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	}
 
-	/*
-	https://stackoverflow.com/questions/9417356/bufferedimage-resize
-	*/
-	/**
-	 * @param img = the image that is to be resized
-	 * @param newW = the new width of the image after the transformation
-	 * @param newH = the new height of the image after the transformation
-	 * @return the newly resized image
-	 */
-	public static BufferedImage resize(BufferedImage img, int newW, int newH) { 
-
-		Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
-		BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
-	
-		Graphics2D g2d = dimg.createGraphics();
-		g2d.drawImage(tmp, 0, 0, null);
-		g2d.dispose();
-	
-		return dimg;
-	}
 
 //CLICK DETECTION & REACTION
   
@@ -730,6 +458,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		return false;
 	}
 
+//---QUIZ PAGE CLICK CHECKS---
+
 	/**
 	 * @param clickedXCoord the y coordinate where the mouse was clicked
 	 * @param clickedYCoord the x coordinate where the mouse was clicked
@@ -738,10 +468,14 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void nextQuestionButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setNextQuestionButtonStuff == true){
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight)){
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getNextQuestionButtonButtonX();
+			int buttonY = quizPageDrawer.getNextQuestionButtonButtonY();
+			int buttonW = quizPageDrawer.getNextQuestionButtonButtonW();
+			int buttonH = quizPageDrawer.getNextQuestionButtonButtonH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
 				//
-				nextQuestionClicked = true;
+				quizPageDrawer.setNextQuestionButtonClicked(true);
 				getNextQuestion();
 			}			
 		}
@@ -754,11 +488,14 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void forwardButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setForwardPageButtonStuff == true){
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getForwardPageButtonX();
+			int buttonY = quizPageDrawer.getForwardPageButtonY();
+			int buttonW = quizPageDrawer.getForwardPageButtonW();
+			int buttonH = quizPageDrawer.getForwardPageButtonH();
 			//
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, forwardPageButtonX, forwardPageButtonY, buttonWidth, buttonHeight)){
-				//
-				forwardPageButtonClicked = true;
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
+				quizPageDrawer.setForwardPageButtonClicked(true);
 				getForwardSlide();
 			}	
 		}
@@ -770,9 +507,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void backwardButtonClickCheck(double clickedXCoord, double clickedYCoord) 
 	{
-		if (setBackPageButtonStuff == true){
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,backPageButtonX, backPageButtonY, buttonWidth, buttonHeight)){
-				backwardPageButtonClicked = true;
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getBackwardPageButtonX();
+			int buttonY = quizPageDrawer.getBackwardPageButtonY();
+			int buttonW = quizPageDrawer.getBackwardPageButtonW();
+			int buttonH = quizPageDrawer.getBackwardPageButtonH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,buttonX, buttonY, buttonW, buttonH)){
+				quizPageDrawer.setBackwardPageButtonClicked(true);
 				getBackwardSlide();
 				
 			}
@@ -785,9 +526,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void tickButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setGreenTickStuff == true){
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, greenTickButtonX, greenTickButtonY, greenTickButtonWidth, greenTickButtonHeight)){
-				tickButtonClicked = true;
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getTickButtonX();
+			int buttonY = quizPageDrawer.getTickButtonY();
+			int buttonW = quizPageDrawer.getTickButtonW();
+			int buttonH = quizPageDrawer.getTickButtonH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
+				quizPageDrawer.setTickButtonClicked(true);
 				greenTickClicked();
 			}
 		}
@@ -799,9 +544,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void xButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setRedXStuff == true){
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,  redXButtonX, redXButtonY, redXButtonWidth, redXButtonHeight)){
-				xButtonClicked = true;
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getXButtonX();
+			int buttonY = quizPageDrawer.getXButtonY();
+			int buttonW = quizPageDrawer.getXButtonW();
+			int buttonH = quizPageDrawer.getXButtonH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
+				quizPageDrawer.setXButtonClicked(true);
 				redXClicked();
 			}
 		}
@@ -809,10 +558,14 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	public void backToMenuButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setBackToMenuButtonStuff == true){
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, backToMenuButtonX, backToMenuButtonY, buttonWidth, buttonHeight)){
+		if (quizPageDrawerSet == true){
+			int buttonX = quizPageDrawer.getBackToMenuButtonX();
+			int buttonY = quizPageDrawer.getBackToMenuButtonY();
+			int buttonW = quizPageDrawer.getBackToMenuButtonW();
+			int buttonH = quizPageDrawer.getBackToMenuButtonH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
 				currentPage = "1";
-				backToMenuButtonClicked = true;
+				quizPageDrawer.setBackToMenuButtonClicked(true);
 				//close the file since going back
 				saveQuestionsCompleted();
 				closePPFile();
@@ -828,36 +581,38 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void textBoxClickCheck(double clickedXCoord, double clickedYCoord)
 	{
-		if (setTextBoxStuff == true){
-			//
-			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, textBoxX, textBoxY, textBoxWidth, textBoxHeight)){
+		if (quizPageDrawerSet == true){
+			int textBoxX = quizPageDrawer.getTextBoxX();
+			int textBoxY = quizPageDrawer.getTextBoxY();
+			int textBoxW = quizPageDrawer.getTextBoxW();
+			int textBoxH = quizPageDrawer.getTextBoxH();
+			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, textBoxX, textBoxY, textBoxW, textBoxH)){
 					//if the user is already in the text box and wants to change their cursor position
 					if (textBoxEntered == true){
 						//update the text box
-						typingTextBox.updateLeftAndRightText((int) clickedXCoord, (int) clickedYCoord);
+						quizPageDrawer.getTypingTextBox().updateLeftAndRightText((int) clickedXCoord, (int) clickedYCoord);
 					}
-					typingTextBox.setEntered(true);
+					quizPageDrawer.getTypingTextBox().setEntered(true);
 					textBoxEntered = true;
 			}
 			else{
 				//resets the text box cursor
-				typingTextBox.setEntered(false);
+				quizPageDrawer.getTypingTextBox().setEntered(false);
 				textBoxEntered = false;
 			}
 		}
 		else{
 			//resets the text box cursor 
-			typingTextBox.setEntered(false); //for the text box
+			quizPageDrawer.getTypingTextBox().setEntered(false); //for the text box
 			textBoxEntered = false; //for this class
 		}
 	}
 
-//CHANGE TO START PAGE CLICK CHECKS
+//---START PAGE CLICK CHECKS---
 
 	public void startPageLaunchQuizButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 
-		
 		if (startPageDrawerSet == true){
 			int buttonX = startPageDrawer.getLaunchQuizButtonX() ;
 			int buttonY = startPageDrawer.getLaunchQuizButtonY() ;
@@ -1010,6 +765,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+//---CLOSING THE POWERPOINT AND SAVING---
+
 	public void closePPFile()
 	{
 		if(pdfHandlerSet == true){
@@ -1027,6 +784,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 //}}
 	
+//--- ---
 
 	/**
 	 * changes the slide reference image to the appropriate question
@@ -1079,7 +837,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void greenTickClicked()
 	{
-		//textBoxTextLeftOfCursor = "";
 		if (pdfHandlerSet == true){
 			//write green tick stuff here 
 			pdfHandler.handleGreenTickClicked();	
@@ -1088,10 +845,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 	public void redXClicked() 
 	{
-		//textBoxTextLeftOfCursor = "";
 		if (pdfHandlerSet == true){
 			pdfHandler.handleRedXClicked();
-			
 		}
 	}
 
@@ -1169,6 +924,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 	}
+
+//---HANDLING TEXT INPUTS---
 
 	public void HandleTextEntered(String typedChar, KeyEvent keyEvent)
 	{
@@ -1258,20 +1015,20 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			//quiz page
 			if (textBoxEntered == true){
 				//user typed into the text box
-				typingTextBox.typeLetter(typedChar, keyEvent.getExtendedKeyCode());
+				quizPageDrawer.getTypingTextBox().typeLetter(typedChar, keyEvent.getExtendedKeyCode());
 				
 			}
 			else{
 				//not in text box
 				if (typedChar == "enter"){
 					//next question button clicked
-					nextQuestionClicked = true;
+					quizPageDrawer.setNextQuestionButtonClicked(true);
 					getNextQuestion();
 					
 				}
 				else if (typedChar.equals("t")){
 					//text box clicked
-					typingTextBox.setEntered(true);
+					quizPageDrawer.getTypingTextBox().setEntered(true);
 					textBoxEntered = true;
 					
 				}
@@ -1282,32 +1039,32 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				}
 				else if (typedChar.equals("r")){
 					//green tick button clicked
-					tickButtonClicked = true;
+					quizPageDrawer.setTickButtonClicked(true);
 					greenTickClicked();
 					
 				}
 				else if (typedChar.equals("w")){
 					//red x button clicked
-					xButtonClicked = true;
+					quizPageDrawer.setXButtonClicked(true);
 					redXClicked();
 					
 				}
 				else if (typedChar.equals("[")){
 					//move left in seen slides button clicked
-					backwardPageButtonClicked = true;
+					quizPageDrawer.setBackwardPageButtonClicked(true);
 					getBackwardSlide();
 					
 				}
 				else if (typedChar.equals("]")){
 					//move right in seen slides button clicked
-					forwardPageButtonClicked = true;
+					quizPageDrawer.setForwardPageButtonClicked(true);
 					getForwardSlide();
 					
 				}
 				else if (typedChar.equals("b")){
 					//back to menu button clicked
 					currentPage = "1";
-					backToMenuButtonClicked = true;
+					quizPageDrawer.setBackToMenuButtonClicked(true);
 					//close the file since going back
 					saveQuestionsCompleted();
 					closePPFile();
@@ -1334,752 +1091,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
         }   
 	}
 
-//DRAWING QUIZ STUFF START
 
-public void drawQuiz()
-{
-	//--DRAWING THE TITLE--
-	drawTitle();
-
-	//--DRAWING THE SLIDE--	
-	drawSlide();
-
-	//--SLIDE DIMENSIONS--
-	setSlideDimensions();
-	
-	//--QUESTIONS COMPLETE TEXT--
-	setQuestioncompleteText();
-
-	//--DRAWING THE CURRENT QUESTION TEXT-- 
-	drawCurrentQuestionText();
-
-	//--BUTTONS SPACING--
-	setButtonSpacing();
-
-	//--DRAWING BACK PAGE BUTTON--
-	drawBackPageButton();
-
-	//--DRAWING THE ARROW ON THE BACK PAGE BUTTON--
-	drawArrowOnBackPageButton();
-
-	//--DRAWING FORWARED PAGE BUTTON--
-	drawForwardPageButton();
-
-	//--DRAWING THE ARROW ON THE FORWARD PAGE BUTTON--
-	drawArrowOnForwardPageButton();
-
-	//--DRAWING NEXT QUESTION BUTTON--
-	drawNextQuestionButton();
-
-	//--DRAWING RED X BUTTON--
-	drawRedXButton();
-
-	//--DRAWING GREEN TICK BUTTON--
-	drawGreenTickButton();
-
-	//--DRAWING THE DONE QUESTION TICK--
-	drawDoneQuestionTick();
-
-	//--DRAWING THE ERROR TEXT--
-	drawErrorText();
-
-	//--DRAWING THE BACK TO THE MENU BUTTON--
-	drawBackToMenuButton();
-
-	//--DRAWING THE TEXT BOX--
-	drawTypingTextBox();
-}
-
-public void drawTitle()
-{
-	if (setTitleDrawingStuff == false){
-		//
-		g.setFont(new Font("Monospaced", Font.PLAIN, 40)); 
-		titleString = (ConvertPDFPagesToImages.getFileNameFromLocation(slidePDFLocation));
-		titleTextWidth = g.getFontMetrics().stringWidth(titleString);
-		titleTextHeight = g.getFontMetrics().getAscent();
-		titleTextX = (int) (windowWidth*0.5) - (int) (titleTextWidth/2) ;
-		titleTextY = ((int) ((float) (windowWidth)*0.02)) + (int) (titleTextHeight);
-		setTitleDrawingStuff = true;//indicates that the above variables can be referenced
-	}
-	g.setFont(new Font("Monospaced", Font.PLAIN, 40)); 
-	g.setColor(new Color(0, 0, 0));
-	
-
-	g.drawString(titleString, titleTextX, titleTextY);
-
-}
-
-public void drawSlide()
-{
-	//the intro slide location
-	introImgLocation = "greyBackground.png"; 
-
-	try {
-		if ((imagePageNumber != -1) || (pdfHandlerSet == true)){
-			//
-			if (slideImageUpdated == true){
-				//--normal code to run--
-				String specificSlideLocation = "images/slideImage" + imagePageNumber+ ".png";
-				slideImg = new File(specificSlideLocation);
-				introImg = new File(introImgLocation);
-				if (pdfHandlerSet == true){
-					img = ImageIO.read(slideImg);
-				}
-				else{
-					img = ImageIO.read(introImg);
-				}
-	
-				//resizing
-				slideImageWidth          = img.getWidth();
-				slideHeight         = img.getHeight();
-	
-				slideWidth = (int) (windowWidth*0.6);
-				slideHeight = (int) (slideWidth*0.56);
-	
-				//setting coordinates
-				resizedImg = resize(img, slideWidth, slideHeight);
-				imgTopLeftX = (int) ((float) (windowWidth)*0.02);
-				imgTopLeftY = (int) (windowHeight/2 - slideHeight/2);
-	
-				//--}}
-				setJustChangedSlide(false);
-			}
-			
-			//drawing to the screen
-			g.drawImage(resizedImg, imgTopLeftX, imgTopLeftY, this);
-	
-			//drawing outline 
-			g.setColor(new Color(0, 0, 0));
-			g.drawRect(imgTopLeftX, imgTopLeftY, slideWidth, slideHeight);
-			//
-	
-			if (setSlideDrawingStuff == false){
-				setSlideDrawingStuff = true;//indicates that the above variables can be referenced
-			}
-		}
-		else{
-			System.out.println("image ref is -1!");
-			slideWidth = (int) (windowWidth*0.6);
-			slideHeight = (int) (slideWidth*0.56);
-			imgTopLeftX = (int) ((float) (windowWidth)*0.02);
-			imgTopLeftY = (int) (windowHeight/2 - slideHeight/2);
-		}
-
-	} catch (IOException ex) {
-		System.out.println("could not attain the slide image file");
-	}
-
-
-}
-
-public void setSlideDimensions()
-{
-	if (setSlideAdditionalDimensions == false){
-		//
-		slideTopY = (int) (windowHeight/2 - slideHeight/2);
-		slideLeftX = (int) ((float) (windowWidth)*0.02);
-		slideBottom = (slideTopY + slideHeight);
-
-		//getting relative dimensions
-		distSlideBottomToScreenBottom = windowHeight- slideBottom;
-
-		setSlideAdditionalDimensions = true;//indicates that the above variables can be referenced
-	}
-}
-
-public void setQuestioncompleteText()
-{
-	questionsCompleteFullString = ("questions complete: " + String.valueOf(questionsComplete));
-	g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-	questionsCompleteTextWidth = g.getFontMetrics().stringWidth(questionsCompleteFullString);
-	questionsCompleteTextHeight = g.getFontMetrics().getAscent();
-	questionsCompleteTextX = windowWidth - questionsCompleteTextWidth - slideLeftX;
-	questionsCompleteTextY = (int) (windowWidth*0.02);
-	
-	
-	
-
-	g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-	g.setColor(new Color(0, 0, 0));
-
-	g.drawString(questionsCompleteFullString, questionsCompleteTextX, questionsCompleteTextY);
-
-	setQuestionsCompleteTextStuff = true;//indicates that the above variables can be referenced
-
-
-}
-
-
-/**
- * --DRAWING THE CURRENT QUESTION TEXT--
- * @param g
- * @param slideLeftX
- * @param slideTopY
- */
-public void drawCurrentQuestionText()
-{
-		
-	currentQuestionFullString = ("current question: " + String.valueOf(currentQuestion));
-	g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-	currentQuestionTextWidth = g.getFontMetrics().stringWidth(currentQuestionFullString);
-	currentQuestionTextHeight = g.getFontMetrics().getAscent();
-	currentQuestionTextX = slideLeftX;
-	currentQuestionTextY = slideTopY - currentQuestionTextHeight;
-		
-
-	
-	g.setColor(new Color(0, 0, 0));
-
-	g.drawString(currentQuestionFullString, currentQuestionTextX, currentQuestionTextY);
-
-	setCurrentQuestionTextStuff = true;
-
-
-}
-
-public void setButtonSpacing()
-{
-	if (setButtonSpacingStuff == false){
-		//
-		buttonSpacing = (int) (slideWidth*0.03);
-		buttonWidth = (int) (buttonSpacing*4);
-		buttonHeight=(int) (buttonWidth*0.56);
-
-		setButtonSpacingStuff = true;//indicates that the above variables can be referenced
-	}
-	
-}
-
-public void drawBackPageButton()
-{
-	if (setBackPageButtonStuff == false){
-		//
-		backPageButtonX= slideLeftX +  (int) (slideWidth*0.25);
-		backPageButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
-
-		//changing back page button colour to be darker if it is hovered over
-		backPageButtonRight = backPageButtonX + buttonWidth;
-		backPageButtonBottom = backPageButtonY + buttonHeight;
-
-		setBackPageButtonStuff = true; //indicates that the above variables can be referenced
-
-	}
-	
-	if (backwardPageButtonClicked){
-		//
-		g.setColor(new Color(190, 190, 190));
-		backwardPageButtonClicked = false;
-	}
-	else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, backPageButtonX, backPageButtonRight, backPageButtonY, backPageButtonBottom) == true){
-		//user is hovering over this button
-		g.setColor(new Color(175, 175, 175));
-	}
-	else{
-		//
-		g.setColor(new Color(180, 180, 180));
-	}
-
-	//drawing the button
-	g.fillRect(backPageButtonX, backPageButtonY, buttonWidth, buttonHeight);
-
-	//drawing outline 
-	g.setColor(new Color(0, 0, 0));
-	g.drawRect(backPageButtonX, backPageButtonY, buttonWidth, buttonHeight);
-	//
-
-}
-
-public void drawArrowOnBackPageButton()
-{
-	if (setBackPageButtonArrowStuff == false){
-		//
-		backPageArrowCentreX = (int) (backPageButtonX + (buttonWidth / 2));
-		backPageArrowCentreY = (int) (backPageButtonY + (buttonHeight / 2));
-		
-		arrowHeight = 40;
-
-		//---top line---
-		backPageArrowTopStartX = backPageArrowCentreX + (int) (arrowHeight/4);
-		backPageArrowTopStartY = backPageArrowCentreY - (int) (arrowHeight/4);
-		backPageArrowTopEndX = backPageArrowCentreX - (int) (arrowHeight/4);
-		backPageArrowTopEndY = backPageArrowCentreY ;
-
-		//---bottom line---
-		backPageArrowBottomStartX = backPageArrowCentreX + (int) (arrowHeight/4);
-		backPageArrowBottomStartY = backPageArrowCentreY + (int) (arrowHeight/4);
-		backPageArrowBottomEndX = backPageArrowCentreX - (int) (arrowHeight/4);
-		backPageArrowBottomEndY = backPageArrowCentreY ;
-
-		setBackPageButtonArrowStuff = true;//indicates that the above variables can be referenced
-	}
-	
-
-	g.setColor(new Color(0, 0, 0));
-	//making the line thicker
-	g.setStroke(new BasicStroke(5));
-	g.drawLine(backPageArrowTopStartX, backPageArrowTopStartY, backPageArrowTopEndX, backPageArrowTopEndY);
-
-	
-	g.setColor(new Color(0, 0, 0));
-	//making the line thicker
-	g.setStroke(new BasicStroke(5));
-	g.drawLine(backPageArrowBottomStartX, backPageArrowBottomStartY, backPageArrowBottomEndX, backPageArrowBottomEndY);
-
-	g.setStroke(new BasicStroke(1));//resets the stroke back to default
-
-
-	
-}
-
-public void drawForwardPageButton()
-{
-	if (setForwardPageButtonStuff == false){
-		//
-		forwardPageButtonX=slideLeftX + (int) (slideWidth*0.25) + buttonWidth + buttonSpacing;
-		forwardPageButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
-
-		//changing next page button colour to be darker if it is hovered over
-		nextPageButtonRight = forwardPageButtonX + buttonWidth;
-		nextPageButtonBottom = forwardPageButtonY + buttonHeight;
-
-		setForwardPageButtonStuff = true;//indicates that the above variables can be referenced
-
-	}
-	
-	if (forwardPageButtonClicked){
-		//
-		g.setColor(new Color(190, 190, 190));
-		forwardPageButtonClicked = false;
-	}
-	else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, forwardPageButtonX, nextPageButtonRight, forwardPageButtonY, nextPageButtonBottom) == true){
-		//user is hovering over this button
-		g.setColor(new Color(175, 175, 175));
-	}
-	else{
-		//
-		g.setColor(new Color(180, 180, 180));
-	}
-
-	g.fillRect(forwardPageButtonX, forwardPageButtonY, buttonWidth, buttonHeight);
-
-	//drawing outline 
-	g.setColor(new Color(0, 0, 0));
-	g.drawRect(forwardPageButtonX, forwardPageButtonY, buttonWidth, buttonHeight);
-	//
-
-}
-
-public void drawArrowOnForwardPageButton()
-{
-	if (setForwardPageButtonArrowStuff == false){
-		forwardPageArrowCentreX = (int) (forwardPageButtonX + (buttonWidth / 2));
-		forwardPageArrowCentreY = (int) (forwardPageButtonY + (buttonHeight / 2));
-		
-		//---top line---
-		forwardPageArrowTopStartX = forwardPageArrowCentreX - (int) (arrowHeight/4);
-		forwardPageArrowTopStartY = forwardPageArrowCentreY - (int) (arrowHeight/4);
-		forwardPageArrowTopEndX = forwardPageArrowCentreX + (int) (arrowHeight/4);
-		forwardPageArrowTopEndY = forwardPageArrowCentreY;
-
-		//---bottom line---
-		forwardPageArrowBottomStartX = forwardPageArrowCentreX - (int) (arrowHeight/4);
-		forwardPageArrowBottomStartY = forwardPageArrowCentreY + (int) (arrowHeight/4);
-		forwardPageArrowBottomEndX = forwardPageArrowCentreX + (int) (arrowHeight/4);
-		forwardPageArrowBottomEndY = forwardPageArrowCentreY;
-
-		setForwardPageButtonArrowStuff = true;//indicates that the above variables can be referenced
-	}
-	
-
-	g.setColor(new Color(0, 0, 0));
-	//making the line thicker
-	g.setStroke(new BasicStroke(5));
-	g.drawLine(forwardPageArrowTopStartX, forwardPageArrowTopStartY, forwardPageArrowTopEndX, forwardPageArrowTopEndY);
-
-	
-
-	g.setColor(new Color(0, 0, 0));
-	//making the line thicker
-	g.setStroke(new BasicStroke(5));
-	g.drawLine(forwardPageArrowBottomStartX, forwardPageArrowBottomStartY, forwardPageArrowBottomEndX, forwardPageArrowBottomEndY);
-
-	g.setStroke(new BasicStroke(1));//resets the stroke back to default
-	
-}
-
-public void drawNextQuestionButton()
-{
-	
-	//https://stackoverflow.com/questions/22628357/how-to-write-text-inside-a-rectangle
-	if (setNextQuestionButtonStuff == false){
-		//
-		nextQuestionButtonX= slideLeftX + (int) (slideWidth*0.25) + buttonWidth + buttonSpacing + buttonWidth + buttonSpacing;
-		nextQuestionButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
-
-		//changing next question button colour to be darker if it is hovered over
-		nextQuestionButtonRight = nextQuestionButtonX + buttonWidth;
-		nextQuestionButtonBottom = nextQuestionButtonY + buttonHeight;
-
-		g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-		stringWidth = g.getFontMetrics().stringWidth("Next");
-		stringHeight = g.getFontMetrics().getAscent();
-
-		nextQuestionButtonTextX = nextQuestionButtonX  + ((buttonWidth-stringWidth)/2);
-		nextQuestionButtonTextY = nextQuestionButtonY + stringHeight + (((buttonHeight-stringHeight)/2));
-
-		setNextQuestionButtonStuff = true;//indicates that the above variables can be referenced
-
-	}
-				
-	
-	if (nextQuestionClicked){
-		g.setColor(new Color(190, 190, 190));
-		nextQuestionClicked = false;
-	}
-	else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, nextQuestionButtonX, nextQuestionButtonRight, nextQuestionButtonY, nextQuestionButtonBottom) == true){
-		//user is hovering over this button
-		g.setColor(new Color(175, 175, 175));
-	}
-	else{
-		//
-		g.setColor(new Color(180, 180, 180));
-	}
-
-	//box
-	g.fillRect(nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight);
-
-	//drawing outline 
-	g.setColor(new Color(0, 0, 0));
-	g.drawRect(nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight);
-	//
-
-	//text
-	g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-	
-	g.setColor(new Color(0, 0, 0));
-
-	g.drawString("Next", nextQuestionButtonTextX, nextQuestionButtonTextY);
-
-}
-	
-
-//https://stackoverflow.com/questions/3976616/how-to-find-nth-occurrence-of-character-in-a-string
-//accessed: 22/08/2020
-public static int ordinalIndexOf(String str, String substr, int n) {
-    int pos = str.indexOf(substr);
-    while (--n > 0 && pos != -1){
-		pos = str.indexOf(substr, pos + 1);
-	}
-    return pos;
-}
-
-public void drawRedXButton()
-{
-	
-	//--begin the process--
-	try {
-		if (setRedXStuff == false){
-			//
-			//the img location
-			redXButtonImgLocation = "red_cross.png"; 
-			redXButtonImg = new File(redXButtonImgLocation);
-
-			redXBimg = ImageIO.read(redXButtonImg);
-			setRedXStuff = true;//indicates that the above variables can be referenced
-
-			
-		}
-
-		//resizing
-		redXButtonWidth = (int) ((windowWidth*0.34)*0.5*0.98);
-		redXButtonHeight=(int) (0.145*windowWidth*0.95);
-		redXBimgResized = resize(redXBimg, redXButtonWidth, redXButtonHeight);
-		
-
-		//setting coordinates
-		redXButtonSpacing = (int) ((float) (windowWidth)*0.02);//
-
-		redXButtonX = windowWidth - redXButtonSpacing - redXButtonWidth;//
-		redXButtonY=(int) (slideBottom - redXButtonHeight); 
-
-		//--changing the image brightness --
-		redXButtonRight = redXButtonX + redXButtonWidth;
-		redXButtonBottom = redXButtonY + redXButtonHeight;
-		
-		double previousRedXBrightness = redXBrightness;
-		if (xButtonClicked == true){
-			//
-			redXBrightness= 1.3;
-			xButtonClicked = false;
-		}
-		else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, redXButtonX, redXButtonRight, redXButtonY, redXButtonBottom) == true){
-			//user is hovering over this button
-			redXBrightness= 0.9;
-		}
-		else{
-			//
-			redXBrightness= 1.0;
-		}
-		if (previousRedXBrightness != redXBrightness){
-			//the brightness has changed, so update
-			redXBrightnessRescaleOp = new RescaleOp((float) redXBrightness, 0, null);
-		}
-		redXBrightnessRescaleOp.filter(redXBimgResized, redXBimgResized);
-
-
-
-		//for the highlighted outline
-		if (needToConfirmCorrectness == true){
-			//draw highlighted outline 
-			redXOutlineX = redXButtonX - 2;
-			redXOutlineY = redXButtonY - 2;
-			redXOutlineW = redXButtonWidth + 4;
-			redXOutlineH = redXButtonHeight + 4;
-
-			g.setColor(new Color(245, 197, 22));
-			g.fillRect(redXOutlineX, redXOutlineY, redXOutlineW, redXOutlineH);
-		}
-
-		//drawing to the screen
-		g.drawImage(redXBimgResized, redXButtonX, redXButtonY, this);
-
-	} catch (IOException e1) {
-		// TODO Auto-generated catch block
-		System.out.println("could not read the red X file");
-	}
-
-	
-}
-
-public void drawGreenTickButton()
-{
-	//--begin the process--
-	try {
-
-		if (setGreenTickStuff == false){
-			//
-			//the img location
-			greenTickButtonImgLocation = "green_tick.png"; 
-			greenTickButtonImg = new File(greenTickButtonImgLocation);
-
-
-			greenTickBimg = ImageIO.read(greenTickButtonImg);
-
-			setGreenTickStuff = true;//indicates that the above variables can be referenced
-		}
-		
-
-		//resizing
-		greenTickButtonWidth = (int) ((windowWidth*0.34)*0.5*0.98);
-		greenTickButtonHeight=(int) (0.145*windowWidth*0.95);
-		greenTickBimgResized = resize(greenTickBimg, greenTickButtonWidth, greenTickButtonHeight);
-
-		//setting coordinates
-		greenTickButtonSpacing = (int) ((float) (windowWidth)*0.02);//
-		greenTickButtonX = windowWidth - ((int) ((float) (windowWidth)*0.02)) - ((int) (windowWidth*0.34));
-		greenTickButtonY=(int) (slideBottom - greenTickButtonHeight); 
-
-		//--changing the image brightness --
-		greenTickButtonRight = greenTickButtonX + greenTickButtonWidth;
-		greenTickButtonBottom = greenTickButtonY + greenTickButtonHeight;
-
-		double previousGreenTickBrightness = greenTickBrightness;
-		if (tickButtonClicked == true){
-			//
-			greenTickBrightness= 1.3;
-			tickButtonClicked = false;
-		}
-		else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, greenTickButtonX, greenTickButtonRight, greenTickButtonY, greenTickButtonBottom) == true){
-			//user is hovering over this button
-			greenTickBrightness= 0.9;
-		}
-		else{
-			//
-			greenTickBrightness= 1.0;
-		}
-		if (previousGreenTickBrightness != greenTickBrightness){
-			//the brightness has changed, so update
-			greenTickBrightnessRescaleOp = new RescaleOp((float) greenTickBrightness, 0, null);
-		}
-		greenTickBrightnessRescaleOp.filter(greenTickBimgResized, greenTickBimgResized);
-		
-
-		//for the highlighted outline
-		if (needToConfirmCorrectness == true){
-			//draw highlighted outline 
-			greenTickOutlineX = greenTickButtonX - 2;
-			greenTickOutlineY = greenTickButtonY - 2;
-			greenTickOutlineW = greenTickButtonWidth + 4;
-			greenTickOutlineH = greenTickButtonHeight + 4;
-
-			g.setColor(new Color(245, 197, 22));
-			g.fillRect(greenTickOutlineX, greenTickOutlineY, greenTickOutlineW, greenTickOutlineH);
-		}
-
-		//drawing to the screen
-		g.drawImage(greenTickBimgResized, greenTickButtonX, greenTickButtonY, this);
-
-
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		System.out.println("could not read the green tick image");
-	}
-
-}
-
-public void drawDoneQuestionTick()
-{
-	if (pdfHandlerSet == true){
-		//
-		if (pdfHandler.isComplete(currentQuestion)){
-			//draw the tick
-			//the img location
-			doneTickImgLocation = "doneTick.png"; 
-			doneTickImg = new File(doneTickImgLocation);
-
-			try {
-				if (setDoneQuestionTickStuff == false){
-					//
-					//the img location
-					doneTickImgLocation = "doneTick.png"; 
-					doneTickImg = new File(doneTickImgLocation);
-
-					doneTickBimg = ImageIO.read(doneTickImg);
-
-					setDoneQuestionTickStuff = true;
-				}
-				//resizing
-				doneTickWidth = (int) (windowWidth*0.02);
-				doneTickHeight=(int) (windowWidth*0.02);
-				doneTickBimgResized = resize(doneTickBimg, doneTickWidth, doneTickHeight);
-
-				//setting coordinates
-				//int greenTickButtonSpacing = (int) ((float) (windowWidth)*0.02);//
-
-				greenTickButtonX = currentQuestionTextX + currentQuestionTextWidth + 10;
-				greenTickButtonY= currentQuestionTextY - (int) (currentQuestionTextHeight); 
-
-				
-
-				//drawing to the screen
-				g.drawImage(doneTickBimgResized, greenTickButtonX, greenTickButtonY, this);
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				System.out.println("could not read the done question tick");
-			}
-
-		}
-	}
-}
-
-public void drawErrorText()
-{
-	errorTextString = ".";
-	if (firstSlide == true){
-		errorTextString = "On the first slide";
-	}
-	if (mostRecentSlide == true){
-		errorTextString = "This is the most recent slide";
-	}
-	if (displayNoMoreSlidesText == true){
-		errorTextString = "No more slides left!";
-	}
-
-	errorTextStringWidth = g.getFontMetrics().stringWidth(errorTextString);
-	errorTextStringHeight = g.getFontMetrics().getAscent();
-	errorTextStringX = slideLeftX;
-	errorTextStringY = slideBottom + errorTextStringHeight*2;
-
-	if ((firstSlide== true) || (mostRecentSlide== true) || (displayNoMoreSlidesText== true))
-	{
-		//
-		g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-		g.setColor(new Color(180, 10, 10));
-		g.drawString(errorTextString, errorTextStringX, errorTextStringY);
-		
-	}
-	
-	setErrorTextStuff = true;
-
-}
-
-public void drawBackToMenuButton()
-{
-	if (setBackToMenuButtonStuff == false){
-		//
-		backToMenuButtonX= (int) (windowWidth*0.02);
-		backToMenuButtonY= (int) (windowHeight*0.02);
-
-		//changing back page button colour to be darker if it is hovered over
-		backToMenuButtonRight = backToMenuButtonX + buttonWidth;
-		backToMenuButtonBottom = backToMenuButtonY + buttonHeight;
-
-		//--drawing the text on the button--
-		g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-		backToMenuButtonText = "Back";
-		backToMenuButtonTextWidth = g.getFontMetrics().stringWidth(backToMenuButtonText);;
-		backToMenuButtonTextHeight = g.getFontMetrics().getAscent();;
-		backToMenuButtonTextX = backToMenuButtonX + (int) ((buttonWidth - backToMenuButtonTextWidth)/2);
-		backToMenuButtonTextY = backToMenuButtonY + (int) ((buttonHeight - backToMenuButtonTextHeight)/2) + backToMenuButtonTextHeight;
-
-		setBackToMenuButtonStuff = true; //indicates that the above variables can be referenced
-
-	}
-	
-	if (backToMenuButtonClicked){
-		//
-		g.setColor(new Color(190, 190, 190));
-		backToMenuButtonClicked = false;
-	}
-	else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, backToMenuButtonX, backToMenuButtonRight, backToMenuButtonY, backToMenuButtonBottom) == true){
-		//user is hovering over this button
-		g.setColor(new Color(175, 175, 175));
-	}
-	else{
-		//
-		g.setColor(new Color(180, 180, 180));
-	}
-
-	//drawing the button
-	g.fillRect(backToMenuButtonX, backToMenuButtonY, buttonWidth, buttonHeight);
-
-	//drawing outline 
-	g.setColor(new Color(0, 0, 0));
-	g.drawRect(backToMenuButtonX, backToMenuButtonY, buttonWidth, buttonHeight);
-	//
-
-	//--drawing the text on the button--
-	g.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-	g.setColor(new Color(0, 0, 0));
-
-	g.drawString(backToMenuButtonText, backToMenuButtonTextX, backToMenuButtonTextY);
-
-}
-
-public void drawTypingTextBox()
-{
-	if (setTextBoxStuff == false){
-
-		//initiate the dimension & location
-		textBoxSpacing = (int) ((float) (windowWidth)*0.02);
-		textBoxWidth = (int) (windowWidth*0.34);
-		textBoxHeight=(int) (textBoxWidth*0.56);
-
-		textBoxX = windowWidth - textBoxSpacing - textBoxWidth;
-		textBoxY=(int) (windowHeight/2 - (windowWidth*0.6*0.56)/2); //lines up with slide image
-
-		//create the text box object
-		typingTextBox  = new TextBox(g, textBoxX, textBoxY, textBoxWidth, textBoxHeight);
-		setTextBoxStuff = true;
-	}
-
-	//draw the text box
-	typingTextBox.drawTextBox(g);
-}
-
-//DRAWING  QUIZ STUFF END
 
 
 //CLEARING THE COMPLETED QUESTIONS TEXT FILE FOR THE SELECTED POWERPOINT

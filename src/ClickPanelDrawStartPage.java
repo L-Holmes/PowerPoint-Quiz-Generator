@@ -1,14 +1,5 @@
 import java.awt.*;//used for layout managers
 
-/**
- * need to think about updating variables between the classes
- * 
- * need to update the drawing location each time
- * 
- * window dimensions- set once
- * slidePDFLocation - set once
- 
- */
 
 public class ClickPanelDrawStartPage
 {
@@ -268,7 +259,6 @@ public class ClickPanelDrawStartPage
         //
         windowWidth = windowW;
         windowHeight = windowH;
-        System.out.println("created this object");
     }
 
     /**

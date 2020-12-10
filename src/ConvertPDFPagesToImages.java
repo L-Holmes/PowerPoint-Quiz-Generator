@@ -40,8 +40,6 @@ public class ConvertPDFPagesToImages {
     boolean slideChoiceRandomOrder = true; //[random order]
     boolean slideChoiceDescendingWrongness = false; // [descending wrong-ness] --but random for the questions with equal wrongness
 
-    //
-
     // user can move back to answers and question
     // but cannot move to a different question, before clicking
     // the tick or the 'X'
