@@ -23,7 +23,7 @@ then sort out the red stuff in the click panel
 */
 
 
-public class ClickPanelDrawQuizPage
+public class ClickPanelDrawQuizPage extends JPanel
 {
     //graphics handler
     private Graphics2D drawingLocation;
@@ -44,10 +44,11 @@ public class ClickPanelDrawQuizPage
     int imagePageNumber; //needs updating
 
     //
+    private ConvertPDFPagesToImages pdfHandler;
     boolean pdfHandlerSet; //needs updating
 
     //
-    boolean slideImageUpdated; //needs updating
+    boolean slideImageUpdated = true; //needs updating
 
     //count indicating the number of questions that the user has completed in the current session
     int questionsComplete; //needs updating
@@ -125,7 +126,9 @@ public class ClickPanelDrawQuizPage
 
 	//--drawing the back page button--
 	int backPageButtonX;
-	int backPageButtonY;
+    int backPageButtonY;
+    int backPageButtonWidth;
+    int backPageButtonHeight;
 	int backPageButtonRight;
     int backPageButtonBottom;
     boolean backwardPageButtonClicked = false;
@@ -149,7 +152,9 @@ public class ClickPanelDrawQuizPage
 
 	//--drawing the forward page button--
 	int forwardPageButtonX;
-	int forwardPageButtonY;
+    int forwardPageButtonY;
+    int forwardPageButtonHeight;
+    int forwardPageButtonWidth;
 	int nextPageButtonRight;
     int nextPageButtonBottom;
     boolean forwardPageButtonClicked = false;
@@ -172,7 +177,9 @@ public class ClickPanelDrawQuizPage
 
 	//--drawing the next question button--
 	int nextQuestionButtonX;
-	int nextQuestionButtonY;
+    int nextQuestionButtonY;
+    int nextQuestionButtonWidth;
+    int nextQuestionButtonHeight;
 	int nextQuestionButtonRight;
 	int nextQuestionButtonBottom;
 	int stringWidth;
@@ -249,7 +256,9 @@ public class ClickPanelDrawQuizPage
 
 	//--drawing the back to menu button--
 	int backToMenuButtonX;
-	int backToMenuButtonY;
+    int backToMenuButtonY;
+    int backToMenuButtonWidth;
+    int backToMenuButtonHeight;
 	int backToMenuButtonRight;
 	int backToMenuButtonBottom;
 	boolean backToMenuButtonClicked;
@@ -568,12 +577,15 @@ public class ClickPanelDrawQuizPage
     {
         if (setBackPageButtonStuff == false){
             //
+
+            backPageButtonWidth = buttonWidth;
+            backPageButtonHeight = buttonHeight;
             backPageButtonX= slideLeftX +  (int) (slideWidth*0.25);
-            backPageButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
+            backPageButtonY= slideBottom + (distSlideBottomToScreenBottom/2 - backPageButtonHeight/2);
 
             //changing back page button colour to be darker if it is hovered over
-            backPageButtonRight = backPageButtonX + buttonWidth;
-            backPageButtonBottom = backPageButtonY + buttonHeight;
+            backPageButtonRight = backPageButtonX + backPageButtonWidth;
+            backPageButtonBottom = backPageButtonY + backPageButtonHeight;
 
             setBackPageButtonStuff = true; //indicates that the above variables can be referenced
 
@@ -594,11 +606,11 @@ public class ClickPanelDrawQuizPage
         }
 
         //drawing the button
-        drawingLocation.fillRect(backPageButtonX, backPageButtonY, buttonWidth, buttonHeight);
+        drawingLocation.fillRect(backPageButtonX, backPageButtonY, backPageButtonWidth, backPageButtonHeight);
 
         //drawing outline 
         drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(backPageButtonX, backPageButtonY, buttonWidth, buttonHeight);
+        drawingLocation.drawRect(backPageButtonX, backPageButtonY, backPageButtonWidth, backPageButtonHeight);
         //
 
     }
@@ -607,8 +619,8 @@ public class ClickPanelDrawQuizPage
     {
         if (setBackPageButtonArrowStuff == false){
             //
-            backPageArrowCentreX = (int) (backPageButtonX + (buttonWidth / 2));
-            backPageArrowCentreY = (int) (backPageButtonY + (buttonHeight / 2));
+            backPageArrowCentreX = (int) (backPageButtonX + (backPageButtonWidth / 2));
+            backPageArrowCentreY = (int) (backPageButtonY + (backPageButtonHeight / 2));
             
             arrowHeight = 40;
 
@@ -649,12 +661,14 @@ public class ClickPanelDrawQuizPage
     {
         if (setForwardPageButtonStuff == false){
             //
-            forwardPageButtonX=slideLeftX + (int) (slideWidth*0.25) + buttonWidth + buttonSpacing;
-            forwardPageButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
+            forwardPageButtonWidth = buttonWidth;
+            forwardPageButtonHeight = buttonHeight;
+            forwardPageButtonX=slideLeftX + (int) (slideWidth*0.25) + forwardPageButtonWidth + buttonSpacing;
+            forwardPageButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - forwardPageButtonHeight/2);
 
             //changing next page button colour to be darker if it is hovered over
-            nextPageButtonRight = forwardPageButtonX + buttonWidth;
-            nextPageButtonBottom = forwardPageButtonY + buttonHeight;
+            nextPageButtonRight = forwardPageButtonX + forwardPageButtonWidth;
+            nextPageButtonBottom = forwardPageButtonY + forwardPageButtonHeight;
 
             setForwardPageButtonStuff = true;//indicates that the above variables can be referenced
 
@@ -674,11 +688,11 @@ public class ClickPanelDrawQuizPage
             drawingLocation.setColor(new Color(180, 180, 180));
         }
 
-        drawingLocation.fillRect(forwardPageButtonX, forwardPageButtonY, buttonWidth, buttonHeight);
+        drawingLocation.fillRect(forwardPageButtonX, forwardPageButtonY, forwardPageButtonWidth, forwardPageButtonHeight);
 
         //drawing outline 
         drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(forwardPageButtonX, forwardPageButtonY, buttonWidth, buttonHeight);
+        drawingLocation.drawRect(forwardPageButtonX, forwardPageButtonY, forwardPageButtonWidth, forwardPageButtonHeight);
         //
 
     }
@@ -686,8 +700,8 @@ public class ClickPanelDrawQuizPage
     public void drawArrowOnForwardPageButton()
     {
         if (setForwardPageButtonArrowStuff == false){
-            forwardPageArrowCentreX = (int) (forwardPageButtonX + (buttonWidth / 2));
-            forwardPageArrowCentreY = (int) (forwardPageButtonY + (buttonHeight / 2));
+            forwardPageArrowCentreX = (int) (forwardPageButtonX + (forwardPageButtonWidth / 2));
+            forwardPageArrowCentreY = (int) (forwardPageButtonY + (forwardPageButtonHeight / 2));
             
             //---top line---
             forwardPageArrowTopStartX = forwardPageArrowCentreX - (int) (arrowHeight/4);
@@ -727,19 +741,22 @@ public class ClickPanelDrawQuizPage
         //https://stackoverflow.com/questions/22628357/how-to-write-text-inside-a-rectangle
         if (setNextQuestionButtonStuff == false){
             //
-            nextQuestionButtonX= slideLeftX + (int) (slideWidth*0.25) + buttonWidth + buttonSpacing + buttonWidth + buttonSpacing;
-            nextQuestionButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - buttonHeight/2);
+            nextQuestionButtonWidth = buttonWidth;
+            nextQuestionButtonHeight = buttonHeight;
+
+            nextQuestionButtonX= slideLeftX + (int) (slideWidth*0.25) + nextQuestionButtonWidth + buttonSpacing + nextQuestionButtonWidth + buttonSpacing;
+            nextQuestionButtonY=slideBottom + (distSlideBottomToScreenBottom/2 - nextQuestionButtonHeight/2);
 
             //changing next question button colour to be darker if it is hovered over
-            nextQuestionButtonRight = nextQuestionButtonX + buttonWidth;
-            nextQuestionButtonBottom = nextQuestionButtonY + buttonHeight;
+            nextQuestionButtonRight = nextQuestionButtonX + nextQuestionButtonWidth;
+            nextQuestionButtonBottom = nextQuestionButtonY + nextQuestionButtonHeight;
 
             drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
             stringWidth = drawingLocation.getFontMetrics().stringWidth("Next");
             stringHeight = drawingLocation.getFontMetrics().getAscent();
 
-            nextQuestionButtonTextX = nextQuestionButtonX  + ((buttonWidth-stringWidth)/2);
-            nextQuestionButtonTextY = nextQuestionButtonY + stringHeight + (((buttonHeight-stringHeight)/2));
+            nextQuestionButtonTextX = nextQuestionButtonX  + ((nextQuestionButtonWidth-stringWidth)/2);
+            nextQuestionButtonTextY = nextQuestionButtonY + stringHeight + (((nextQuestionButtonHeight-stringHeight)/2));
 
             setNextQuestionButtonStuff = true;//indicates that the above variables can be referenced
 
@@ -760,11 +777,11 @@ public class ClickPanelDrawQuizPage
         }
 
         //box
-        drawingLocation.fillRect(nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight);
+        drawingLocation.fillRect(nextQuestionButtonX, nextQuestionButtonY, nextQuestionButtonWidth, nextQuestionButtonHeight);
 
         //drawing outline 
         drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(nextQuestionButtonX, nextQuestionButtonY, buttonWidth, buttonHeight);
+        drawingLocation.drawRect(nextQuestionButtonX, nextQuestionButtonY, nextQuestionButtonWidth, nextQuestionButtonHeight);
         //
 
         //text
@@ -1024,18 +1041,20 @@ public class ClickPanelDrawQuizPage
             //
             backToMenuButtonX= (int) (windowWidth*0.02);
             backToMenuButtonY= (int) (windowHeight*0.02);
+            backToMenuButtonWidth = buttonWidth;
+            backToMenuButtonHeight = backToMenuButtonHeight;
 
             //changing back page button colour to be darker if it is hovered over
-            backToMenuButtonRight = backToMenuButtonX + buttonWidth;
-            backToMenuButtonBottom = backToMenuButtonY + buttonHeight;
+            backToMenuButtonRight = backToMenuButtonX + backToMenuButtonWidth;
+            backToMenuButtonBottom = backToMenuButtonY + backToMenuButtonHeight;
 
             //--drawing the text on the button--
             drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
             backToMenuButtonText = "Back";
             backToMenuButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(backToMenuButtonText);;
             backToMenuButtonTextHeight = drawingLocation.getFontMetrics().getAscent();;
-            backToMenuButtonTextX = backToMenuButtonX + (int) ((buttonWidth - backToMenuButtonTextWidth)/2);
-            backToMenuButtonTextY = backToMenuButtonY + (int) ((buttonHeight - backToMenuButtonTextHeight)/2) + backToMenuButtonTextHeight;
+            backToMenuButtonTextX = backToMenuButtonX + (int) ((backToMenuButtonWidth - backToMenuButtonTextWidth)/2);
+            backToMenuButtonTextY = backToMenuButtonY + (int) ((backToMenuButtonHeight - backToMenuButtonTextHeight)/2) + backToMenuButtonTextHeight;
 
             setBackToMenuButtonStuff = true; //indicates that the above variables can be referenced
 
@@ -1056,11 +1075,11 @@ public class ClickPanelDrawQuizPage
         }
 
         //drawing the button
-        drawingLocation.fillRect(backToMenuButtonX, backToMenuButtonY, buttonWidth, buttonHeight);
+        drawingLocation.fillRect(backToMenuButtonX, backToMenuButtonY, backToMenuButtonWidth, backToMenuButtonHeight);
 
         //drawing outline 
         drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(backToMenuButtonX, backToMenuButtonY, buttonWidth, buttonHeight);
+        drawingLocation.drawRect(backToMenuButtonX, backToMenuButtonY, backToMenuButtonWidth, backToMenuButtonHeight);
         //
 
         //--drawing the text on the button--
@@ -1105,19 +1124,19 @@ public class ClickPanelDrawQuizPage
 
     public int getTextBoxX()
     {
-        return x;
+        return textBoxX;
     }
 
 
     public int getTextBoxY()
     {
-        return x;
+        return textBoxY;
     }
 
 
     public int getTextBoxW()
     {
-        return x;
+        return textBoxWidth;
     }
 
     /**
@@ -1125,7 +1144,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getTextBoxH()
     {
-        return x;
+        return textBoxHeight;
     }
 
 
@@ -1134,12 +1153,12 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackToMenuButtonX()
     {
-        return x;
+        return backToMenuButtonX;
     }
 
     public int getBackToMenuButtonY()
     {
-        return x;
+        return backToMenuButtonY;
     }
 
     /**
@@ -1147,7 +1166,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackToMenuButtonW()
     {
-        return x;
+        return backToMenuButtonWidth;
     }
 
     /**
@@ -1155,7 +1174,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackToMenuButtonH()
     {
-        return x;
+        return backToMenuButtonHeight;
     }
 
 
@@ -1164,7 +1183,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getXButtonX()
     {
-        return x;
+        return redXButtonX;
     }
 
     /**
@@ -1172,7 +1191,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getXButtonY()
     {
-        return x;
+        return redXButtonY;
     }
 
     /**
@@ -1180,7 +1199,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getXButtonW()
     {
-        return x;
+        return redXButtonWidth;
     }
 
     /**
@@ -1188,7 +1207,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getXButtonH()
     {
-        return x;
+        return redXButtonHeight;
     }
 
 
@@ -1197,7 +1216,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getTickButtonX()
     {
-        return x;
+        return greenTickButtonX;
     }
 
     /**
@@ -1205,12 +1224,12 @@ public class ClickPanelDrawQuizPage
      */
     public int getTickButtonY()
     {
-        return x;
+        return greenTickButtonY;
     }
 
     public int getTickButtonW()
     {
-        return x;
+        return greenTickButtonWidth;
     }
 
     /**
@@ -1218,7 +1237,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getTickButtonH()
     {
-        return x;
+        return greenTickButtonHeight;
     }
 
 
@@ -1227,7 +1246,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackwardPageButtonX()
     {
-        return x;
+        return backPageButtonX;
     }
 
     /**
@@ -1235,7 +1254,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackwardPageButtonY()
     {
-        return x;
+        return backPageButtonY;
     }
 
     /**
@@ -1243,7 +1262,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackwardPageButtonW()
     {
-        return x;
+        return backPageButtonWidth;
     }
 
     /**
@@ -1251,7 +1270,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getBackwardPageButtonH()
     {
-        return x;
+        return backPageButtonHeight;
     }
 
 
@@ -1260,7 +1279,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getForwardPageButtonX()
     {
-        return x;
+        return forwardPageButtonX;
     }
 
     /**
@@ -1268,7 +1287,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getForwardPageButtonY()
     {
-        return x;
+        return forwardPageButtonY;
     }
 
     /**
@@ -1276,7 +1295,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getForwardPageButtonW()
     {
-        return x;
+        return forwardPageButtonWidth;
     }
 
     /**
@@ -1284,7 +1303,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getForwardPageButtonH()
     {
-        return x;
+        return forwardPageButtonHeight;
     }
 
 
@@ -1293,7 +1312,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getNextQuestionButtonButtonX()
     {
-        return x;
+        return nextQuestionButtonX;
     }
 
     /**
@@ -1301,7 +1320,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getNextQuestionButtonButtonY()
     {
-        return x;
+        return nextQuestionButtonY;
     }
 
     /**
@@ -1309,7 +1328,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getNextQuestionButtonButtonW()
     {
-        return x;
+        return nextQuestionButtonWidth;
     }
 
     /**
@@ -1317,7 +1336,7 @@ public class ClickPanelDrawQuizPage
      */
     public int getNextQuestionButtonButtonH()
     {
-        return x;
+        return nextQuestionButtonHeight;
     }
 
     //---SETTERS---
@@ -1327,7 +1346,7 @@ public class ClickPanelDrawQuizPage
      */
     public void setNextQuestionButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        nextQuestionClicked = newClickedValue;
     }
     /**
      * sets the x to the newClickedValue
@@ -1335,7 +1354,7 @@ public class ClickPanelDrawQuizPage
      */
     public void setForwardPageButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        forwardPageButtonClicked = newClickedValue;
     }
     /**
      * sets the x to the newClickedValue
@@ -1343,7 +1362,7 @@ public class ClickPanelDrawQuizPage
      */
     public void setBackwardPageButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        backwardPageButtonClicked = newClickedValue;
     }
     /**
      * sets the x to the newClickedValue
@@ -1351,7 +1370,7 @@ public class ClickPanelDrawQuizPage
      */
     public void setTickButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        tickButtonClicked = newClickedValue;
     }
     /**
      * sets the x to the newClickedValue
@@ -1359,7 +1378,7 @@ public class ClickPanelDrawQuizPage
      */
     public void setXButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        xButtonClicked = newClickedValue;
     }
     /**
      * sets the x to the newClickedValue
@@ -1367,7 +1386,33 @@ public class ClickPanelDrawQuizPage
      */
     public void setBackToMenuButtonClicked(boolean newClickedValue)
     {
-        x = newClickedValue;
+        backToMenuButtonClicked = newClickedValue;
+    }
+
+    /**
+	 * @param needsUpdating = the new value of the slideImageUpdated 
+	 * sets the slide image update variable to the passed value
+	 */
+	public void setJustChangedSlide(boolean needsUpdating)
+	{
+		slideImageUpdated = needsUpdating;
+    }
+    
+    /**
+     * updates the pdfHandler to the new value
+     * @param newPDFHandler = the new ConvertPDFPagesToImages object that is to be 
+     *                        used by the ClickPanel
+     */
+    public void setPDFHandler(ConvertPDFPagesToImages newPDFHandler)
+    {
+        pdfHandler = newPDFHandler;
+        if (newPDFHandler!=null){
+            pdfHandlerSet = true;
+        }
+        else{
+            pdfHandlerSet = false;
+        }
+        
     }
 
 

@@ -242,7 +242,7 @@ public class ConvertPDFPagesToImages {
             //updating (or not) the slide image
             if (previousPageNumber != pageNumber){
                 //moved onto a new slide
-                motherClickPanel.setJustChangedSlide(true);
+                motherClickPanel.setJustChangedSlideForQuizPage(true);
             }
             //}}
 

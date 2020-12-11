@@ -44,4 +44,7 @@ public class Main {
  *  need to do the same with the quiz page
  * 
  * I think I need to make click panel call getters and setter on the quiz page instead now.
+ * 
+ * 
+ * need to sort out the getters and setters mate
  */

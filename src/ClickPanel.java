@@ -56,7 +56,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	//location of the powerpoint
 	private String slideImgLocation = "images/"; // converted images from pdf document are saved here
 	private String slidePDFLocation = "test_pp.pdf";
-	private boolean slideImageUpdated;
 
 	//new slide stuff
 	private int imagePageNumber = 1; 
@@ -133,7 +132,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void initializeDefaultValueVariables()
 	{
-		slideImageUpdated = true;
 		//
 		setCoordinateStuff = false;
 
@@ -250,16 +248,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	public boolean getCorrectness()
 	{
 		return needToConfirmCorrectness;
-	}
-
-	/**
-	 * @param needsUpdating = the new value of the slideImageUpdated 
-	 * sets the slide image update variable to the passed value
-	 */
-	public void setJustChangedSlide(boolean needsUpdating)
-	{
-		slideImageUpdated = needsUpdating;
-
 	}
 
 
@@ -796,6 +784,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		if (pdfHandlerSet == false){
 			pdfHandler = new ConvertPDFPagesToImages(this);
 			pdfHandlerSet = true;
+			if (quizPageDrawerSet == true){
+				quizPageDrawer.setPDFHandler(pdfHandler);
+			}
+			
 
 		}
 
@@ -1223,7 +1215,21 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 //}}
 
+//--- ---
 
+	/**
+	 * @param needsUpdating = the new value of the slideImageUpdated 
+	 * sets the slide image update variable for the quiz page to the passed value
+	 */
+	public void setJustChangedSlideForQuizPage(boolean needsUpdating)
+	{
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.setJustChangedSlide(needsUpdating);
+		}
+
+    }
+
+//}}
 
 }
   
