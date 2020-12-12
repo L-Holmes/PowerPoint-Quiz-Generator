@@ -55,10 +55,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	//location of the powerpoint
 	private String slideImgLocation = "images/"; // converted images from pdf document are saved here
-	private String slidePDFLocation = "test_pp.pdf";
-
-	//new slide stuff
-	private int imagePageNumber = 1; 
+	private String slidePDFLocation = "more_complex_pp.pdf";
 	
 
 	//slide thread handler
@@ -157,8 +154,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 		//set stuff
 		setWindowDimensions = false;
-		
-		
 	}
 
 
@@ -306,8 +301,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			windowHeight = thisWindow.getwindowHeight();
 			setWindowDimensions = true;
 		}
-		
-
+	
         //sets the size of the JPanel if it has not been rendered
 		if (!rendered) {
 			this.setSize(windowWidth, windowHeight);
@@ -356,7 +350,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				//--DRAWING THE REST OF THE PAGE--
 				if (currentPage == "2"){
 					if (quizPageDrawerSet == false){
-						quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight);
+						quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight, this);
 						quizPageDrawerSet = true;
 					}
 					quizPageDrawer.drawQuiz(g, slidePDFLocation, pointXCoord, pointYCoord);
@@ -784,15 +778,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		if (pdfHandlerSet == false){
 			pdfHandler = new ConvertPDFPagesToImages(this);
 			pdfHandlerSet = true;
-			if (quizPageDrawerSet == true){
-				quizPageDrawer.setPDFHandler(pdfHandler);
-			}
-			
-
 		}
 
-		imagePageNumber = pdfHandler.changeSlide("newQuestion");/////////////////////////
-		setMostResentSlide(false);
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("newQuestion"));
+			setMostResentSlide(false);
+		}
+		
 	}
 
 	/**
@@ -804,7 +796,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	{
 		//
 		if (pdfHandlerSet == true){
-			imagePageNumber = pdfHandler.changeSlide("forward");/////////////////
+			if (quizPageDrawerSet == true){
+				quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("forward"));
+			}
 		}
 	}
 
@@ -815,11 +809,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void getBackwardSlide()
 	{
-		//
 		if (pdfHandlerSet == true){
-			imagePageNumber = pdfHandler.changeSlide("back");////////////////
-			setNoMoreSlideText(false);
-			setMostResentSlide(false);
+			if (quizPageDrawerSet == true){
+				quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("back"));
+				setNoMoreSlideText(false);
+				setMostResentSlide(false);
+			}
 		}
 	}
 
@@ -946,13 +941,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				}
 				else{
 					if ((startPageDrawer.getSlideMode2ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
-						//
 						startPageDrawer.setSlideMode1ButtonSelected(false);
 					}
 				}
-				//
 				startPageDrawer.setSlideMode1ButtonClicked(true);
-				
 			}
 			else if (typedChar.equals("2")){
 				//slide mode 2 button click
@@ -960,13 +952,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					startPageDrawer.setSlideMode2ButtonSelected(true);				}
 				else{
 					if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
-						//
 						startPageDrawer.setSlideMode2ButtonSelected(false);
 					}
 				}
-				//
 				startPageDrawer.setSlideMode2ButtonClicked(true);
-				
 			}
 			else if (typedChar.equals("3")){
 				//slide mode 3 button click
@@ -974,13 +963,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					startPageDrawer.setSlideMode3ButtonSelected(true);				}
 				else{
 					if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode2ButtonSelected() == true)){
-						//
 						startPageDrawer.setSlideMode3ButtonSelected(false);
 					}
 				}
-				//
 				startPageDrawer.setSlideMode3ButtonClicked(true);
-				
 			}
 			else if (typedChar.equals("[")){
 				//slide option 1 button click
@@ -988,9 +974,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					startPageDrawer.setSlideOrder2ButtonSelected(false);
 					startPageDrawer.setSlideOrder1ButtonSelected(true);
 				}			
-				//
 				startPageDrawer.setSlideOrder1ButtonClicked(true);
-				
 			}
 			else if (typedChar.equals("]")){
 				//slide option 2 button click
@@ -998,9 +982,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					startPageDrawer.setSlideOrder1ButtonSelected(false);
 					startPageDrawer.setSlideOrder2ButtonSelected(true);
 				}			
-				//
 				startPageDrawer.setSlideOrder2ButtonClicked(true);
-				
 			}
 		}
 		else if (currentPage == "2"){
@@ -1008,7 +990,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			if (textBoxEntered == true){
 				//user typed into the text box
 				quizPageDrawer.getTypingTextBox().typeLetter(typedChar, keyEvent.getExtendedKeyCode());
-				
+				if (quizPageDrawer.getTypingTextBox().isEntered()){
+					textBoxEntered = true;
+				}
+				else{
+					textBoxEntered = false;
+				}
 			}
 			else{
 				//not in text box
@@ -1016,42 +1003,35 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					//next question button clicked
 					quizPageDrawer.setNextQuestionButtonClicked(true);
 					getNextQuestion();
-					
 				}
 				else if (typedChar.equals("t")){
 					//text box clicked
 					quizPageDrawer.getTypingTextBox().setEntered(true);
 					textBoxEntered = true;
-					
 				}
 				else if (typedChar.equals("/")){
 					//text box clicked
 					//textBoxTextLeftOfCursor = ""; reset the text in the text box
-					
 				}
 				else if (typedChar.equals("r")){
 					//green tick button clicked
 					quizPageDrawer.setTickButtonClicked(true);
 					greenTickClicked();
-					
 				}
 				else if (typedChar.equals("w")){
 					//red x button clicked
 					quizPageDrawer.setXButtonClicked(true);
 					redXClicked();
-					
 				}
 				else if (typedChar.equals("[")){
 					//move left in seen slides button clicked
 					quizPageDrawer.setBackwardPageButtonClicked(true);
 					getBackwardSlide();
-					
 				}
 				else if (typedChar.equals("]")){
 					//move right in seen slides button clicked
 					quizPageDrawer.setForwardPageButtonClicked(true);
 					getForwardSlide();
-					
 				}
 				else if (typedChar.equals("b")){
 					//back to menu button clicked
@@ -1061,11 +1041,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					saveQuestionsCompleted();
 					closePPFile();
 					initializeDefaultValueVariables();
-					
 				}
 			}
 		}
-		
 	}
 
 	public String backspaceString(String str) {
@@ -1227,7 +1205,26 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			quizPageDrawer.setJustChangedSlide(needsUpdating);
 		}
 
-    }
+	}
+	
+	/**
+	 * @return true if the pdfHandler object has been created; fales otherwise
+	 */
+	public boolean isPDFHandlerSet()
+	{
+		return pdfHandlerSet;
+	}
+
+	public boolean isTheQuestionComplete(int questionNumber)
+	{
+		if (pdfHandlerSet == true){
+			return pdfHandler.isComplete(currentQuestion);
+		}
+		else{
+			return false;
+		}
+		
+	}
 
 //}}
 

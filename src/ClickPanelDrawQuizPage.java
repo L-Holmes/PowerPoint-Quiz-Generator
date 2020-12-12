@@ -28,6 +28,9 @@ public class ClickPanelDrawQuizPage extends JPanel
     //graphics handler
     private Graphics2D drawingLocation;
 
+    //
+    private ClickPanel mainClickPanel;
+
     //window dimensions
     private int windowWidth;
     private int windowHeight;
@@ -41,11 +44,10 @@ public class ClickPanelDrawQuizPage extends JPanel
     String slidePDFLocation; //set once
 
     //think its the slide number within the powerpoint(?)
-    int imagePageNumber; //needs updating
+    int imagePageNumber = 1; //needs updating
 
     //
     private ConvertPDFPagesToImages pdfHandler;
-    boolean pdfHandlerSet; //needs updating
 
     //
     boolean slideImageUpdated = true; //needs updating
@@ -289,10 +291,11 @@ public class ClickPanelDrawQuizPage extends JPanel
      * @param windowW = the width of the window (in pixels)
      * @param windowH = the height of the window (in pixels)
      */
-    public ClickPanelDrawQuizPage(int windowW, int windowH)
+    public ClickPanelDrawQuizPage(int windowW, int windowH, ClickPanel motherClickPanel)
     {
         windowWidth = windowW;
         windowHeight = windowH;
+        mainClickPanel = motherClickPanel;
     }
 
     //REQUIRED METHODS FOR THE DRAWING
@@ -427,7 +430,6 @@ public class ClickPanelDrawQuizPage extends JPanel
         drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 40)); 
         drawingLocation.setColor(new Color(0, 0, 0));
         
-
         drawingLocation.drawString(titleString, titleTextX, titleTextY);
 
     }
@@ -438,14 +440,14 @@ public class ClickPanelDrawQuizPage extends JPanel
         introImgLocation = "greyBackground.png"; 
 
         try {
-            if ((imagePageNumber != -1) || (pdfHandlerSet == true)){
+            if ((imagePageNumber != -1) || (mainClickPanel.isPDFHandlerSet() == true)){
                 //
                 if (slideImageUpdated == true){
                     //--normal code to run--
                     String specificSlideLocation = "images/slideImage" + imagePageNumber+ ".png";
                     slideImg = new File(specificSlideLocation);
                     introImg = new File(introImgLocation);
-                    if (pdfHandlerSet == true){
+                    if (mainClickPanel.isPDFHandlerSet() == true){
                         img = ImageIO.read(slideImg);
                     }
                     else{
@@ -618,7 +620,6 @@ public class ClickPanelDrawQuizPage extends JPanel
     public void drawArrowOnBackPageButton()
     {
         if (setBackPageButtonArrowStuff == false){
-            //
             backPageArrowCentreX = (int) (backPageButtonX + (backPageButtonWidth / 2));
             backPageArrowCentreY = (int) (backPageButtonY + (backPageButtonHeight / 2));
             
@@ -946,23 +947,19 @@ public class ClickPanelDrawQuizPage extends JPanel
                 drawingLocation.setColor(new Color(245, 197, 22));
                 drawingLocation.fillRect(greenTickOutlineX, greenTickOutlineY, greenTickOutlineW, greenTickOutlineH);
             }
-
             //drawing to the screen
             drawingLocation.drawImage(greenTickBimgResized, greenTickButtonX, greenTickButtonY, this);
-
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
             System.out.println("could not read the green tick image");
         }
-
     }
 
     public void drawDoneQuestionTick()
     {
-        if (pdfHandlerSet == true){
-            //
-            if (pdfHandler.isComplete(currentQuestion)){
+        if (mainClickPanel.isPDFHandlerSet() == true){
+            if (mainClickPanel.isTheQuestionComplete(currentQuestion) == true){
                 //draw the tick
                 //the img location
                 doneTickImgLocation = "doneTick.png"; 
@@ -970,7 +967,6 @@ public class ClickPanelDrawQuizPage extends JPanel
 
                 try {
                     if (setDoneQuestionTickStuff == false){
-                        //
                         //the img location
                         doneTickImgLocation = "doneTick.png"; 
                         doneTickImg = new File(doneTickImgLocation);
@@ -985,21 +981,15 @@ public class ClickPanelDrawQuizPage extends JPanel
                     doneTickBimgResized = resize(doneTickBimg, doneTickWidth, doneTickHeight);
 
                     //setting coordinates
-                    //int greenTickButtonSpacing = (int) ((float) (windowWidth)*0.02);//
-
                     greenTickButtonX = currentQuestionTextX + currentQuestionTextWidth + 10;
                     greenTickButtonY= currentQuestionTextY - (int) (currentQuestionTextHeight); 
 
-                    
-
                     //drawing to the screen
                     drawingLocation.drawImage(doneTickBimgResized, greenTickButtonX, greenTickButtonY, this);
-
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     System.out.println("could not read the done question tick");
                 }
-
             }
         }
     }
@@ -1042,7 +1032,7 @@ public class ClickPanelDrawQuizPage extends JPanel
             backToMenuButtonX= (int) (windowWidth*0.02);
             backToMenuButtonY= (int) (windowHeight*0.02);
             backToMenuButtonWidth = buttonWidth;
-            backToMenuButtonHeight = backToMenuButtonHeight;
+            backToMenuButtonHeight = buttonHeight;
 
             //changing back page button colour to be darker if it is hovered over
             backToMenuButtonRight = backToMenuButtonX + backToMenuButtonWidth;
@@ -1397,22 +1387,14 @@ public class ClickPanelDrawQuizPage extends JPanel
 	{
 		slideImageUpdated = needsUpdating;
     }
-    
+
     /**
-     * updates the pdfHandler to the new value
-     * @param newPDFHandler = the new ConvertPDFPagesToImages object that is to be 
-     *                        used by the ClickPanel
+     * sets the image page number to the new parameter-passed value
+     * @param newImagePageNumber = the new value for the page number
      */
-    public void setPDFHandler(ConvertPDFPagesToImages newPDFHandler)
+    public void setImagePageNumber(int newImagePageNumber)
     {
-        pdfHandler = newPDFHandler;
-        if (newPDFHandler!=null){
-            pdfHandlerSet = true;
-        }
-        else{
-            pdfHandlerSet = false;
-        }
-        
+        imagePageNumber = newImagePageNumber;
     }
 
 

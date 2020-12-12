@@ -122,7 +122,6 @@ public class ClickPanelDrawStartPage
 	
 	boolean setResetCompletedQuestionsButtonStuff;
 
-
 	//--drawing the slide mode text--
 	String startPageSlideModeText;
 	int startPageSlideModeTextWidth ;

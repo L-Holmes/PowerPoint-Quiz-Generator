@@ -687,7 +687,7 @@ public class TextBox
 			rightText.remove(0);
 			rightTextFormatInfo.remove(0);
 		}
-		
+
 		//-recalculate the format info for the leftText's last entry-
 		updateFormattingOnEntireLine(true, leftText.size() - 1, true);
 
@@ -705,10 +705,8 @@ public class TextBox
 			}
 			else{
 				entireLine = rightText.get(clickedLineIndex-1);
-
 			}
 		}
-
 
 		//---SECTION 3: REMOVING THE ENTIRE LINE THAT WAS CLICKED, SO IT CAN BE REPLACED WITH THE UPDATED LEFT/RIGHT SPLIT IN SECTION 5---
 		if (clickedLeftText == true){
@@ -1498,6 +1496,14 @@ public class TextBox
 			//updates the right text format info array list
 			rightTextFormatInfo.set(outerIndex, newEntry);
 		}
+	}
+
+	/**
+	 * @return true if the user has entered the text box (and is ready to type); false if the user has not entered/seleted the text box
+	 */
+	public boolean isEntered()
+	{
+		return entered;
 	}
 
 }

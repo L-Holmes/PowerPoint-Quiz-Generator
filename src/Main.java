@@ -29,22 +29,25 @@ shortcuts reference:
 
 public class Main {
     public static void main(String[] args) throws Exception {
-
         WindowHandle application = new WindowHandle();
         application.run();
-        
-       
     }
 
 }
 
 /**
- * what I am currently doing:
- *  seperating click panel into 2 seperate pages- I have got the start page one to a non-crashing state
- *  need to do the same with the quiz page
- * 
- * I think I need to make click panel call getters and setter on the quiz page instead now.
- * 
- * 
- * need to sort out the getters and setters mate
+ * right now to do:
+ * -the quiz page doesn't reset when I enter and exit it
+ * -the next question button doesn't work
  */
+
+ /**
+  * TO DO:
+  * -add comments / doc strings to everything
+  * -sort out the file system & defualt files
+  * -add the concurrency/threads for the loading of files, add a loading symbol (e.g. dots)
+  *
+  *
+  * -look at some readme examples off of other github projects, and make mine match
+  */
+
