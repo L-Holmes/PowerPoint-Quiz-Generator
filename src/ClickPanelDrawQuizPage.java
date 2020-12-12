@@ -53,18 +53,18 @@ public class ClickPanelDrawQuizPage extends JPanel
     boolean slideImageUpdated = true; //needs updating
 
     //count indicating the number of questions that the user has completed in the current session
-    int questionsComplete; //needs updating
+    int questionsComplete = 0; //needs updating
 
     //indicates the number of the question that the user is currently looking at in the session
     int currentQuestion; //needs updating
 
     //indicates whether the user needs to click the 'correct' or 'incorrect' buttons
-    boolean needToConfirmCorrectness; //needs updating
+    boolean needToConfirmCorrectness = false; //needs updating
 
     //indicator text stuff 
 	boolean mostRecentSlide; //needs updating
-	boolean displayNoMoreSlidesText; //needs updating
-	boolean firstSlide; //needs updating
+	boolean displayNoMoreSlidesText = false; //needs updating
+	boolean firstSlide = false; //needs updating
 
 
     //---GENERAL PAGE DRAWING---
@@ -1394,8 +1394,51 @@ public class ClickPanelDrawQuizPage extends JPanel
      */
     public void setImagePageNumber(int newImagePageNumber)
     {
+        System.out.println("setting the image page number to: "+ newImagePageNumber);
         imagePageNumber = newImagePageNumber;
     }
+
+    /**
+     * sets the displayNoMoreSlidesText to the new parameter value
+     * @param newNoMoreSlidesIndication = the new value indicating true if their are no slides left; false otherwise
+     */
+    public void setDisplayNoMoreSlidesText(boolean newNoMoreSlidesIndication)
+    {
+        displayNoMoreSlidesText = newNoMoreSlidesIndication;
+    }
+
+    /**
+     * sets the new status of on the first slide (true) or not (false)
+     * @param newFirstSlideStatus the new slide status value
+     */
+    public void setFirstSlide(boolean newFirstSlideStatus)
+    {
+        firstSlide = newFirstSlideStatus;
+    }
+
+    /**
+	 * sets the need to confirm correctness variable to the passed value
+	 */
+	public void setNeedToConfirmCorrectness(boolean state)
+	{
+		needToConfirmCorrectness = state;
+    }
+    
+    /**
+	 * @return the correctness variable indication
+	 */
+	public boolean getCorrectness()
+	{
+		return needToConfirmCorrectness;
+    }
+    
+    /**
+     * increases the value of questionsComplete by 1
+     */
+    public void incrementQuestionsCompleted()
+	{
+		questionsComplete++;
+	}
 
 
 }

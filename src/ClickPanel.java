@@ -85,10 +85,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	private boolean canScroll;
 
 	//question stuff
-	private int questionsComplete;
 	private int currentQuestion;
 	private boolean currentQuestionComplete;
-	private boolean needToConfirmCorrectness;
 
 	//pdf handler
 	private ConvertPDFPagesToImages pdfHandler;
@@ -96,8 +94,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	//indicator text stuff
 	private boolean mostRecentSlide;
-	private boolean displayNoMoreSlidesText;
-	private boolean firstSlide;
 
 	//--page indicator--
 	private String currentPage;
@@ -139,16 +135,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		scrollAmount = 0;
 		canScroll = false;
 
-		questionsComplete = 0;
 		currentQuestion = 0;
 		currentQuestionComplete = false;
-		needToConfirmCorrectness = false;
 
 		pdfHandlerSet = false;
 
 		mostRecentSlide = false;
-		displayNoMoreSlidesText = false;
-		firstSlide = false;
 
 		currentPage = "1";
 
@@ -234,7 +226,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void setNeedToConfirmCorrectness(boolean state)
 	{
-		needToConfirmCorrectness = state;
+		if (quizPageDrawerSet==true){
+			quizPageDrawer.setNeedToConfirmCorrectness(state);
+		}
 	}
 
 	/**
@@ -242,7 +236,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public boolean getCorrectness()
 	{
-		return needToConfirmCorrectness;
+		if (quizPageDrawerSet == true){
+			return quizPageDrawer.getCorrectness();
+		}
+		return false;
 	}
 
 
@@ -267,7 +264,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void setNoMoreSlideText(boolean status)
 	{
-		displayNoMoreSlidesText = status;
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.setDisplayNoMoreSlidesText(status);
+		}
 	}
 
 	/**
@@ -277,7 +276,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void setFirstSlideStatus(boolean status)
 	{
-		firstSlide = status;
+		if (quizPageDrawerSet == true)
+		{
+			quizPageDrawer.setFirstSlide(status);
+		}
 	}
 
 //END OF TEXT INDICATOR METHODS
@@ -774,17 +776,17 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void getNextQuestion()
 	{
-		//
 		if (pdfHandlerSet == false){
 			pdfHandler = new ConvertPDFPagesToImages(this);
 			pdfHandlerSet = true;
 		}
 
 		if (quizPageDrawerSet == true){
-			quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("newQuestion"));
+			System.out.println("setting the page number to the next question");
+			int newPageNumber = pdfHandler.changeSlide("newQuestion");
+			quizPageDrawer.setImagePageNumber(newPageNumber);
 			setMostResentSlide(false);
 		}
-		
 	}
 
 	/**
@@ -797,7 +799,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		//
 		if (pdfHandlerSet == true){
 			if (quizPageDrawerSet == true){
-				quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("forward"));
+				int newPageNumber = pdfHandler.changeSlide("forward");
+				quizPageDrawer.setImagePageNumber(newPageNumber);
 			}
 		}
 	}
@@ -811,7 +814,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	{
 		if (pdfHandlerSet == true){
 			if (quizPageDrawerSet == true){
-				quizPageDrawer.setImagePageNumber(pdfHandler.changeSlide("back"));
+				int newPageNumber = pdfHandler.changeSlide("back");
+				quizPageDrawer.setImagePageNumber(newPageNumber);
 				setNoMoreSlideText(false);
 				setMostResentSlide(false);
 			}
@@ -866,7 +870,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	public void incrementQuestionsCompleted()
 	{
-		questionsComplete++;
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.incrementQuestionsCompleted();
+		}
 	}
 
 	public void setCurrentQuestion(int currentQuestionNumber)

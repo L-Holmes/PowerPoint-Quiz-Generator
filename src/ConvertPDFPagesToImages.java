@@ -213,6 +213,7 @@ public class ConvertPDFPagesToImages {
         if (ppLoaded == true) {
             //
             if (nextSlideOperation == "newQuestion") {
+                System.out.println("getting the next question");
                 getNextQuestion();
 
             } else if (nextSlideOperation == "back") {
@@ -409,6 +410,7 @@ public class ConvertPDFPagesToImages {
     private int getNewQuestionSlide(PDDocument pDocument) {
         boolean foundNewQuestion = false;
 
+        System.out.println("getting a new question slide");
         // get random number
         while (foundNewQuestion == false) {
             if (slidesUnchecked.length > 0) {
@@ -450,6 +452,7 @@ public class ConvertPDFPagesToImages {
                             }
                         }
 
+                        System.out.println("returning (1) "+ possibleQuestion);
                         // returns the new question
                         return possibleQuestion;
                     }
@@ -458,9 +461,11 @@ public class ConvertPDFPagesToImages {
             } else {
                 // all slides have been looked at
                 motherClickPanel.setNoMoreSlideText(true);
+                System.out.println("returning (2) "+ pageNumber);
                 return pageNumber;
             }
         }
+        System.out.println("returning (3) "+ pageNumber);
         return pageNumber;
     }
 
