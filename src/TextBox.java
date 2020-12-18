@@ -55,8 +55,8 @@ public class TextBox
 			inner (line 3): -1       //line3 is shorter than the box width, or has not been initialised, so has the null values of -1
 		}
 	*/
-	ArrayList<ArrayList<Integer>> leftTextFormatInfo = new ArrayList<ArrayList<Integer>>();  //info with each index relating to the equivalent index within the leftText array list
-	ArrayList<ArrayList<Integer>> rightTextFormatInfo = new ArrayList<ArrayList<Integer>>(); //info with each index relating to the equivalent index within the rightText array list
+	private ArrayList<ArrayList<Integer>> leftTextFormatInfo = new ArrayList<ArrayList<Integer>>();  //info with each index relating to the equivalent index within the leftText array list
+	private ArrayList<ArrayList<Integer>> rightTextFormatInfo = new ArrayList<ArrayList<Integer>>(); //info with each index relating to the equivalent index within the rightText array list
 
 
 	//colours
@@ -218,8 +218,6 @@ public class TextBox
 				//only for if the last line has got longer and needs a new line, so check after the last newline
 				updateLeftTextFormatInfo(true);
 			}
-
-
 		}
 	}
 
@@ -353,10 +351,7 @@ public class TextBox
 					if (isLeft){
 						setNewFormattingEntry(isLeft, leftTextFormatInfo.size() - 1, 0, -1);
 					}
-
-
 				}
-				
 			}
 		}
 	}
@@ -395,7 +390,6 @@ public class TextBox
 	 */
 	private int findOverHangEntryFromAvgCharWidth(String lastLine, int lastLineSize, int averageCharWidth, int lineStartDistFromBoxStart)
 	{
-		//
 		int widthToFit = boxW - lineStartDistFromBoxStart;
 		int splitPos = lastLine.length() - 1;
 
@@ -728,8 +722,6 @@ public class TextBox
 			}
 		}
 
-		
-
 		//---SECTION 4: MOVE LINES FROM LEFT TEXT TO RIGHT TEXT (OR VICE VERSA), IN ORDER TO FIT THE NEWLY CLICKED POSITION---
 		/*
 		if clicked left:
@@ -785,8 +777,6 @@ public class TextBox
 			}
 		}
 
-		
-
 		//---SECTION 5: UPDATE THE LINES WHERE THE NEW CURSOR POSITION IS LOCATED---
 
 		//-add the substring of the portion of the line that is to the left of the new cursor position, as the final line of the leftText-
@@ -814,10 +804,8 @@ public class TextBox
 			else{
 				rightPortion = "";
 			}
-
 		}
 		else{
-			//
 			leftPortion = "";
 			rightPortion = entireLine;
 		}
@@ -837,10 +825,6 @@ public class TextBox
 		//-updating the formatting info for the newly added sections-
 		updateFormattingOnEntireLine(true, leftText.size() - 1, false);
 		updateFormattingOnEntireLine(false, 0, false);
-
-
-
-		
 	}
 
 	/**
@@ -1006,11 +990,8 @@ public class TextBox
 			//cannot be on the first line after first iteration, so text must begin at the start of the text box X.
 			textStartRelativeToBoxX = 0;
 		}
-
-		
 	}
 
-	
 	/**
 	 * returns information relating to the row that was clicked by the user in the process of selecting a new cursor position
 	 * @param rowNum = the number of rows of text that spans the vertical distance between the 
@@ -1042,7 +1023,6 @@ public class TextBox
 
 			lineInfo = formatInfo.get(userTypedLineIndex);
 			totalFoundRows++;
-
 
 			//-if the part of the line before the first formatting newline 
 			// is the row that the user clicked-
@@ -1089,8 +1069,6 @@ public class TextBox
 		returnArr[2] = substringEndIndex;
 
 		return returnArr;
-
-
 	}
 
 	/**
@@ -1121,8 +1099,6 @@ public class TextBox
 		cursorY = newY;
 		cursorH = tempH;
 	}
-
-
 
 	//---DRAWING STUFF---
 
@@ -1167,7 +1143,6 @@ public class TextBox
 		graphicsHandler.setStroke(new BasicStroke(1));//resets the stroke back to default
 	
 	}
-
 
 	/**
 	 * draws the text inside of the text box
@@ -1307,16 +1282,12 @@ public class TextBox
 				//prevents any drawing after the text box height has been exceeded
 				break;
 			}
-			
 		}
 
 		if (exceededTextBoxHeight == true){
 			//if exceeded, initiate a backspace to remove the character that caused the overflow
 			this.typeLetter("backspace", 8);
 		}
-
-		
-		
 	}
 
 
@@ -1423,7 +1394,6 @@ public class TextBox
 		original method:
 		leftTextFormatInfo.get(outerIndex).set(innerIndex, newValue);
 		*/
-		//
 		if (isLeft){
 			ArrayList<Integer> formattingForTheGivenLine = leftTextFormatInfo.get(outerIndex);
 			ArrayList<Integer> newEntry = new ArrayList<Integer>();
@@ -1437,9 +1407,6 @@ public class TextBox
 			leftTextFormatInfo.set(outerIndex, newEntry);
 		}
 		else{
-
-			
-
 			ArrayList<Integer> formattingForTheGivenLine = rightTextFormatInfo.get(outerIndex);
 			ArrayList<Integer> newEntry = new ArrayList<Integer>();
 			//creates a copy of the formatting entries for the given line
@@ -1451,10 +1418,7 @@ public class TextBox
 
 			//updates the right text format info array list
 			rightTextFormatInfo.set(outerIndex, newEntry);
-			
 		}
-		
-		
 	}
 
 	/**
@@ -1471,7 +1435,6 @@ public class TextBox
 		original method:
 		leftTextFormatInfo.get(leftTextFormatInfo.size() - 1).set(0, newSplitPosition);
 		*/
-		//
 		if (isLeft){
 			ArrayList<Integer> formattingForTheGivenLine = leftTextFormatInfo.get(outerIndex);
 			ArrayList<Integer> newEntry = new ArrayList<Integer>();

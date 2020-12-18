@@ -1,12 +1,10 @@
 import java.io.File;
-import java.io.FileFilter;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileSelector
 {
-
     public static String selectPpfFile()
     {
         File foundFile;
@@ -14,7 +12,6 @@ public class FileSelector
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
         chooser.setDialogTitle("choosertitle");
-        //chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         //
         FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF format (.pdf)", "pdf");
         //
@@ -29,6 +26,4 @@ public class FileSelector
             return null;
         }
     }
-
-    
 }

@@ -4,258 +4,255 @@ import java.awt.*;//used for layout managers
 public class ClickPanelDrawStartPage
 {
     //graphics handler
-    Graphics2D drawingLocation;
+    private Graphics2D drawingLocation;
 
     //window dimensions
-    int windowWidth;
-    int windowHeight;
+    private int windowWidth;
+    private int windowHeight;
 
     //location of the slide that is to be loaded
-    String slidePDFLocation;
+    private String slidePDFLocation;
 
     //mouse coordinates
-    int pointXCoord;
-	int pointYCoord;
+    private int pointXCoord;
+	private int pointYCoord;
 
     //---GENERAL PAGE DRAWING---
 
     //--drawing the start page title--
-	int startPageTitleWidth;
-	int startPageTitleHeight;
-	int startPageTitleX;
-	int startPageTitleY;
-	String startPageTitleTextUpper;
-	int startPageTitleUpperTextWidth;
-	int startPageTitleUpperTextHeight;
-	int startPageTitleUpperTextX;
-	int startPageTitleUpperTextY;
-	String startPageTitleTextLower;
-	int startPageTitleLowerTextWidth;
-	int startPageTitleLowerTextHeight;
-	int startPageTitleLowerTextX;
-	int startPageTitleLowerTextY;
+	private int startPageTitleWidth;
+	private int startPageTitleHeight;
+	private int startPageTitleX;
+	private int startPageTitleY;
+	private String startPageTitleTextUpper;
+	private int startPageTitleUpperTextWidth;
+	private int startPageTitleUpperTextHeight;
+	private int startPageTitleUpperTextX;
+	private int startPageTitleUpperTextY;
+	private String startPageTitleTextLower;
+	private int startPageTitleLowerTextWidth;
+	private int startPageTitleLowerTextHeight;
+	private int startPageTitleLowerTextX;
+	private int startPageTitleLowerTextY;
 
 	boolean setStartPageTitleStuff;
 
 	//--drawing the start page main box--
-	int startPageTitleBottom;
-	int startPageMainBoxOuterWidth;
-	int startPageMainBoxOuterHeight;
-	int startPageMainBoxOuterX;
-	int startPageMainBoxOuterY;
-	int startPageMainBoxInnerWidth;
-	int startPageMainBoxInnerHeight;
-	int startPageMainBoxInnerX;
-	int startPageMainBoxInnerY;
+	private int startPageTitleBottom;
+	private int startPageMainBoxOuterWidth;
+	private int startPageMainBoxOuterHeight;
+	private int startPageMainBoxOuterX;
+	private int startPageMainBoxOuterY;
+	private int startPageMainBoxInnerWidth;
+	private int startPageMainBoxInnerHeight;
+	private int startPageMainBoxInnerX;
+	private int startPageMainBoxInnerY;
 
-	boolean setStartPageMainBoxStuff;
+	private boolean setStartPageMainBoxStuff;
 
 	//--drawing the loaded powerpoint text--
-	String startPageLoadedPowerpointText;
-	int startPageLoadedPowerpointTextWidth;
-	int startPageLoadedPowerpointTextHeight;
-	int startPageLoadedPowerpointTextX;
-	int startPageLoadedPowerpointTextY;
+	private String startPageLoadedPowerpointText;
+	private int startPageLoadedPowerpointTextWidth;
+	private int startPageLoadedPowerpointTextHeight;
+	private int startPageLoadedPowerpointTextX;
+	private int startPageLoadedPowerpointTextY;
 
-	boolean setLoadedPowerpointTextStuff;
+	private boolean setLoadedPowerpointTextStuff;
 
 	//--initiating the side spacing variables--
-	int sideSpacing;
-	boolean setBoxSpacing;
+	private int sideSpacing;
+	private boolean setBoxSpacing;
 
 	//--drawing the loaded filename--
-	int startPageLoadedFilenameBoxWidth;
-	int startPageLoadedFilenameBoxHeight;
-	int startPageLoadedFilenameBoxX;
-	int startPageLoadedFilenameBoxY;
-	String startPageLoadedFilenameText;
-	int startPageLoadedFilenameTextWidth;
-	int startPageLoadedFilenameTextHeight;
-	int startPageLoadedFilenameTextX;
-	int startPageLoadedFilenameTextY;
+	private int startPageLoadedFilenameBoxWidth;
+	private int startPageLoadedFilenameBoxHeight;
+	private int startPageLoadedFilenameBoxX;
+	private int startPageLoadedFilenameBoxY;
+	private String startPageLoadedFilenameText;
+	private int startPageLoadedFilenameTextWidth;
+	private int startPageLoadedFilenameTextHeight;
+	private int startPageLoadedFilenameTextX;
+	private int startPageLoadedFilenameTextY;
 
-	boolean setLoadedFilenameStuff;
+	private boolean setLoadedFilenameStuff;
 
 	//--drawnig the launch quiz button--
-	int startPageLaunchQuizButtonWidth;
-	int startPageLaunchQuizButtonHeight;
-	int startPageLaunchQuizButtonX;
-	int startPageLaunchQuizButtonY;
-	String startPageLaunchQuizButtonText;
-	int startPageLaunchQuizButtonTextWidth;
-	int startPageLaunchQuizButtonTextHeight;
-	int startPageLaunchQuizButtonTextX;
-	int startPageLaunchQuizButtonTextY;
-	boolean startPageLaunchQuizButtonClicked;
-	int startPageLaunchQuizButtonClickedTick;
+	private int startPageLaunchQuizButtonWidth;
+	private int startPageLaunchQuizButtonHeight;
+	private int startPageLaunchQuizButtonX;
+	private int startPageLaunchQuizButtonY;
+	private String startPageLaunchQuizButtonText;
+	private int startPageLaunchQuizButtonTextWidth;
+	private int startPageLaunchQuizButtonTextHeight;
+	private int startPageLaunchQuizButtonTextX;
+	private int startPageLaunchQuizButtonTextY;
+	private boolean startPageLaunchQuizButtonClicked;
+	private int startPageLaunchQuizButtonClickedTick;
 
-	boolean setLaunchQuizButtonStuff;
+	private boolean setLaunchQuizButtonStuff;
 
 	//--drawing the change file button stuff--
-	int startPageChangeFileButtonWidth;
-	int startPageChangeFileButtonHeight;
-	int startPageChangeFileButtonX;
-	int startPageChangeFileButtonY;
-	String startPageChangeFileButtonText;
-	int startPageChangeFileButtonTextWidth;
-	int startPageChangeFileButtonTextHeight;
-	int startPageChangeFileButtonTextX;
-	int startPageChangeFileButtonTextY;
-	boolean startPageChangeFileButtonClicked;
-	int startPageChangeFileButtonClickedTick;
+	private int startPageChangeFileButtonWidth;
+	private int startPageChangeFileButtonHeight;
+	private int startPageChangeFileButtonX;
+	private int startPageChangeFileButtonY;
+	private String startPageChangeFileButtonText;
+	private int startPageChangeFileButtonTextWidth;
+	private int startPageChangeFileButtonTextHeight;
+	private int startPageChangeFileButtonTextX;
+	private int startPageChangeFileButtonTextY;
+	private boolean startPageChangeFileButtonClicked;
+	private int startPageChangeFileButtonClickedTick;
 
 
-	boolean setChangeFileButtonStuff;
+	private boolean setChangeFileButtonStuff;
 
 	//--drawing the reset completed questions file stuff--
-	int startPageResetCompletedQuestionsButtonWidth;
-	int startPageResetCompletedQuestionsButtonHeight;
-	int startPageResetCompletedQuestionsButtonX;
-	int startPageResetCompletedQuestionsButtonY;
-	String startPageResetCompletedQuestionsButtonText;
-	int startPageResetCompletedQuestionsButtonTextWidth;
-	int startPageResetCompletedQuestionsButtonTextHeight;
-	int startPageResetCompletedQuestionsButtonTextX;
-	int startPageResetCompletedQuestionsButtonTextY;
-	boolean startPageResetCompletedQuestionsButtonClicked;
-	int startPageResetCompletedQuestionsButtonClickedTick;
+	private int startPageResetCompletedQuestionsButtonWidth;
+	private int startPageResetCompletedQuestionsButtonHeight;
+	private int startPageResetCompletedQuestionsButtonX;
+	private int startPageResetCompletedQuestionsButtonY;
+	private String startPageResetCompletedQuestionsButtonText;
+	private int startPageResetCompletedQuestionsButtonTextWidth;
+	private int startPageResetCompletedQuestionsButtonTextHeight;
+	private int startPageResetCompletedQuestionsButtonTextX;
+	private int startPageResetCompletedQuestionsButtonTextY;
+	private boolean startPageResetCompletedQuestionsButtonClicked;
+	private int startPageResetCompletedQuestionsButtonClickedTick;
 	
-	boolean setResetCompletedQuestionsButtonStuff;
+	private boolean setResetCompletedQuestionsButtonStuff;
 
 	//--drawing the slide mode text--
-	String startPageSlideModeText;
-	int startPageSlideModeTextWidth ;
-	int startPageSlideModeTextHeight;
-	int startPageSlideModeTextX ;
-	int startPageTextY;
+	private String startPageSlideModeText;
+	private int startPageSlideModeTextWidth ;
+	private int startPageSlideModeTextHeight;
+	private int startPageSlideModeTextX ;
+	private int startPageTextY;
 	
-	boolean setSlideModeTextStuff = false;
+	private boolean setSlideModeTextStuff = false;
 
 	//--drawing the slide mode 1 button--
-	int startPageSlideMode1ButtonWidth;
-	int startPageSlideMode1ButtonHeight;
-	int startPageSlideMode1ButtonX;
-	int startPageSlideMode1ButtonY;
-	boolean startPageSlideMode1ButtonClicked;
-	int startPageSlideMode1ButtonClickedTick;
-	String startPageSlideMode1ButtonText;
-	int startPageSlideMode1ButtonTextWidth;
-	int startPageSlideMode1ButtonTextHeight;
-	int startPageSlideMode1ButtonTextX;
-	int startPageSlideMode1ButtonTextY;
-	boolean startPageSlideMode1ButtonSelected = true;
-	int startPageSlideMode1ButtonOutlineX;
-	int startPageSlideMode1ButtonOutlineY;
-	int startPageSlideMode1ButtonOutlineW;
-	int startPageSlideMode1ButtonOutlineH;
+	private int startPageSlideMode1ButtonWidth;
+	private int startPageSlideMode1ButtonHeight;
+	private int startPageSlideMode1ButtonX;
+	private int startPageSlideMode1ButtonY;
+	private boolean startPageSlideMode1ButtonClicked;
+	private int startPageSlideMode1ButtonClickedTick;
+	private String startPageSlideMode1ButtonText;
+	private int startPageSlideMode1ButtonTextWidth;
+	private int startPageSlideMode1ButtonTextHeight;
+	private int startPageSlideMode1ButtonTextX;
+	private int startPageSlideMode1ButtonTextY;
+	private boolean startPageSlideMode1ButtonSelected = true;
+	private int startPageSlideMode1ButtonOutlineX;
+	private int startPageSlideMode1ButtonOutlineY;
+	private int startPageSlideMode1ButtonOutlineW;
+	private int startPageSlideMode1ButtonOutlineH;
 
-	boolean setSlideMode1ButtonStuff = false;
+	private boolean setSlideMode1ButtonStuff = false;
 
 	//--drawing the slide mode 2 button--
-	int startPageSlideMode2ButtonWidth;
-	int startPageSlideMode2ButtonHeight;
-	int startPageSlideMode2ButtonX;
-	int startPageSlideMode2ButtonY;
-	boolean startPageSlideMode2ButtonClicked;
-	int startPageSlideMode2ButtonClickedTick;
-	String startPageSlideMode2ButtonText;
-	int startPageSlideMode2ButtonTextWidth;
-	int startPageSlideMode2ButtonTextHeight;
-	int startPageSlideMode2ButtonTextX;
-	int startPageSlideMode2ButtonTextY;
-	boolean startPageSlideMode2ButtonSelected = false;
-	int startPageSlideMode2ButtonOutlineX;
-	int startPageSlideMode2ButtonOutlineY;
-	int startPageSlideMode2ButtonOutlineW;
-	int startPageSlideMode2ButtonOutlineH;
+	private int startPageSlideMode2ButtonWidth;
+	private int startPageSlideMode2ButtonHeight;
+	private int startPageSlideMode2ButtonX;
+	private int startPageSlideMode2ButtonY;
+	private boolean startPageSlideMode2ButtonClicked;
+	private int startPageSlideMode2ButtonClickedTick;
+	private String startPageSlideMode2ButtonText;
+	private int startPageSlideMode2ButtonTextWidth;
+	private int startPageSlideMode2ButtonTextHeight;
+	private int startPageSlideMode2ButtonTextX;
+	private int startPageSlideMode2ButtonTextY;
+	private boolean startPageSlideMode2ButtonSelected = false;
+	private int startPageSlideMode2ButtonOutlineX;
+	private int startPageSlideMode2ButtonOutlineY;
+	private int startPageSlideMode2ButtonOutlineW;
+	private int startPageSlideMode2ButtonOutlineH;
 	
-	boolean setSlideMode2ButtonStuff = false;
+	private boolean setSlideMode2ButtonStuff = false;
 
 	//--drawing the slide mode 3 button--
-	int startPageSlideMode3ButtonWidth;
-	int startPageSlideMode3ButtonHeight;
-	int startPageSlideMode3ButtonX;
-	int startPageSlideMode3ButtonY;
-	boolean startPageSlideMode3ButtonClicked;
-	int startPageSlideMode3ButtonClickedTick;
-	String startPageSlideMode3ButtonText;
-	int startPageSlideMode3ButtonTextWidth;
-	int startPageSlideMode3ButtonTextHeight;
-	int startPageSlideMode3ButtonTextX;
-	int startPageSlideMode3ButtonTextY;
-	boolean startPageSlideMode3ButtonSelected = false;
-	int startPageSlideMode3ButtonOutlineX;
-	int startPageSlideMode3ButtonOutlineY;
-	int startPageSlideMode3ButtonOutlineW;
-	int startPageSlideMode3ButtonOutlineH;
+	private int startPageSlideMode3ButtonWidth;
+	private int startPageSlideMode3ButtonHeight;
+	private int startPageSlideMode3ButtonX;
+	private int startPageSlideMode3ButtonY;
+	private boolean startPageSlideMode3ButtonClicked;
+	private int startPageSlideMode3ButtonClickedTick;
+	private String startPageSlideMode3ButtonText;
+	private int startPageSlideMode3ButtonTextWidth;
+	private int startPageSlideMode3ButtonTextHeight;
+	private int startPageSlideMode3ButtonTextX;
+	private int startPageSlideMode3ButtonTextY;
+	private boolean startPageSlideMode3ButtonSelected = false;
+	private int startPageSlideMode3ButtonOutlineX;
+	private int startPageSlideMode3ButtonOutlineY;
+	private int startPageSlideMode3ButtonOutlineW;
+	private int startPageSlideMode3ButtonOutlineH;
 	
-	boolean setSlideMode3ButtonStuff = false;
+	private boolean setSlideMode3ButtonStuff = false;
 
 	//--drawing the slide order text--
-	String startPageSlideOrderText;
-	int startPageSlideOrderTextWidth;
-	int startPageSlideOrderTextHeight;
-	int startPageSlideOrderTextX ;
-	int startPageSlideOrderTextY;
+	private String startPageSlideOrderText;
+	private int startPageSlideOrderTextWidth;
+	private int startPageSlideOrderTextHeight;
+	private int startPageSlideOrderTextX ;
+	private int startPageSlideOrderTextY;
 	
-	boolean setSlideOrderTextStuff = false;
+	private boolean setSlideOrderTextStuff = false;
 	
 	//--drawing the slide order 1 button--
-	int startPageSlideOrder1ButtonWidth;
-	int startPageSlideOrder1ButtonHeight;
-	int startPageSlideOrder1ButtonX;
-	int startPageSlideOrder1ButtonY;
-	boolean startPageSlideOrder1ButtonClicked;
-	int startPageSlideOrder1ButtonClickedTick;
-	String startPageSlideOrder1ButtonText;
-	int startPageSlideOrder1ButtonTextWidth;
-	int startPageSlideOrder1ButtonTextHeight;
-	int startPageSlideOrder1ButtonTextX;
-	int startPageSlideOrder1ButtonTextY;
-	boolean startPageSlideOrder1ButtonSelected = true;
-	int startPageSlideOrder1ButtonOutlineX;
-	int startPageSlideOrder1ButtonOutlineY;
-	int startPageSlideOrder1ButtonOutlineW;
-	int startPageSlideOrder1ButtonOutlineH;
+	private int startPageSlideOrder1ButtonWidth;
+	private int startPageSlideOrder1ButtonHeight;
+	private int startPageSlideOrder1ButtonX;
+	private int startPageSlideOrder1ButtonY;
+	private boolean startPageSlideOrder1ButtonClicked;
+	private int startPageSlideOrder1ButtonClickedTick;
+	private String startPageSlideOrder1ButtonText;
+	private int startPageSlideOrder1ButtonTextWidth;
+	private int startPageSlideOrder1ButtonTextHeight;
+	private int startPageSlideOrder1ButtonTextX;
+	private int startPageSlideOrder1ButtonTextY;
+	private boolean startPageSlideOrder1ButtonSelected = true;
+	private int startPageSlideOrder1ButtonOutlineX;
+	private int startPageSlideOrder1ButtonOutlineY;
+	private int startPageSlideOrder1ButtonOutlineW;
+	private int startPageSlideOrder1ButtonOutlineH;
 
-	boolean setSlideOrder1ButtonStuff = false;
+	private boolean setSlideOrder1ButtonStuff = false;
 
 	//--drawing the slide order 2 button--
-	int startPageSlideOrder2ButtonWidth;
-	int startPageSlideOrder2ButtonHeight;
-	int startPageSlideOrder2ButtonX;
-	int startPageSlideOrder2ButtonY;
-	boolean startPageSlideOrder2ButtonClicked;
-	int startPageSlideOrder2ButtonClickedTick;
-	String startPageSlideOrder2ButtonText;
-	int startPageSlideOrder2ButtonTextWidth;
-	int startPageSlideOrder2ButtonTextHeight;
-	int startPageSlideOrder2ButtonTextX;
-	int startPageSlideOrder2ButtonTextY;
-	boolean startPageSlideOrder2ButtonSelected = false;
-	int startPageSlideOrder2ButtonOutlineX;
-	int startPageSlideOrder2ButtonOutlineY;
-	int startPageSlideOrder2ButtonOutlineW;
-	int startPageSlideOrder2ButtonOutlineH;
+	private int startPageSlideOrder2ButtonWidth;
+	private int startPageSlideOrder2ButtonHeight;
+	private int startPageSlideOrder2ButtonX;
+	private int startPageSlideOrder2ButtonY;
+	private boolean startPageSlideOrder2ButtonClicked;
+	private int startPageSlideOrder2ButtonClickedTick;
+	private String startPageSlideOrder2ButtonText;
+	private int startPageSlideOrder2ButtonTextWidth;
+	private int startPageSlideOrder2ButtonTextHeight;
+	private int startPageSlideOrder2ButtonTextX;
+	private int startPageSlideOrder2ButtonTextY;
+	private boolean startPageSlideOrder2ButtonSelected = false;
+	private int startPageSlideOrder2ButtonOutlineX;
+	private int startPageSlideOrder2ButtonOutlineY;
+	private int startPageSlideOrder2ButtonOutlineW;
+	private int startPageSlideOrder2ButtonOutlineH;
 
-	boolean setSlideOrder2ButtonStuff = false;
+	private boolean setSlideOrder2ButtonStuff = false;
 
 	//--drawing the reset completed questions indication text--
-	String startPageResetQuestionsIndicationText;
-	int startPageResetQuestionsIndicationTextWidth;
-	int startPageResetQuestionsIndicationTextHeight;
-	int startPageResetQuestionsIndicationTextX;
-	int startPageResetQuestionsIndicationTextY;
-	boolean startPageResetQuestionsIndicationTextActivated;
-	int startPageResetQuestionsIndicationTextActivatedTick;
+	private String startPageResetQuestionsIndicationText;
+	private int startPageResetQuestionsIndicationTextWidth;
+	private int startPageResetQuestionsIndicationTextHeight;
+	private int startPageResetQuestionsIndicationTextX;
+	private int startPageResetQuestionsIndicationTextY;
+	private boolean startPageResetQuestionsIndicationTextActivated;
+	private int startPageResetQuestionsIndicationTextActivatedTick;
 
-	boolean setResetQuestionsIndicationText;
+	private boolean setResetQuestionsIndicationText;
 	
-
-
     public ClickPanelDrawStartPage(int windowW, int windowH)
     {
-        //
         windowWidth = windowW;
         windowHeight = windowH;
     }

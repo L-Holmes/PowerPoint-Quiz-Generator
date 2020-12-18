@@ -1,20 +1,10 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;//used for gui generation
-
-
 import java.awt.*;//used for layout managers
 import java.awt.image.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Stack;
-import java.awt.event.*;
+
 
 /*
 need to sort out the rest of the red stuff here
@@ -41,249 +31,246 @@ public class ClickPanelDrawQuizPage extends JPanel
     
 
     //loca
-    String slidePDFLocation; //set once
+    private String slidePDFLocation; //set once
 
     //think its the slide number within the powerpoint(?)
-    int imagePageNumber = 1; //needs updating
+    private int imagePageNumber = 1; //needs updating
 
     //
-    private ConvertPDFPagesToImages pdfHandler;
-
-    //
-    boolean slideImageUpdated = true; //needs updating
+    private boolean slideImageUpdated = true; //needs updating
 
     //count indicating the number of questions that the user has completed in the current session
-    int questionsComplete = 0; //needs updating
+    private int questionsComplete = 0; //needs updating
 
     //indicates the number of the question that the user is currently looking at in the session
-    int currentQuestion; //needs updating
+    private int currentQuestion = 0; //needs updating
 
     //indicates whether the user needs to click the 'correct' or 'incorrect' buttons
-    boolean needToConfirmCorrectness = false; //needs updating
+    private boolean needToConfirmCorrectness = false; //needs updating
 
     //indicator text stuff 
-	boolean mostRecentSlide; //needs updating
-	boolean displayNoMoreSlidesText = false; //needs updating
-	boolean firstSlide = false; //needs updating
+	private boolean mostRecentSlide = false; //needs updating
+	private boolean displayNoMoreSlidesText = false; //needs updating
+	private boolean firstSlide = false; //needs updating
 
 
     //---GENERAL PAGE DRAWING---
 	
 	//--drawing title string stuff--
-	String titleString;
-	int titleTextWidth;
-	int titleTextHeight;
-	int titleTextX;
-	int titleTextY;
+	private String titleString;
+	private int titleTextWidth;
+	private int titleTextHeight;
+	private int titleTextX;
+	private int titleTextY;
 
-	boolean setTitleDrawingStuff;
+	private boolean setTitleDrawingStuff;
 
 	//--drawing the slide image--
-	File slideImg;
-	String introImgLocation; 
-	File introImg;
-	BufferedImage img;
-	int slideImageWidth;
-	int slideImageHeight;
-	int slideWidth;
-	int slideHeight;
-	BufferedImage resizedImg;
-	int imgTopLeftX;
-	int imgTopLeftY;
+	private File slideImg;
+	private String introImgLocation; 
+	private File introImg;
+	private BufferedImage img;
+	private int slideImageWidth;
+	private int slideImageHeight;
+	private int slideWidth;
+	private int slideHeight;
+	private BufferedImage resizedImg;
+	private int imgTopLeftX;
+	private int imgTopLeftY;
 
-	boolean setSlideDrawingStuff;
+	private boolean setSlideDrawingStuff;
 
 	//--slide additional/relative dimensions--
-	int slideTopY;
-	int slideLeftX ;
-	int slideBottom;
-	int distSlideBottomToScreenBottom;
+	private int slideTopY;
+	private int slideLeftX ;
+	private int slideBottom;
+	private int distSlideBottomToScreenBottom;
 
-	boolean setSlideAdditionalDimensions;
+	private boolean setSlideAdditionalDimensions;
 
 	//--drawing the questions complete text stuff--
-	String questionsCompleteFullString;	
-	int questionsCompleteTextWidth;
-	int questionsCompleteTextHeight;
-	int questionsCompleteTextX;
-	int questionsCompleteTextY;
+	private String questionsCompleteFullString;	
+	private int questionsCompleteTextWidth;
+	private int questionsCompleteTextHeight;
+	private int questionsCompleteTextX;
+	private int questionsCompleteTextY;
 
-	boolean setQuestionsCompleteTextStuff;
+	private boolean setQuestionsCompleteTextStuff;
 
 	//--drawing the current question text--
-	String currentQuestionFullString;
-	int currentQuestionTextWidth;
-	int currentQuestionTextHeight;
-	int currentQuestionTextX;
-	int currentQuestionTextY;
+	private String currentQuestionFullString;
+	private int currentQuestionTextWidth;
+	private int currentQuestionTextHeight;
+	private int currentQuestionTextX;
+	private int currentQuestionTextY;
 
-	boolean setCurrentQuestionTextStuff;
+	private boolean setCurrentQuestionTextStuff;
 
 	//--drawing the button spacing stuff--
-	int buttonSpacing;
-	int buttonWidth;
-	int buttonHeight;
+	private int buttonSpacing;
+	private int buttonWidth;
+	private int buttonHeight;
 
-	boolean setButtonSpacingStuff;
+	private boolean setButtonSpacingStuff;
 
 	//--drawing the back page button--
-	int backPageButtonX;
-    int backPageButtonY;
-    int backPageButtonWidth;
-    int backPageButtonHeight;
-	int backPageButtonRight;
-    int backPageButtonBottom;
-    boolean backwardPageButtonClicked = false;
+	private int backPageButtonX;
+    private int backPageButtonY;
+    private int backPageButtonWidth;
+    private int backPageButtonHeight;
+	private int backPageButtonRight;
+    private int backPageButtonBottom;
+    private boolean backwardPageButtonClicked = false;
 
-	boolean setBackPageButtonStuff;
+	private boolean setBackPageButtonStuff;
 
 	//--drawing the arrow on the back page button--
-	int backPageArrowCentreX;
-	int backPageArrowCentreY;
-	int arrowHeight;
-	int backPageArrowTopStartX;
-	int backPageArrowTopStartY;
-	int backPageArrowTopEndX;
-	int backPageArrowTopEndY;
-	int backPageArrowBottomStartX;
-	int backPageArrowBottomStartY;
-	int backPageArrowBottomEndX;
-	int backPageArrowBottomEndY;
+	private int backPageArrowCentreX;
+	private int backPageArrowCentreY;
+	private int arrowHeight;
+	private int backPageArrowTopStartX;
+	private int backPageArrowTopStartY;
+	private int backPageArrowTopEndX;
+	private int backPageArrowTopEndY;
+	private int backPageArrowBottomStartX;
+	private int backPageArrowBottomStartY;
+	private int backPageArrowBottomEndX;
+	private int backPageArrowBottomEndY;
 
-	boolean setBackPageButtonArrowStuff;
+	private boolean setBackPageButtonArrowStuff;
 
 	//--drawing the forward page button--
-	int forwardPageButtonX;
-    int forwardPageButtonY;
-    int forwardPageButtonHeight;
-    int forwardPageButtonWidth;
-	int nextPageButtonRight;
-    int nextPageButtonBottom;
-    boolean forwardPageButtonClicked = false;
+	private int forwardPageButtonX;
+    private int forwardPageButtonY;
+    private int forwardPageButtonHeight;
+    private int forwardPageButtonWidth;
+	private int nextPageButtonRight;
+    private int nextPageButtonBottom;
+    private boolean forwardPageButtonClicked = false;
 
-	boolean setForwardPageButtonStuff;
+	private boolean setForwardPageButtonStuff;
 
 	//--drawing the arrow on the forward page button--
-	int forwardPageArrowCentreX;
-	int forwardPageArrowCentreY;
-	int forwardPageArrowTopStartX;
-	int forwardPageArrowTopStartY;
-	int forwardPageArrowTopEndX;
-	int forwardPageArrowTopEndY;
-	int forwardPageArrowBottomStartX;
-	int forwardPageArrowBottomStartY;
-	int forwardPageArrowBottomEndX;
-	int forwardPageArrowBottomEndY;
+	private int forwardPageArrowCentreX;
+	private int forwardPageArrowCentreY;
+	private int forwardPageArrowTopStartX;
+	private int forwardPageArrowTopStartY;
+	private int forwardPageArrowTopEndX;
+	private int forwardPageArrowTopEndY;
+	private int forwardPageArrowBottomStartX;
+	private int forwardPageArrowBottomStartY;
+	private int forwardPageArrowBottomEndX;
+	private int forwardPageArrowBottomEndY;
 
-	boolean setForwardPageButtonArrowStuff;
+	private boolean setForwardPageButtonArrowStuff;
 
 	//--drawing the next question button--
-	int nextQuestionButtonX;
-    int nextQuestionButtonY;
-    int nextQuestionButtonWidth;
-    int nextQuestionButtonHeight;
-	int nextQuestionButtonRight;
-	int nextQuestionButtonBottom;
-	int stringWidth;
-	int stringHeight;
-	int nextQuestionButtonTextX;
-    int nextQuestionButtonTextY;
-    boolean nextQuestionClicked = false;
+	private int nextQuestionButtonX;
+    private int nextQuestionButtonY;
+    private int nextQuestionButtonWidth;
+    private int nextQuestionButtonHeight;
+	private int nextQuestionButtonRight;
+	private int nextQuestionButtonBottom;
+	private int stringWidth;
+	private int stringHeight;
+	private int nextQuestionButtonTextX;
+    private int nextQuestionButtonTextY;
+    private boolean nextQuestionClicked = false;
 
-	boolean setNextQuestionButtonStuff;
+	private boolean setNextQuestionButtonStuff;
 
 	//--drawing the red 'X' button--
-	String redXButtonImgLocation; 
-	File redXButtonImg;
-	BufferedImage redXBimg;
-	int redXButtonWidth;
-	int redXButtonHeight;
-	BufferedImage redXBimgResized;
-	int redXButtonSpacing;
-	int redXButtonX;
-	int redXButtonY; 
-	int redXButtonRight;
-	int redXButtonBottom ;
-	double redXBrightness;
-	RescaleOp redXBrightnessRescaleOp;
-	int redXOutlineX;
-	int redXOutlineY;
-	int redXOutlineW;
-    int redXOutlineH;
-    boolean xButtonClicked = false;
+	private String redXButtonImgLocation; 
+	private File redXButtonImg;
+	private BufferedImage redXBimg;
+	private int redXButtonWidth;
+	private int redXButtonHeight;
+	private BufferedImage redXBimgResized;
+	private int redXButtonSpacing;
+	private int redXButtonX;
+	private int redXButtonY; 
+	private int redXButtonRight;
+	private int redXButtonBottom ;
+	private double redXBrightness;
+	private RescaleOp redXBrightnessRescaleOp;
+	private int redXOutlineX;
+	private int redXOutlineY;
+	private int redXOutlineW;
+    private int redXOutlineH;
+    private boolean xButtonClicked = false;
 
-	boolean setRedXStuff;
+	private boolean setRedXStuff;
 
 	//--drawing the green tick button--
-	String greenTickButtonImgLocation; 
-	File greenTickButtonImg;
-	BufferedImage greenTickBimg;
-	int greenTickButtonWidth;
-	int greenTickButtonHeight;
-	BufferedImage greenTickBimgResized;
-	int greenTickButtonSpacing;
-	int greenTickButtonX;
-	int greenTickButtonY; 
-	int greenTickButtonRight;
-	int greenTickButtonBottom ;
-	double greenTickBrightness;
-	RescaleOp greenTickBrightnessRescaleOp;
-	int greenTickOutlineX;
-	int greenTickOutlineY;
-	int greenTickOutlineW;
-    int greenTickOutlineH;
-    boolean tickButtonClicked = false;
+	private String greenTickButtonImgLocation; 
+	private File greenTickButtonImg;
+	private BufferedImage greenTickBimg;
+	private int greenTickButtonWidth;
+	private int greenTickButtonHeight;
+	private BufferedImage greenTickBimgResized;
+	private int greenTickButtonSpacing;
+	private int greenTickButtonX;
+	private int greenTickButtonY; 
+	private int greenTickButtonRight;
+	private int greenTickButtonBottom ;
+	private double greenTickBrightness;
+	private RescaleOp greenTickBrightnessRescaleOp;
+	private int greenTickOutlineX;
+	private int greenTickOutlineY;
+	private int greenTickOutlineW;
+    private int greenTickOutlineH;
+    private boolean tickButtonClicked = false;
 
-	boolean setGreenTickStuff;
+	private boolean setGreenTickStuff;
 
 	//--drawing the done question tick--
-	String doneTickImgLocation; 
-	File doneTickImg;
-	BufferedImage doneTickBimg;
-	int doneTickWidth;
-	int doneTickHeight;
-	BufferedImage doneTickBimgResized;
+	private String doneTickImgLocation; 
+	private File doneTickImg;
+	private BufferedImage doneTickBimg;
+	private int doneTickWidth;
+	private int doneTickHeight;
+	private BufferedImage doneTickBimgResized;
 	
 
-	boolean setDoneQuestionTickStuff;
+	private boolean setDoneQuestionTickStuff;
 
 	//--drawing the error text--
-	String errorTextString;
-	int errorTextStringWidth ;
-	int errorTextStringHeight;
-	int errorTextStringX;
-	int errorTextStringY;
+	private String errorTextString;
+	private int errorTextStringWidth ;
+	private int errorTextStringHeight;
+	private int errorTextStringX;
+	private int errorTextStringY;
 
-	boolean setErrorTextStuff;
+	private boolean setErrorTextStuff;
 
 	//--drawing the back to menu button--
-	int backToMenuButtonX;
-    int backToMenuButtonY;
-    int backToMenuButtonWidth;
-    int backToMenuButtonHeight;
-	int backToMenuButtonRight;
-	int backToMenuButtonBottom;
-	boolean backToMenuButtonClicked;
-	String backToMenuButtonText;
-	int backToMenuButtonTextX;
-	int backToMenuButtonTextY;
-	int backToMenuButtonTextWidth;
-	int backToMenuButtonTextHeight;
+	private int backToMenuButtonX;
+    private int backToMenuButtonY;
+    private int backToMenuButtonWidth;
+    private int backToMenuButtonHeight;
+	private int backToMenuButtonRight;
+	private int backToMenuButtonBottom;
+	private boolean backToMenuButtonClicked;
+	private String backToMenuButtonText;
+	private int backToMenuButtonTextX;
+	private int backToMenuButtonTextY;
+	private int backToMenuButtonTextWidth;
+	private int backToMenuButtonTextHeight;
 
 
-	boolean setBackToMenuButtonStuff;
+	private boolean setBackToMenuButtonStuff;
 
 	//--drawing the answer text box--
 	private TextBox typingTextBox;
-	int textBoxSpacing;
-	int textBoxWidth;
-	int textBoxHeight;
-	int textBoxX;
-	int textBoxY; 
-	int textBoxRight;
-	int textBoxBottom;
+	private int textBoxSpacing;
+	private int textBoxWidth;
+	private int textBoxHeight;
+	private int textBoxX;
+	private int textBoxY; 
+	private int textBoxRight;
+	private int textBoxBottom;
 
-	boolean setTextBoxStuff;
+	private boolean setTextBoxStuff;
 							
 
     /**
@@ -1394,7 +1381,6 @@ public class ClickPanelDrawQuizPage extends JPanel
      */
     public void setImagePageNumber(int newImagePageNumber)
     {
-        System.out.println("setting the image page number to: "+ newImagePageNumber);
         imagePageNumber = newImagePageNumber;
     }
 
@@ -1438,7 +1424,35 @@ public class ClickPanelDrawQuizPage extends JPanel
     public void incrementQuestionsCompleted()
 	{
 		questionsComplete++;
-	}
+    }
+    
+    /**
+     * sets the current question to the parameter passed value
+     * @param newQuestionNum = the new question number
+     *                         i.e. question 1 being the first question that was returned and displayed 
+     *                              question 2 being the next; etc...
+     */
+    public void setCurrentQuestion(int newQuestionNum)
+    {
+        currentQuestion = newQuestionNum;
+    }
+
+    /**
+     * @return the current question number 
+     */
+    public int getCurrentQuestion()
+    {
+        return currentQuestion;
+    }
+
+    /**
+     * sets the mostRecentSlide (indicating whether on the 'rightmost slide' / last new slide that was fetched (true) or not (false))
+     * @param newMostRecentSlideIndicator = the new value 
+     */
+    public void setMostRecentSlide(boolean newMostRecentSlideIndicator)
+    {
+        mostRecentSlide = newMostRecentSlideIndicator;
+    }
 
 
 }

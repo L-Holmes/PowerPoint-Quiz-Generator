@@ -32,16 +32,7 @@ public class Main {
         WindowHandle application = new WindowHandle();
         application.run();
     }
-
 }
-
-/**
- * right now to do:
- * -the quiz page doesn't reset when I enter and exit it
- * -the next question button doesn't work
- * 
- * -need to look at all of the motherclickpanel references in the convert....
- */
 
  /**
   * TO DO:
@@ -52,3 +43,5 @@ public class Main {
   *
   * -look at some readme examples off of other github projects, and make mine match
   */
+
+

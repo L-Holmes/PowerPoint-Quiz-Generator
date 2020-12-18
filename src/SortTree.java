@@ -2,8 +2,8 @@ import java.util.stream.IntStream;
 
 public class SortTree
 {
-    int totalNumNodes = 0;
-    SortTreeNode rootNode = null;
+    private int totalNumNodes = 0;
+    private SortTreeNode rootNode = null;
 
     public SortTree(){
         //

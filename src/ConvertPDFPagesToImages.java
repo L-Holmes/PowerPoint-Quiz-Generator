@@ -28,17 +28,17 @@ import org.apache.pdfbox.text.PDFTextStripper;
 public class ConvertPDFPagesToImages {
 
     // Pdf files are read from this folder
-    String sourceDir;
+    private String sourceDir;
 
     //determines which questions are shown to the reader
     // can combine all 3, but need at least 1 to be true
-    boolean slideModeUncompletedQuestions = true;    //continue with uncompleted questions
-    boolean slideModeWrongQuestions = false;    //3 = complete questions that were wrong >= 1 time(s)
-    boolean slideModeWrongLastTimeQuestions = false;     //4 = complete wrong last time questions
+    private boolean slideModeUncompletedQuestions = true;    //continue with uncompleted questions
+    private boolean slideModeWrongQuestions = false;    //3 = complete questions that were wrong >= 1 time(s)
+    private boolean slideModeWrongLastTimeQuestions = false;     //4 = complete wrong last time questions
     
     //slide order selection (XOR)
-    boolean slideChoiceRandomOrder = true; //[random order]
-    boolean slideChoiceDescendingWrongness = false; // [descending wrong-ness] --but random for the questions with equal wrongness
+    private boolean slideChoiceRandomOrder = true; //[random order]
+    private boolean slideChoiceDescendingWrongness = false; // [descending wrong-ness] --but random for the questions with equal wrongness
 
     // user can move back to answers and question
     // but cannot move to a different question, before clicking
@@ -46,60 +46,62 @@ public class ConvertPDFPagesToImages {
     // after a click, the next question will be visited automatically
     // a completed indicator will be added
     // need to add an error text to screen indicating this must be completed
-    boolean rightWrongBlock = false;
+    private boolean rightWrongBlock = false;
 
     // converted images from pdf document are saved here
-    String destinationDir = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/src/";
+    private String destinationDir = "/Users/lindonholmes/Documents/personal_projects/revision_tool/revision_software/src/";
 
     // extension of output slide image file
-    String fileExtension = "png";
+    private String fileExtension = "png";
 
     // init stuff
-    int[] slidesUnchecked;
-    boolean slidesFound = false;
+    private int[] slidesUnchecked;
+    private boolean slidesFound = false;
 
-    File sourceFile;
-    File destinationFile;
-    PDDocument document;
-    PDPageTree list;
-    int totalNumPages;
-    String fileName;
-    PDFRenderer pdfRenderer;
+    private File sourceFile;
+    private File destinationFile;
+    private PDDocument document;
+    private PDPageTree list;
+    private int totalNumPages;
+    private String fileName;
+    private PDFRenderer pdfRenderer;
 
     // change slide stuff
-    int pageNumber = -1;
-    int previousPageNumber = -1;
-    BufferedImage bim;
-    File outPutFile;
-    String outputFileName;
+    private int pageNumber = -1;
+    private int previousPageNumber = -1;
+    private BufferedImage bim;
+    private File outPutFile;
+    private String outputFileName;
 
     // initiation indicator
-    boolean ppLoaded = false;
+    private boolean ppLoaded = false;
 
     // stacks and queue for seen questions
-    Stack previousSeenStack = new Stack();
-    Stack forwardSeenStack = new Stack();
+    private Stack previousSeenStack = new Stack();//vice versa of the forwardSeenStack (see below)
+    private Stack forwardSeenStack = new Stack(); //when the user clicks the 'previous slide' button, they are no longer on the most recent
+                                          //slide (they go back to a slide they have already seen). Therefore, the most recent,
+                                          // the penultimate, etc..  [most recent slides] are added to this stack, 
+                                          //so that the user can move back to those slides when they press the 'forward slide' button
+                                          
 
     // questions completed
-    int numQuestionsCompleted = 0;
-    int currentQuestion = 0;
-    int[] completedQuestions;
+    private int numQuestionsCompleted = 0;
+    private int currentQuestion = 0;
+    private int[] completedQuestions;
 
     //slides completed
     //int currentSlide;
-    int[] completedSlides;
-    int [] slidesDoneBefore;
-    int nextAddSlideIndex = 0;
+    private int[] completedSlides;
+    private int [] slidesDoneBefore;
+    private int nextAddSlideIndex = 0;
 
     //getting the number of attempts wrong stuff
-    Map<Integer, Integer> slideNumWithAttemptsWrongMap = new HashMap<Integer, Integer>();
-    Map<Integer, Boolean> currentlyCompletedMap = new HashMap<Integer, Boolean>();
-    Map<Integer, Boolean> wrongLastTimeMap = new HashMap<Integer, Boolean>();
+    private Map<Integer, Integer> slideNumWithAttemptsWrongMap = new HashMap<Integer, Integer>();
+    private Map<Integer, Boolean> currentlyCompletedMap = new HashMap<Integer, Boolean>();
+    private Map<Integer, Boolean> wrongLastTimeMap = new HashMap<Integer, Boolean>();
 
     // mother click panel
-    ClickPanel motherClickPanel;
-
-    //
+    private ClickPanel motherClickPanel;
 
     public ConvertPDFPagesToImages(ClickPanel linkedClickPanel) {
         // init
@@ -149,6 +151,7 @@ public class ConvertPDFPagesToImages {
                     // create slides unchecked, array of numbers from 1 to num of pages
                     // list of all slide numbers not checked
                     slidesUnchecked = getPopulatedNumberArray(1, totalNumPages);
+                    System.out.println("slides uncheced start size: "+ slidesUnchecked.length);
                     removeCompletedSlidesFromSlidesLeft();
                     slidesFound = true;
                 }
@@ -169,13 +172,9 @@ public class ConvertPDFPagesToImages {
                 // TODO Auto-generated catch block
                 System.out.println("couldn't open the source file");
             }
-
-            
         } else {
             System.err.println(sourceFile.getName() + " File not exists");
-
         }
-
     }
 
     /**
@@ -191,9 +190,6 @@ public class ConvertPDFPagesToImages {
             for (int pageIndex = 0; pageIndex<document.getNumberOfPages(); pageIndex++){
                 fileNameToCreate = "images/slideImage" + (pageIndex+1)+".png";
                 fileToExportTo = new File(fileNameToCreate);
-                
-
-
                 try {
                     bim = pdfRenderer.renderImageWithDPI(pageIndex, 300, ImageType.RGB);
                     ImageIO.write(bim, fileExtension, fileToExportTo);
@@ -203,22 +199,16 @@ public class ConvertPDFPagesToImages {
                     System.out.println("could not import all of the slides");
                 }
             }
-
         }
     }
 
 
     public  int  changeSlide(String nextSlideOperation) {
-        //
         if (ppLoaded == true) {
-            //
             if (nextSlideOperation == "newQuestion") {
-                System.out.println("getting the next question");
                 getNextQuestion();
-
             } else if (nextSlideOperation == "back") {
                 moveBackwardInSeenSlides();
-
             } else if (nextSlideOperation == "forward") {
                 moveForewardInSeenSlides();
             } else {
@@ -230,10 +220,8 @@ public class ConvertPDFPagesToImages {
                 if (isQuestion(pageNumber, document) == true) {
                     motherClickPanel.setFirstSlideStatus(true);
                 } else {
-
                     motherClickPanel.setFirstSlideStatus(false);
                 }
-    
             }
             else{
                 motherClickPanel.setFirstSlideStatus(false);
@@ -280,7 +268,6 @@ public class ConvertPDFPagesToImages {
     public void moveForewardInSeenSlides() {
         if (pageNumber != -1) {
             // first question has been displayed
-
             if (forwardSeenStack.size() > 0) {
                 // check if next stack item is an answer
                 int nextStackItem = (int) forwardSeenStack.peek();
@@ -310,12 +297,11 @@ public class ConvertPDFPagesToImages {
                 }
 
             } else {
-                // are on the most resent answer/question,
+                // are on the most recent answer/question,
                 // nothing else left
                 getNextAnswer();
             }
         }
-        
     }
 
     public void getNextAnswer() {
@@ -410,9 +396,9 @@ public class ConvertPDFPagesToImages {
     private int getNewQuestionSlide(PDDocument pDocument) {
         boolean foundNewQuestion = false;
 
-        System.out.println("getting a new question slide");
         // get random number
         while (foundNewQuestion == false) {
+            System.out.println("slides unchecked length: "+ slidesUnchecked.length);///////////////////////
             if (slidesUnchecked.length > 0) {
                 int randIndex;
                 if (slideChoiceRandomOrder == true) {
@@ -421,7 +407,6 @@ public class ConvertPDFPagesToImages {
                     // need to change this to get descending wrongness
                     // start at top and move down until a question is found,
                     randIndex = 0;
-
                 } else {
                     randIndex = getRandomNumber(0, slidesUnchecked.length - 1);
                 }
@@ -452,7 +437,6 @@ public class ConvertPDFPagesToImages {
                             }
                         }
 
-                        System.out.println("returning (1) "+ possibleQuestion);
                         // returns the new question
                         return possibleQuestion;
                     }
@@ -461,23 +445,18 @@ public class ConvertPDFPagesToImages {
             } else {
                 // all slides have been looked at
                 motherClickPanel.setNoMoreSlideText(true);
-                System.out.println("returning (2) "+ pageNumber);
                 return pageNumber;
             }
         }
-        System.out.println("returning (3) "+ pageNumber);
         return pageNumber;
     }
 
     private void changeSlidesUncheckedToAscendingWrongness()
     {
-        
         SortTree myNumbersTree = new SortTree();
         
         for (int index = 0; index < slidesUnchecked.length; index++)
-        {
-            
-            
+        {   
             if (slideNumWithAttemptsWrongMap.get(slidesUnchecked[index]) != null){
                 //
                 myNumbersTree.addNode(slidesUnchecked[index], slideNumWithAttemptsWrongMap.get(slidesUnchecked[index]));
@@ -487,10 +466,7 @@ public class ConvertPDFPagesToImages {
                 myNumbersTree.addNode(slidesUnchecked[index], 0);
             }
         }
-
         slidesUnchecked = myNumbersTree.getIdentifierArraySortedWeightDescending();
-        
-        
     }
 
     
@@ -502,8 +478,6 @@ public class ConvertPDFPagesToImages {
     public void handleQuestionCompleted() {
         rightWrongBlock = true;
         motherClickPanel.setNeedToConfirmCorrectness(true);
-
-        
         
     }
 
@@ -520,8 +494,6 @@ public class ConvertPDFPagesToImages {
 
         motherClickPanel.setCurrentQuestion(currentQuestion);
        
-            
-
     }
 
     public void handleGreenTickClicked() {
@@ -709,11 +681,8 @@ public class ConvertPDFPagesToImages {
             a = new int[1];
             a[0] = 0;
         }
-
         return a;
     }
-
-    
 
     /**
      * returns a random number from min to max (including min and max as possible
@@ -757,8 +726,6 @@ public class ConvertPDFPagesToImages {
         return false;
     }
 
-    
-
     // need to validate this
     public static String getFileNameFromLocation(String location) {
         int lastSlash = location.lastIndexOf("/") + 1;
@@ -785,17 +752,11 @@ public class ConvertPDFPagesToImages {
             //do stuff
             // if it does, import the data and copy to the completed slides array
             readCompletedSlidesArrayFromThisTextFile(textfileToRead, numSlides);
-
         }
-        
-        
     }
 
     public void exportCompletedSlides(boolean clearFirst) {
-        //
-        
         if (completedSlides.length > 0) {
-            
 
             // check if text file exists
             // if it does, write whilst keeping original contents
@@ -803,7 +764,6 @@ public class ConvertPDFPagesToImages {
 
             String textFilename = getFileNameFromLocation(sourceDir);
             
-
             if (clearFirst == true) {
                 writeIntArrayToTextFile(textFilename, completedSlides);
             } else {
@@ -820,33 +780,22 @@ public class ConvertPDFPagesToImages {
         FileWriter fileWriteHandle;
         String lineToWrite;
 
-        
-        
         try {
-            
-
             fileWriteHandle = new FileWriter(filenameAsTextFile);
             fileWriter = new BufferedWriter(fileWriteHandle);
-            
 
             for (int i = 0; i < intArray.length; i++) {
                 // or
-                
-
-
                 lineToWrite = getSlideNumAndIncorrectCountString(intArray[i]);
                 fileWriter.write(lineToWrite);
                 fileWriter.newLine();
             }
             fileWriter.flush();
             fileWriter.close();
-            
-
         } catch (IOException e) {
             // TODO Auto-generated catch block
             System.out.println("could not write int array to file");
         }
-
     }
 
     // https://stackoverflow.com/questions/13707223/how-to-write-an-array-to-a-file-java
@@ -854,7 +803,6 @@ public class ConvertPDFPagesToImages {
     public void addIntArrayToTextFile(String filename, int[] intArray) {
         String filenameAsTextFile = filename + "_completed_questions_array.txt";
         String lineToWrite;
-
         
         try (FileWriter fw = new FileWriter(filenameAsTextFile, true);
                 BufferedWriter bw = new BufferedWriter(fw);
@@ -863,7 +811,6 @@ public class ConvertPDFPagesToImages {
                 lineToWrite = getSlideNumAndIncorrectCountString(intArray[i]);
                 fileWriter.println(lineToWrite);
             }
-
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException e) {
@@ -899,8 +846,6 @@ public class ConvertPDFPagesToImages {
      * adds to the completedSlides array
      */
     public void readCompletedSlidesArrayFromThisTextFile(File textFileToRead, int totalNumberOfSlides) {
-
-        // do something
         Scanner scanner;
         double nextDouble;
         int entriesFound = 0;
@@ -933,8 +878,6 @@ public class ConvertPDFPagesToImages {
                     }
 
                     //choosing whether to remove the slide or not 
-                    
-                    //
                     boolean removeQuestionFromUncompletedSlides = true;
                     if (slideModeUncompletedQuestions == true){
                         //want to remove question if currentlyCompleted == true
@@ -990,14 +933,10 @@ public class ConvertPDFPagesToImages {
                 // TODO Auto-generated catch block
                 System.out.println("could not read the completed slides array");
             }
-
         } 
         finally{
             //
         } 
-
-        
-      
 
     }
 

@@ -1,6 +1,4 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;//used for gui generation
-
 import java.awt.*;//used for layout managers
 import java.awt.image.*;
 import java.io.BufferedReader;
@@ -12,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Stack;
 import java.awt.event.*;
 
 
@@ -56,18 +53,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	//location of the powerpoint
 	private String slideImgLocation = "images/"; // converted images from pdf document are saved here
 	private String slidePDFLocation = "more_complex_pp.pdf";
-	
-
-	//slide thread handler
-	//UpdateSlideThread slideThreadHandler;
-	private boolean setSlideThread = false;
 
 	//mouse coordinate stuff
 	private Point currentPointerPosition;
 	private int pointXCoord;
 	private int pointYCoord;
-
-	private boolean setCoordinateStuff;
 
 	//drawing the start page handler stuff 
 	private ClickPanelDrawStartPage startPageDrawer;
@@ -77,23 +67,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	private ClickPanelDrawQuizPage quizPageDrawer;
 	private boolean quizPageDrawerSet = false;
 
-	//text box details
-	private boolean textBoxEntered; 
-
-	//text box scroll stuff
-	private int scrollAmount;
-	private boolean canScroll;
-
-	//question stuff
-	private int currentQuestion;
-	private boolean currentQuestionComplete;
-
 	//pdf handler
 	private ConvertPDFPagesToImages pdfHandler;
 	private boolean pdfHandlerSet;
 
-	//indicator text stuff
-	private boolean mostRecentSlide;
+	//text box details
+	private boolean textBoxEntered; 
 
 	//--page indicator--
 	private String currentPage;
@@ -125,22 +104,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void initializeDefaultValueVariables()
 	{
-		//
-		setCoordinateStuff = false;
-
 		//text box details
 	
 		textBoxEntered = false; 
 
-		scrollAmount = 0;
-		canScroll = false;
-
-		currentQuestion = 0;
-		currentQuestionComplete = false;
-
 		pdfHandlerSet = false;
-
-		mostRecentSlide = false;
 
 		currentPage = "1";
 
@@ -253,7 +221,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	public void setMostResentSlide(boolean status)
 	{
-		mostRecentSlide = status;
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.setMostRecentSlide(status);
+		}
 	}
 
 	/**
@@ -343,7 +313,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				pointXCoord = (int) currentPointerPosition.getX();
 				pointYCoord = (int) currentPointerPosition.getY();
 
-				setCoordinateStuff = true; //indicates that the above variables can be referenced
 
 				//--DRAWNIG THE BACKGROUND--
 				g.setColor(new Color(172, 200, 255));
@@ -782,7 +751,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 
 		if (quizPageDrawerSet == true){
-			System.out.println("setting the page number to the next question");
 			int newPageNumber = pdfHandler.changeSlide("newQuestion");
 			quizPageDrawer.setImagePageNumber(newPageNumber);
 			setMostResentSlide(false);
@@ -877,10 +845,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 	public void setCurrentQuestion(int currentQuestionNumber)
 	{
-		currentQuestion = currentQuestionNumber;
+		if (quizPageDrawerSet == true){
+			quizPageDrawer.setCurrentQuestion(currentQuestionNumber);
+		}
 
 		//if not on page 1
-		if (currentQuestion > 1){
+		if (currentQuestionNumber > 1){
 			setFirstSlideStatus(false);
 		}
 	}
@@ -1221,15 +1191,21 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		return pdfHandlerSet;
 	}
 
+	/**
+	 * @param questionNumber = the question number, i.e. the 'n'th question returned by the pdfHander 
+	 * @return true, if the passed question number has been completed (i.e. the user has clicked the tick or cross
+	 * 				 to indicate a true/incorrect answer respectively);
+	 * 		   false, if the either the pdfHandler / quizPageDrawer have not been initialised; if the question number is invalid; if 
+	 * 				  the question has not been completed.
+	 */
 	public boolean isTheQuestionComplete(int questionNumber)
 	{
 		if (pdfHandlerSet == true){
-			return pdfHandler.isComplete(currentQuestion);
+			if (quizPageDrawerSet == true){
+				return pdfHandler.isComplete(quizPageDrawer.getCurrentQuestion()); 
+			}
 		}
-		else{
-			return false;
-		}
-		
+		return false;
 	}
 
 //}}

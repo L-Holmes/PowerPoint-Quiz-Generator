@@ -24,7 +24,7 @@ public class WindowHandle extends JFrame {
 	private int FPS = 30;
 
 	// panel
-	ClickPanel panelMain;
+	private ClickPanel panelMain;
 
 	/**
 	 * Create a view of a GameArena.
@@ -41,7 +41,6 @@ public class WindowHandle extends JFrame {
 
 		setJPanel();
 		setClosingOperations();
-
 	}
 
 	/**
@@ -73,7 +72,6 @@ public class WindowHandle extends JFrame {
 		setVisible(true);
 
 		this.addKeyListener(panelMain);
-
 	}
 
 	/**

@@ -1,10 +1,10 @@
 public class SortTreeNode
 {
-    int identifier;
-    int weight;
-    SortTreeNode motherNode = null;
-    SortTreeNode leftPointer = null;
-    SortTreeNode rightPointer = null;
+    private int identifier;
+    private int weight;
+    private SortTreeNode motherNode = null;
+    private SortTreeNode leftPointer = null;
+    private SortTreeNode rightPointer = null;
 
     public SortTreeNode(int ident, int w)
     {
