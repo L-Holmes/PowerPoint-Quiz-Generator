@@ -498,12 +498,13 @@ public class ClickPanelDrawStartPage
         if (startPageLaunchQuizButtonClicked == true){
             drawingLocation.setColor(new Color(110, 240, 25));
 
-            if (startPageLaunchQuizButtonClickedTick == 3){
-                startPageLaunchQuizButtonClicked = false;
-                startPageLaunchQuizButtonClickedTick = 0;
-            }
-            else{
-                startPageLaunchQuizButtonClickedTick++;
+            switch (startPageLaunchQuizButtonClickedTick){
+                case 3:
+                    startPageLaunchQuizButtonClicked = false;
+                    startPageLaunchQuizButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageLaunchQuizButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageLaunchQuizButtonX, startPageLaunchQuizButtonRight, startPageLaunchQuizButtonY, startPageLaunchQuizButtonBottom) == true){
@@ -552,13 +553,13 @@ public class ClickPanelDrawStartPage
         if (startPageChangeFileButtonClicked == true){
             drawingLocation.setColor(new Color(208, 208, 208));
 
-
-            if (startPageChangeFileButtonClickedTick == 3){
-                startPageChangeFileButtonClicked = false;
-                startPageChangeFileButtonClickedTick = 0;
-            }
-            else{
-                startPageChangeFileButtonClickedTick++;
+            switch(startPageChangeFileButtonClickedTick){
+                case 3:
+                    startPageChangeFileButtonClicked = false;
+                    startPageChangeFileButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageChangeFileButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageChangeFileButtonX, startPageChangeFileButtonRight, startPageChangeFileButtonY, startPageChangeFileButtonBottom) == true){
@@ -605,12 +606,13 @@ public class ClickPanelDrawStartPage
         if (startPageResetCompletedQuestionsButtonClicked == true){
             drawingLocation.setColor(new Color(208, 208, 208));
 
-            if (startPageResetCompletedQuestionsButtonClickedTick == 3){
-                startPageResetCompletedQuestionsButtonClicked = false;
-                startPageResetCompletedQuestionsButtonClickedTick = 0;
-            }
-            else{
-                startPageResetCompletedQuestionsButtonClickedTick++;
+            switch (startPageResetCompletedQuestionsButtonClickedTick){
+                case 3:
+                    startPageResetCompletedQuestionsButtonClicked = false;
+                    startPageResetCompletedQuestionsButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageResetCompletedQuestionsButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageResetCompletedQuestionsButtonX, startPageResetCompletedQuestionsButtonRight, startPageResetCompletedQuestionsButtonY, startPageResetCompletedQuestionsButtonBottom) == true){
@@ -688,12 +690,15 @@ public class ClickPanelDrawStartPage
         if (startPageSlideMode1ButtonClicked == true){
             drawingLocation.setColor(new Color(138, 243, 255));
 
-            if (startPageSlideMode1ButtonClickedTick == 3){
-                startPageSlideMode1ButtonClicked = false;
-                startPageSlideMode1ButtonClickedTick = 0;
-            }
-            else{
-                startPageSlideMode1ButtonClickedTick++;
+            switch (startPageSlideMode1ButtonClickedTick){
+                case 3:
+                    startPageSlideMode1ButtonClicked = false;
+                    startPageSlideMode1ButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageSlideMode1ButtonClickedTick++;
+
+
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode1ButtonX, startPageSlideMode1ButtonRight, startPageSlideMode1ButtonY, startPageSlideMode1ButtonBottom) == true){
@@ -756,12 +761,13 @@ public class ClickPanelDrawStartPage
         if (startPageSlideMode2ButtonClicked == true){
             drawingLocation.setColor(new Color(138, 248, 255));
 
-            if (startPageSlideMode2ButtonClickedTick == 3){
-                startPageSlideMode2ButtonClicked = false;
-                startPageSlideMode2ButtonClickedTick = 0;
-            }
-            else{
-                startPageSlideMode2ButtonClickedTick++;
+            switch(startPageSlideMode2ButtonClickedTick){
+                case 3:
+                    startPageSlideMode2ButtonClicked = false;
+                    startPageSlideMode2ButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageSlideMode2ButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode2ButtonX, startPageSlideMode2ButtonRight, startPageSlideMode2ButtonY, startPageSlideMode2ButtonBottom) == true){
@@ -824,12 +830,13 @@ public class ClickPanelDrawStartPage
         if (startPageSlideMode3ButtonClicked == true){
             drawingLocation.setColor(new Color(138, 248, 255));
 
-            if (startPageSlideMode3ButtonClickedTick == 3){
-                startPageSlideMode3ButtonClicked = false;
-                startPageSlideMode3ButtonClickedTick = 0;
-            }
-            else{
-                startPageSlideMode3ButtonClickedTick++;
+            switch (startPageSlideMode3ButtonClickedTick){
+                case 3:
+                    startPageSlideMode3ButtonClicked = false;
+                    startPageSlideMode3ButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageSlideMode3ButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode3ButtonX, startPageSlideMode3ButtonRight, startPageSlideMode3ButtonY, startPageSlideMode3ButtonBottom) == true){
@@ -908,12 +915,13 @@ public class ClickPanelDrawStartPage
         if (startPageSlideOrder1ButtonClicked == true){
             drawingLocation.setColor(new Color(138, 243, 255));
 
-            if (startPageSlideOrder1ButtonClickedTick == 3){
-                startPageSlideOrder1ButtonClicked = false;
-                startPageSlideOrder1ButtonClickedTick = 0;
-            }
-            else{
-                startPageSlideOrder1ButtonClickedTick++;
+            switch(startPageSlideOrder1ButtonClickedTick){
+                case 3:
+                    startPageSlideOrder1ButtonClicked = false;
+                    startPageSlideOrder1ButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageSlideOrder1ButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideOrder1ButtonX, startPageSlideOrder1ButtonRight, startPageSlideOrder1ButtonY, startPageSlideOrder1ButtonBottom) == true){
@@ -974,12 +982,13 @@ public class ClickPanelDrawStartPage
         if (startPageSlideOrder2ButtonClicked == true){
             drawingLocation.setColor(new Color(138, 243, 255));
 
-            if (startPageSlideOrder2ButtonClickedTick == 3){
-                startPageSlideOrder2ButtonClicked = false;
-                startPageSlideOrder2ButtonClickedTick = 0;
-            }
-            else{
-                startPageSlideOrder2ButtonClickedTick++;
+            switch (startPageSlideOrder2ButtonClickedTick){
+                case 3:
+                    startPageSlideOrder2ButtonClicked = false;
+                    startPageSlideOrder2ButtonClickedTick = 0;
+                    break;
+                default:
+                    startPageSlideOrder2ButtonClickedTick++;
             }
         }
         else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideOrder2ButtonX, startPageSlideOrder2ButtonRight, startPageSlideOrder2ButtonY, startPageSlideOrder2ButtonBottom) == true){
@@ -1036,13 +1045,15 @@ public class ClickPanelDrawStartPage
             drawingLocation.drawString(startPageResetQuestionsIndicationText, startPageResetQuestionsIndicationTextX, startPageResetQuestionsIndicationTextY);
 
 
-            if (startPageResetQuestionsIndicationTextActivatedTick == 30){
-                startPageResetQuestionsIndicationTextActivated = false;
-                startPageResetQuestionsIndicationTextActivatedTick = 0;
+            switch (startPageResetQuestionsIndicationTextActivatedTick){
+                case 30:
+                    startPageResetQuestionsIndicationTextActivated = false;
+                    startPageResetQuestionsIndicationTextActivatedTick = 0;
+                    break;
+                default:
+                    startPageResetQuestionsIndicationTextActivatedTick++;
             }
-            else{
-                startPageResetQuestionsIndicationTextActivatedTick++;
-            }
+            
         }
 
         

@@ -205,26 +205,31 @@ public class ConvertPDFPagesToImages {
 
     public  int  changeSlide(String nextSlideOperation) {
         if (ppLoaded == true) {
-            if (nextSlideOperation == "newQuestion") {
-                getNextQuestion();
-            } else if (nextSlideOperation == "back") {
-                moveBackwardInSeenSlides();
-            } else if (nextSlideOperation == "forward") {
-                moveForewardInSeenSlides();
-            } else {
-                pageNumber = -1;
+            switch (nextSlideOperation){
+                case "newQuestion":
+                    getNextQuestion();
+                    break;
+                case "back":
+                    moveBackwardInSeenSlides();
+                    break;
+                case "forward":
+                    moveForewardInSeenSlides();
+                    break;
+                default:
+                    pageNumber = -1;
             }
 
             //setting (or not) the 'on first slide' text
-            if (currentQuestion == 1){
-                if (isQuestion(pageNumber, document) == true) {
-                    motherClickPanel.setFirstSlideStatus(true);
-                } else {
+            switch (currentQuestion){
+                case 1:
+                    if (isQuestion(pageNumber, document) == true) {
+                        motherClickPanel.setFirstSlideStatus(true);
+                    } else {
+                        motherClickPanel.setFirstSlideStatus(false);
+                    }
+                    break;
+                default:
                     motherClickPanel.setFirstSlideStatus(false);
-                }
-            }
-            else{
-                motherClickPanel.setFirstSlideStatus(false);
             }
             //}}
 
@@ -862,19 +867,20 @@ public class ConvertPDFPagesToImages {
                 while ((line = br.readLine()) != null) {
                     // process the line.
                     splitLine = line.split(",");
-                    if (splitLine.length == 4){
-                        //
-                        currentSlideNumber = Integer.parseInt(splitLine[0]);
-                        currentQuestionTimesIncorrect = Integer.parseInt(splitLine[1]);
-                        currentlyCompleted = Boolean.parseBoolean(splitLine[2]);
-                        wrongLastTime = Boolean.parseBoolean(splitLine[3]);
-                    }
-                    else{
-                        //if there are not 4 values
-                        currentSlideNumber = 0;
-                        currentQuestionTimesIncorrect = 0;
-                        currentlyCompleted = false;
-                        wrongLastTime = false;
+                    int splitLineLength = splitLine.length;
+                    switch (splitLineLength){
+                        case 4:
+                            currentSlideNumber = Integer.parseInt(splitLine[0]);
+                            currentQuestionTimesIncorrect = Integer.parseInt(splitLine[1]);
+                            currentlyCompleted = Boolean.parseBoolean(splitLine[2]);
+                            wrongLastTime = Boolean.parseBoolean(splitLine[3]);
+                            break;
+                        default:
+                            //if there are not 4 values
+                            currentSlideNumber = 0;
+                            currentQuestionTimesIncorrect = 0;
+                            currentlyCompleted = false;
+                            wrongLastTime = false;
                     }
 
                     //choosing whether to remove the slide or not 

@@ -129,16 +129,17 @@ public class TextBox
 		justTypedCount = 0;
 
 		//handle the entered text
-		if (extendedKeyCode == 8){
-			typedKey = "backspace";
+		switch(extendedKeyCode){
+			case 8:
+				typedKey = "backspace";
+				break;
+			case 10:
+				typedKey = "enter";
+				break;
+			case 16777383:
+				typedKey = "exit";
+				break;
 		}
-		else if (extendedKeyCode == 10){
-			typedKey = "enter";
-		}
-		else if (extendedKeyCode == 16777383){
-			typedKey = "exit";
-		}
-
 		handleTextEntered(typedKey);
 	}
 	
@@ -167,57 +168,59 @@ public class TextBox
 	 */
 	public void updateText(String typedChar)
 	{
-		if (typedChar == "backspace"){
-			//find the last item in the array 
-			//ensure that the array is not empty
-			//backspace string the last part of the left of cursor text
+		int howBig;
+		switch (typedChar){
+			case "backspace":
+				//find the last item in the array 
+				//ensure that the array is not empty
+				//backspace string the last part of the left of cursor text
 
-			int howBig = leftText.size();
-			if (howBig > 0){
-				String changedLine = leftText.get(howBig - 1);
-				int lineLen = changedLine.length();
-				if (lineLen > 0){
-					String backspacedStr = backspaceString(changedLine);
-					leftText.set(howBig-1, backspacedStr);
+				howBig = leftText.size();
+				if (howBig > 0){
+					String changedLine = leftText.get(howBig - 1);
+					int lineLen = changedLine.length();
+					if (lineLen > 0){
+						String backspacedStr = backspaceString(changedLine);
+						leftText.set(howBig-1, backspacedStr);
 
-					//check if formatting info needs updating
-					//only for if the last line has got shorter and needs to remove a new line, so check after the last newline
-					updateLeftTextFormatInfo(false);
-				}
-				else{
-					//remove the empty line
-					if (howBig > 1){
-						leftText.remove(howBig - 1);
+						//check if formatting info needs updating
+						//only for if the last line has got shorter and needs to remove a new line, so check after the last newline
+						updateLeftTextFormatInfo(false);
+					}
+					else{
+						//remove the empty line
+						if (howBig > 1){
+							leftText.remove(howBig - 1);
 
-						//remove the last entry from the formatting
-						leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
+							//remove the last entry from the formatting
+							leftTextFormatInfo.remove(leftTextFormatInfo.size() - 1);
 
-						//update the first entry of the right text
-						//since it has moved up onto the line before the one that was deleted
-						updateFormattingOnEntireLine(false, 0, false);
+							//update the first entry of the right text
+							//since it has moved up onto the line before the one that was deleted
+							updateFormattingOnEntireLine(false, 0, false);
+						}
 					}
 				}
-			}
-		}
-		else if (typedChar == "enter"){			
-			//add new entry for newline
-			leftText.add("");
-			//add the formatting info
-			ArrayList<Integer> thisLineInfo = new ArrayList<Integer>(); 
-			thisLineInfo.add(-1);  
-			leftTextFormatInfo.add(thisLineInfo);
-		}
-		else{
-			//add normal character
-			int howBig = leftText.size();
-			if (howBig > 0){
-				String changedLine = leftText.get(howBig - 1) + typedChar;
-				leftText.set(howBig-1, changedLine);
+				break;
+			case "enter":
+				//add new entry for newline
+				leftText.add("");
+				//add the formatting info
+				ArrayList<Integer> thisLineInfo = new ArrayList<Integer>(); 
+				thisLineInfo.add(-1);  
+				leftTextFormatInfo.add(thisLineInfo);
+				break;
+			default:
+				//add normal character
+				howBig = leftText.size();
+				if (howBig > 0){
+					String changedLine = leftText.get(howBig - 1) + typedChar;
+					leftText.set(howBig-1, changedLine);
 
-				//check if formatting info needs updating
-				//only for if the last line has got longer and needs a new line, so check after the last newline
-				updateLeftTextFormatInfo(true);
-			}
+					//check if formatting info needs updating
+					//only for if the last line has got longer and needs a new line, so check after the last newline
+					updateLeftTextFormatInfo(true);
+				}
 		}
 	}
 

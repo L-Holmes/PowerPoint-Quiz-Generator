@@ -30,18 +30,17 @@ shortcuts reference:
 public class Main {
     public static void main(String[] args) throws Exception {
         WindowHandle application = new WindowHandle();
-        application.run();
+        application.run(); 
     }
 }
 
  /**
   * TO DO:
   * -add comments / doc strings to everything
+  *     --docstrings after click panel, and then add the docstring to the click panel class def. 
   * -sort out the file system & defualt files
   * -add the concurrency/threads for the loading of files, add a loading symbol (e.g. dots)
   *
   *
   * -look at some readme examples off of other github projects, and make mine match
   */
-
-

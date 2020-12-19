@@ -45,15 +45,13 @@ public class SortTree
                 else{
                     //move than greater than or equal to branch
                     if (compareNode.gotRight() == true){
-                        //then repeat with this node
+                        //then repeat with this node 
                         compareNode = compareNode.getRight();
                     }
                     else{
                         //set this Node as the right node
                         compareNode.setRight(newNode);
                         newNode.setMother(compareNode);
-
-                       
 
                         foundPlace = true;
                     }
@@ -64,7 +62,7 @@ public class SortTree
         totalNumNodes++;
     }
 
-    public int[] getIdentifierArraySortedWeightDescending()
+    public int[] getIdentifierArraySortedWeightDescending() 
     {
 
         int returnArrayPointer = 0;
@@ -137,8 +135,7 @@ public class SortTree
                             foundUnaddedNode = true;
                             foundRoot = true;
                         }
-                    }
-                    
+                    }  
                 }
             }
 

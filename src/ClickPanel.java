@@ -35,7 +35,6 @@ the ones that the user actually added thenselves
  * 
  */
 class ClickPanel extends JPanel implements MouseListener, KeyListener {
-	 
 	//Initialising drawing surface here
 	private Graphics2D drawingSurface;
 	private BufferedImage i;
@@ -319,21 +318,21 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				g.fillRect(0, 0, windowWidth, windowHeight);
 
 				//--DRAWING THE REST OF THE PAGE--
-				if (currentPage == "2"){
-					if (quizPageDrawerSet == false){
-						quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight, this);
-						quizPageDrawerSet = true;
-					}
-					quizPageDrawer.drawQuiz(g, slidePDFLocation, pointXCoord, pointYCoord);
-					
-				}
-				else if (currentPage == "1"){
-					
-					if (startPageDrawerSet == false){
-						startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight);
-						startPageDrawerSet = true;
-					}
-					startPageDrawer.drawStartPage(g, slidePDFLocation, pointXCoord, pointYCoord);
+				switch (currentPage){
+					case "2":
+						if (quizPageDrawerSet == false){
+							quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight, this);
+							quizPageDrawerSet = true;
+						}
+						quizPageDrawer.drawQuiz(g, slidePDFLocation, pointXCoord, pointYCoord);
+						break;
+					case "1":
+						if (startPageDrawerSet == false){
+							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight);
+							startPageDrawerSet = true;
+						}
+						startPageDrawer.drawStartPage(g, slidePDFLocation, pointXCoord, pointYCoord);
+						break;
 				}
 
 			}
@@ -354,46 +353,70 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
 
-    /** Called whenever the mouse clicks.
-		* Could be replaced with setting the value of a JLabel, etc.
-		@param e = the fetched input from the action that the mouse performed */
+	/**
+	 * Called whenever the mouse clicks.
+	 * @param e = the fetched input from the action that the mouse performed 
+	 */
     public void mouseClicked(MouseEvent e) {
         Point p = e.getPoint();
         double pointXCoord = p.getX();
-        double pointYCoord = p.getY();
-		if (currentPage == "1") {
-			startPageLaunchQuizButtonClickCheck(pointXCoord, pointYCoord);
-			startPageChangeFileButtonClickCheck(pointXCoord, pointYCoord);
-			startPageResetCompletedQuestionsButtonClickCheck(pointXCoord, pointYCoord);
-			startPageSlideMode1ButtonClickCheck(pointXCoord, pointYCoord);
-			startPageSlideMode2ButtonClickCheck(pointXCoord, pointYCoord);
-			startPageSlideMode3ButtonClickCheck(pointXCoord, pointYCoord);
-			startPageSlideOrder1ButtonClickCheck(pointXCoord, pointYCoord);
-			startPageSlideOrder2ButtonClickCheck(pointXCoord, pointYCoord);
-
-		} else if (currentPage == "2") {
-			nextQuestionButtonClickCheck(pointXCoord, pointYCoord);
-			forwardButtonClickCheck(pointXCoord, pointYCoord);
-			backwardButtonClickCheck(pointXCoord, pointYCoord);
-			tickButtonClickCheck(pointXCoord, pointYCoord);
-			xButtonClickCheck(pointXCoord, pointYCoord);
-			backToMenuButtonClickCheck(pointXCoord, pointYCoord);
-			textBoxClickCheck(pointXCoord, pointYCoord);
+		double pointYCoord = p.getY();
+		switch (currentPage){
+			case "1":
+				checkStartPageClickCollisions(pointXCoord, pointYCoord);
+				break;
+			case "2":
+				checkQuizPageClickCollisions(pointXCoord, pointYCoord);
+				break;
 		}
-        
 	}
 
 	/**
-	 * returns whether the passed coordinates
-	 * of a click intercept the passed values regarding 
-	 * a rectangle acting as a button
+	 * checks all buttons / clickable objects on the start page, to see if they have been 
+	 * clicked by the passed click point coorindates
+	 * @param pointXCoord = the x coordinate of the pixel on screen that was clicked
+	 * @param pointYCoord = the y coordinate of the pixel on screen that was clicked
+	 */
+	public void checkStartPageClickCollisions(double pointXCoord, double pointYCoord)
+	{
+		startPageLaunchQuizButtonClickCheck(pointXCoord, pointYCoord);
+		startPageChangeFileButtonClickCheck(pointXCoord, pointYCoord);
+		startPageResetCompletedQuestionsButtonClickCheck(pointXCoord, pointYCoord);
+		startPageSlideMode1ButtonClickCheck(pointXCoord, pointYCoord);
+		startPageSlideMode2ButtonClickCheck(pointXCoord, pointYCoord);
+		startPageSlideMode3ButtonClickCheck(pointXCoord, pointYCoord);
+		startPageSlideOrder1ButtonClickCheck(pointXCoord, pointYCoord);
+		startPageSlideOrder2ButtonClickCheck(pointXCoord, pointYCoord);
+	}
+
+	/**
+	 * checks all buttons / clickable objects on the quiz page, to see if they have been 
+	 * clicked by the passed click point coorindates
+	 * @param pointXCoord = the x coordinate of the pixel on screen that was clicked
+	 * @param pointYCoord = the y coordinate of the pixel on screen that was clicked
+	 */
+	public void checkQuizPageClickCollisions(double pointXCoord, double pointYCoord)
+	{
+		nextQuestionButtonClickCheck(pointXCoord, pointYCoord);
+		forwardButtonClickCheck(pointXCoord, pointYCoord);
+		backwardButtonClickCheck(pointXCoord, pointYCoord);
+		tickButtonClickCheck(pointXCoord, pointYCoord);
+		xButtonClickCheck(pointXCoord, pointYCoord);
+		backToMenuButtonClickCheck(pointXCoord, pointYCoord);
+		textBoxClickCheck(pointXCoord, pointYCoord);
+	}
+
+	/**
+	 * determines whether the  coordinates of a point (i.e. a point clicked on screen)
+	 * intercept the area of a rectangle (acting as a button),
+	 * whose dimensions are determined via passed parameters
 	 * (checks if the button has been clicked)
-	 * @param clickedXCoord
-	 * @param clickedYCoord
-	 * @param topLeftX
-	 * @param topLeftY
-	 * @param buttonWidth
-	 * @param buttonHeight
+	 * @param clickedXCoord = the x coordinate of the pixel on screen that was clicked
+	 * @param clickedYCoord = the y coordinate of the pixel on screen that was clicked
+	 * @param topLeftX =  the x coordinate of the top left corner of the rectangle
+	 * @param topLeftY = the y coordinate of the top left corner of the rectangle
+	 * @param buttonWidth = the width of the rectangle (in pixels)
+	 * @param buttonHeight = the height of the rectangle (in pixels)
 	 * @return whether the buttons has been clicked (true) or not (false)
 	 */
 	public boolean rectButtonClickCheck(double clickedXCoord, double clickedYCoord, int topLeftX, int topLeftY, int buttonWidth, int buttonHeight)
@@ -410,6 +433,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 		return false;
 	}
+
 
 //---QUIZ PAGE CLICK CHECKS---
 
@@ -436,8 +460,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 
 	/**
-	 * checks whether the forward button has been clicked
-	 * 
+	 * checks whether the forward button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
 	 */
 	public void forwardButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
@@ -446,7 +471,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			int buttonY = quizPageDrawer.getForwardPageButtonY();
 			int buttonW = quizPageDrawer.getForwardPageButtonW();
 			int buttonH = quizPageDrawer.getForwardPageButtonH();
-			//
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
 				quizPageDrawer.setForwardPageButtonClicked(true);
 				getForwardSlide();
@@ -455,7 +479,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * checks whether the backward button has been clicked
+	 * checks whether the backward button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
 	 * 
 	 */
 	public void backwardButtonClickCheck(double clickedXCoord, double clickedYCoord) 
@@ -468,13 +494,14 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord,buttonX, buttonY, buttonW, buttonH)){
 				quizPageDrawer.setBackwardPageButtonClicked(true);
 				getBackwardSlide();
-				
 			}
 		}
 	}
 
 	/**
-	 * checks whether the tick button has been clicked
+	 * checks whether the tick button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
 	 * 
 	 */
 	public void tickButtonClickCheck(double clickedXCoord, double clickedYCoord)
@@ -492,7 +519,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * checks whether the 'X button has been clicked
+	 * checks whether the 'X button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
 	 * 
 	 */
 	public void xButtonClickCheck(double clickedXCoord, double clickedYCoord)
@@ -509,6 +538,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * checks whether the back to menu button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void backToMenuButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (quizPageDrawerSet == true){
@@ -529,8 +563,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * checks whether the textbox has been clicked
-	 * 
+	 * checks whether the textbox has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
 	 */
 	public void textBoxClickCheck(double clickedXCoord, double clickedYCoord)
 	{
@@ -563,6 +598,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 //---START PAGE CLICK CHECKS---
 
+	/**
+	 * checks whether the launch quiz button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageLaunchQuizButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 
@@ -578,7 +618,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
-
+	/**
+	 * checks whether the change file button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageChangeFileButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -593,6 +637,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * checks whether the reset completed questions button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageResetCompletedQuestionsButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -608,6 +657,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 	
+	/**
+	 * checks whether the slide mode 1 button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageSlideMode1ButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -632,6 +686,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * checks whether the slide mode 2 button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageSlideMode2ButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -656,6 +715,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * checks whether the slide mode 3 button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageSlideMode3ButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -680,6 +744,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * checks whether the slide order 1 button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageSlideOrder1ButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -688,17 +757,20 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			int buttonW = startPageDrawer.getSlideOrder1ButtonW();
 			int buttonH = startPageDrawer.getSlideOrder1ButtonH();
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
-				//do stuff
 				if (startPageDrawer.getSlideOrder1ButtonSelected() == false){
 					startPageDrawer.setSlideOrder2ButtonSelected(false);
 					startPageDrawer.setSlideOrder1ButtonSelected(true);
 				}			
-				//
 				startPageDrawer.setSlideOrder1ButtonClicked(true);
 			}
 		}
 	}
 
+	/**
+	 * checks whether the slide order 2 button has been clicked, and initiates the handling of that event, correspondingly
+	 * @param clickedXCoord the y coordinate where the mouse was clicked
+	 * @param clickedYCoord the x coordinate where the mouse was clicked
+	 */
 	public void startPageSlideOrder2ButtonClickCheck(double clickedXCoord, double clickedYCoord)
 	{
 		if (startPageDrawerSet == true){
@@ -707,12 +779,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 			int buttonW = startPageDrawer.getSlideOrder2ButtonW();
 			int buttonH = startPageDrawer.getSlideOrder2ButtonH();
 			if (rectButtonClickCheck(clickedXCoord, clickedYCoord, buttonX, buttonY, buttonW, buttonH)){
-				//do stuff
 				if (startPageDrawer.getSlideOrder2ButtonSelected() == false){
 					startPageDrawer.setSlideOrder1ButtonSelected(false);
 					startPageDrawer.setSlideOrder2ButtonSelected(true);
 				}			
-				//
 				startPageDrawer.setSlideOrder2ButtonClicked(true);
 			}
 		}
@@ -720,6 +790,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 //---CLOSING THE POWERPOINT AND SAVING---
 
+	/**
+	 * closes the pdf file that is being used as a source for the 
+	 * slide images, if said file exists / in use.
+	 */
 	public void closePPFile()
 	{
 		if(pdfHandlerSet == true){
@@ -729,19 +803,21 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * saves the completed questions data to a non-volatile storage location
+	 */
 	public void saveQuestionsCompleted()
 	{
 		if(pdfHandlerSet == true){
 			pdfHandler.exportCompletedSlides(true);
 		}
 	}
-//}}
 	
 //--- ---
 
 	/**
-	 * changes the slide reference image to the appropriate question
-	 * 
+	 * changes the slide reference image to the appropriate question if a valid one if found
+	 * if no valid new question slide is found, no changes are made.
 	 */
 	public void getNextQuestion()
 	{
@@ -760,11 +836,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * changes the slide reference image to the appropriate slide
 	 * moving forward through the seen slides
-	 * 
 	 */
 	public void getForwardSlide()
 	{
-		//
 		if (pdfHandlerSet == true){
 			if (quizPageDrawerSet == true){
 				int newPageNumber = pdfHandler.changeSlide("forward");
@@ -776,7 +850,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	/**
 	 * changes the slide reference image to the appropriate slide
 	 * moving backward through the seen slides
-	 * 
 	 */
 	public void getBackwardSlide()
 	{
@@ -791,8 +864,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * 
-
+	 * activates the procedure for the green tick button being clicked
+	 * this marks the current question as 'completed correctly'
 	 */
 	public void greenTickClicked()
 	{
@@ -802,6 +875,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 	
+	/**
+	 * activates the procedure for the red X button being clicked
+	 * this marks the current question as 'completed, but answer was wrong / did not gain full marks'
+	 */
 	public void redXClicked() 
 	{
 		if (pdfHandlerSet == true){
@@ -810,32 +887,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	/**
-	 * slightly different in that it adjust for Mac 
-	 * being slightly off with the mouse y coord
-	 * 
-	 * @param pointX
-	 * @param pointY
-	 * @param rectLeft
-	 * @param rectRight
-	 * @param rectTop
-	 * @param rectBottom
-	 * @return
+	 * increments the questions completed count by 1
+	 * i.e. 'completed question' = a question, where the user has clicked the 'red X' or 'green tick' buttons 
+	 * 							 when prompted to, in order to indicate that they have finished looking at the question
+	 * 		'questions completed' = an integer total, of the number of 'completed questions' from within the current session only
 	 */
-	public boolean isPointCollisionWithRectangle(int pointX, int pointY, int rectLeft, int rectRight, int rectTop, int rectBottom)
-	{
-		int macAdjust = 45;
-		rectTop = rectTop + macAdjust;
-		rectBottom = rectBottom + macAdjust;
-		if ( (pointX > rectLeft) && (pointX < rectRight) ){
-			//it is in the x range
-			if ( (pointY < rectBottom) && (pointY > rectTop) ){
-				// (it is in the y range)
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void incrementQuestionsCompleted()
 	{
 		if (quizPageDrawerSet == true){
@@ -843,6 +899,17 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 	}
 
+	/**
+	 * sets the 'current questions' to the parameter passed value.
+	 * i.e. 'current question' = 'the question number' relating to the current slide.
+	 * 		'question number' = an integer value, linked to the order of which a 'question slide group' has been displayed 
+	 * 							in the current quiz session. 
+	 * 							e.g. the seen after starting the quiz would be question 1, and all of the following answer slides
+	 * 									would also be question 1. 
+	 * 								 when the user goes onto the next question, the 'question number' would be '2'. 
+	 * 							
+	 * 		'question slide group' = question slide and its corresponding answer slides
+	 */
 	public void setCurrentQuestion(int currentQuestionNumber)
 	{
 		if (quizPageDrawerSet == true){
@@ -861,174 +928,181 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		String typedKey = String.valueOf(e.getKeyChar());
+		int typedKeysExtendedKeyCode = e.getExtendedKeyCode();
 		
-		if (e.getExtendedKeyCode() == 8){
-			typedKey = "backspace";
+		switch (typedKeysExtendedKeyCode){
+			case 8:
+				typedKey = "backspace";
+				break;
+			case 10:
+				typedKey = "enter";
+				break;
+			case 16777383:
+				typedKey = "exit";
+				break;
 		}
-		else if (e.getExtendedKeyCode() == 10){
-			typedKey = "enter";
-		}
-		else if (e.getExtendedKeyCode() == 16777383){
-			typedKey = "exit";
-		}
-
-
 		HandleTextEntered(typedKey, e);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 //---HANDLING TEXT INPUTS---
 
+	/**
+	 * responds to the appropriate key that was pressed, by activating a shortcut, or entering text into a text box.
+	 * @param typedChar = the character, which corresponds to the character relating to the key that was pressed
+	 * @param keyEvent = the corresponding event relating to the key that was interacted with
+	 */
 	public void HandleTextEntered(String typedChar, KeyEvent keyEvent)
 	{
-		if (currentPage == "1"){
-			//start page
-			if (typedChar == "enter"){
-				//launch quiz button click
-				currentPage = "2";
-				startPageDrawer.setLaunchQuizButtonClicked(true);
-			}
-			else if (typedChar.equals("c")){
-				//change file button click
-				changeLoadedFile();
-				startPageDrawer.setChangeFileButtonClicked(true);
-			}
-			else if (typedChar.equals("r")){
-				//reset button click
-				setAllSlidesToUnseen(slidePDFLocation);
-				startPageDrawer.setResetCompletedQuestionsIndicationTextActivated(true);
-				startPageDrawer.setResetCompletedQuestionsButtonClicked(true);
-			}
-			else if (typedChar.equals("1")){
-				//slide mode 1 button click
-				if (startPageDrawer.getSlideMode1ButtonSelected() == false){
-					startPageDrawer.setSlideMode1ButtonSelected(true);
+		switch (currentPage){
+			case "1":
+				switch (typedChar){
+					case "enter":
+						//launch quiz button click
+						currentPage = "2";
+						startPageDrawer.setLaunchQuizButtonClicked(true);
+						break;
+					case "c":
+						//change file button click
+						changeLoadedFile();
+						startPageDrawer.setChangeFileButtonClicked(true);
+						break;
+					case "r":
+						//reset button click
+						setAllSlidesToUnseen(slidePDFLocation);
+						startPageDrawer.setResetCompletedQuestionsIndicationTextActivated(true);
+						startPageDrawer.setResetCompletedQuestionsButtonClicked(true);
+						break;
+					case "1":
+						//slide mode 1 button click
+						if (startPageDrawer.getSlideMode1ButtonSelected() == false){
+							startPageDrawer.setSlideMode1ButtonSelected(true);
+						}
+						else{
+							if ((startPageDrawer.getSlideMode2ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
+								startPageDrawer.setSlideMode1ButtonSelected(false);
+							}
+						}
+						startPageDrawer.setSlideMode1ButtonClicked(true);
+						break;
+					case "2":
+						//slide mode 2 button click
+						if (startPageDrawer.getSlideMode2ButtonSelected() == false){
+							startPageDrawer.setSlideMode2ButtonSelected(true);				}
+						else{
+							if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
+								startPageDrawer.setSlideMode2ButtonSelected(false);
+							}
+						}
+						startPageDrawer.setSlideMode2ButtonClicked(true);
+						break;
+					case "3":
+						//slide mode 3 button click
+						if (startPageDrawer.getSlideMode3ButtonSelected() == false){
+							startPageDrawer.setSlideMode3ButtonSelected(true);				}
+						else{
+							if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode2ButtonSelected() == true)){
+								startPageDrawer.setSlideMode3ButtonSelected(false);
+							}
+						}
+						startPageDrawer.setSlideMode3ButtonClicked(true);
+						break;
+					case "[":
+						//slide option 1 button click
+						if (startPageDrawer.getSlideOrder1ButtonSelected() == false){
+							startPageDrawer.setSlideOrder2ButtonSelected(false);
+							startPageDrawer.setSlideOrder1ButtonSelected(true);
+						}			
+						startPageDrawer.setSlideOrder1ButtonClicked(true);
+						break;
+					case "]":
+						//slide option 2 button click
+						if (startPageDrawer.getSlideOrder2ButtonSelected() == false){
+							startPageDrawer.setSlideOrder1ButtonSelected(false);
+							startPageDrawer.setSlideOrder2ButtonSelected(true);
+						}			
+						startPageDrawer.setSlideOrder2ButtonClicked(true);
+						break;
 				}
-				else{
-					if ((startPageDrawer.getSlideMode2ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
-						startPageDrawer.setSlideMode1ButtonSelected(false);
+				break;
+			case "2":
+				if (textBoxEntered == true){
+					//user typed into the text box
+					quizPageDrawer.getTypingTextBox().typeLetter(typedChar, keyEvent.getExtendedKeyCode());
+					if (quizPageDrawer.getTypingTextBox().isEntered()){
+						textBoxEntered = true;
+					}
+					else{
+						textBoxEntered = false;
 					}
 				}
-				startPageDrawer.setSlideMode1ButtonClicked(true);
-			}
-			else if (typedChar.equals("2")){
-				//slide mode 2 button click
-				if (startPageDrawer.getSlideMode2ButtonSelected() == false){
-					startPageDrawer.setSlideMode2ButtonSelected(true);				}
 				else{
-					if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode3ButtonSelected() == true)){
-						startPageDrawer.setSlideMode2ButtonSelected(false);
-					}
+					//not in text box
+					switch (typedChar){
+						case "enter":
+							//next question button clicked
+							quizPageDrawer.setNextQuestionButtonClicked(true);
+							getNextQuestion();
+							break;
+						case "t":
+							//text box clicked
+							textBoxEntered = true;
+							quizPageDrawer.getTypingTextBox().setEntered(true);
+							break;
+						case "/":
+							//text box clicked
+							//textBoxTextLeftOfCursor = ""; reset the text in the text box
+							break;
+						case "r":
+							//green tick button clicked
+							quizPageDrawer.setTickButtonClicked(true);
+							greenTickClicked();
+							break;
+						case "w":
+							//red x button clicked
+							quizPageDrawer.setXButtonClicked(true);
+							redXClicked();
+							break;
+						case "[":
+							//move left in seen slides button clicked
+							quizPageDrawer.setBackwardPageButtonClicked(true);
+							getBackwardSlide();
+							break;
+						case "]":
+							//move right in seen slides button clicked
+							quizPageDrawer.setForwardPageButtonClicked(true);
+							getForwardSlide();
+							break;
+						case "b":
+							//back to menu button clicked
+							currentPage = "1";
+							quizPageDrawer.setBackToMenuButtonClicked(true);
+							//close the file since going back
+							saveQuestionsCompleted();
+							closePPFile();
+							initializeDefaultValueVariables();
+							break;
+					}					
 				}
-				startPageDrawer.setSlideMode2ButtonClicked(true);
-			}
-			else if (typedChar.equals("3")){
-				//slide mode 3 button click
-				if (startPageDrawer.getSlideMode3ButtonSelected() == false){
-					startPageDrawer.setSlideMode3ButtonSelected(true);				}
-				else{
-					if ((startPageDrawer.getSlideMode1ButtonSelected() == true) || (startPageDrawer.getSlideMode2ButtonSelected() == true)){
-						startPageDrawer.setSlideMode3ButtonSelected(false);
-					}
-				}
-				startPageDrawer.setSlideMode3ButtonClicked(true);
-			}
-			else if (typedChar.equals("[")){
-				//slide option 1 button click
-				if (startPageDrawer.getSlideOrder1ButtonSelected() == false){
-					startPageDrawer.setSlideOrder2ButtonSelected(false);
-					startPageDrawer.setSlideOrder1ButtonSelected(true);
-				}			
-				startPageDrawer.setSlideOrder1ButtonClicked(true);
-			}
-			else if (typedChar.equals("]")){
-				//slide option 2 button click
-				if (startPageDrawer.getSlideOrder2ButtonSelected() == false){
-					startPageDrawer.setSlideOrder1ButtonSelected(false);
-					startPageDrawer.setSlideOrder2ButtonSelected(true);
-				}			
-				startPageDrawer.setSlideOrder2ButtonClicked(true);
-			}
-		}
-		else if (currentPage == "2"){
-			//quiz page
-			if (textBoxEntered == true){
-				//user typed into the text box
-				quizPageDrawer.getTypingTextBox().typeLetter(typedChar, keyEvent.getExtendedKeyCode());
-				if (quizPageDrawer.getTypingTextBox().isEntered()){
-					textBoxEntered = true;
-				}
-				else{
-					textBoxEntered = false;
-				}
-			}
-			else{
-				//not in text box
-				if (typedChar == "enter"){
-					//next question button clicked
-					quizPageDrawer.setNextQuestionButtonClicked(true);
-					getNextQuestion();
-				}
-				else if (typedChar.equals("t")){
-					//text box clicked
-					quizPageDrawer.getTypingTextBox().setEntered(true);
-					textBoxEntered = true;
-				}
-				else if (typedChar.equals("/")){
-					//text box clicked
-					//textBoxTextLeftOfCursor = ""; reset the text in the text box
-				}
-				else if (typedChar.equals("r")){
-					//green tick button clicked
-					quizPageDrawer.setTickButtonClicked(true);
-					greenTickClicked();
-				}
-				else if (typedChar.equals("w")){
-					//red x button clicked
-					quizPageDrawer.setXButtonClicked(true);
-					redXClicked();
-				}
-				else if (typedChar.equals("[")){
-					//move left in seen slides button clicked
-					quizPageDrawer.setBackwardPageButtonClicked(true);
-					getBackwardSlide();
-				}
-				else if (typedChar.equals("]")){
-					//move right in seen slides button clicked
-					quizPageDrawer.setForwardPageButtonClicked(true);
-					getForwardSlide();
-				}
-				else if (typedChar.equals("b")){
-					//back to menu button clicked
-					currentPage = "1";
-					quizPageDrawer.setBackToMenuButtonClicked(true);
-					//close the file since going back
-					saveQuestionsCompleted();
-					closePPFile();
-					initializeDefaultValueVariables();
-				}
-			}
+				break;
 		}
 	}
 
-	public String backspaceString(String str) {
-		if (str != null && str.length() > 0 ) {
-			str = str.substring(0, str.length() - 1);
-		}
-		return str;
-	}
-
+	/**
+	 * opens up an interface which allows
+	 * the user to select the pdf file which they wish 
+	 * to use as the quiz basis. 
+	 * It then promptly updates the variable 
+	 * pointing to the pdf source file
+	 */
 	public void changeLoadedFile()
 	{
 		String foundPath = FileSelector.selectPpfFile();
@@ -1038,9 +1112,12 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 
-
-
 //CLEARING THE COMPLETED QUESTIONS TEXT FILE FOR THE SELECTED POWERPOINT
+
+	/**
+	 * clears/resets the text file, so that it becomes empty
+	 * @param powerpiontPdfFileLocation = the path to the text file that is to be cleared
+	 */
     public void clearGivenTextFile(String powerpiontPdfFileLocation) {
         String textFilename = getFileNameFromLocation(powerpiontPdfFileLocation);
         String filenameAsTextFile = textFilename + "_completed_questions_array.txt";
@@ -1054,19 +1131,19 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
             fwOb.close();
 
         } catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("could not clear the given text file");
         }
-
 	}
 
+	/**
+	 * Updates the meta data file, associated with the parameter passed pdf, to have all slides 'unseen'
+	 * @param powerpointPdfFileLocation = the name of the pdf, whose 'slides seen' metadata is to be reset
+	 * 									  (so that all slides are 'unseen')
+	 */
 	public void setAllSlidesToUnseen(String powerpointPdfFileLocation)
 	{
-		//
 		String textFilename = getFileNameFromLocation(powerpointPdfFileLocation);
 		String filenameAsTextFile = textFilename + "_completed_questions_array.txt";
-		
-		//stuff
 		
 		Deque<Integer> slideNumberQueue = new LinkedList<>();
 		Deque<Integer> incorrectAttemptsQueue = new LinkedList<>();
@@ -1078,10 +1155,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		*/
 		File textfileToRead = new File(filenameAsTextFile);
 
-
-
         if(textfileToRead.exists() && !textfileToRead.isDirectory()) { 
-			//
 			//--GETTING THE CURRENT CONTENTS--
 			int entriesFound = 0;
 	
@@ -1095,10 +1169,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 						// process the line.
 						splitLine = line.split(",");
 						if (splitLine.length == 4){
-							//
 							currentSlideNumber = Integer.parseInt(splitLine[0]);
 							currentQuestionTimesIncorrect = Integer.parseInt(splitLine[1]);
-							
 						}
 						else{
 							//if there are not 4 values
@@ -1106,10 +1178,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 							currentQuestionTimesIncorrect = 0;
 						}
 	
-						//
 						slideNumberQueue.push(currentSlideNumber);
 						incorrectAttemptsQueue.push(currentQuestionTimesIncorrect);
-						//
 						entriesFound++;
 						
 					}
@@ -1122,7 +1192,6 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	
 			} 
 			finally{
-				//
 			} 
 
 			//--RE-WRITING THE NEW VALUES--
@@ -1154,11 +1223,13 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				System.out.println("could not re-write the new values to the file");
 			}
 		}
-
-        
 	}
 	
 	// need to validate this
+	/**
+	 * @param location = the path to the file
+	 * @return the name of the file at the end of the path (without the file extention)
+	 */
     public static String getFileNameFromLocation(String location) {
         int lastSlash = location.lastIndexOf("/") + 1;
         String fullFilename = location.substring(lastSlash);
@@ -1166,25 +1237,22 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
         String fileName = fullFilename.substring(0, lastDotIndex);
         return fileName;
 	}
-	
-//}}
 
 //--- ---
 
 	/**
-	 * @param needsUpdating = the new value of the slideImageUpdated 
 	 * sets the slide image update variable for the quiz page to the passed value
+	 * @param needsUpdating = the new value of the slideImageUpdated 
 	 */
 	public void setJustChangedSlideForQuizPage(boolean needsUpdating)
 	{
 		if (quizPageDrawerSet == true){
 			quizPageDrawer.setJustChangedSlide(needsUpdating);
 		}
-
 	}
 	
 	/**
-	 * @return true if the pdfHandler object has been created; fales otherwise
+	 * @return true if the pdfHandler object has been created; false otherwise
 	 */
 	public boolean isPDFHandlerSet()
 	{
@@ -1207,8 +1275,5 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		}
 		return false;
 	}
-
-//}}
-
 }
   
