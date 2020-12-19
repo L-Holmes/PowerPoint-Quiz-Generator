@@ -202,34 +202,25 @@ public class ConvertPDFPagesToImages {
         }
     }
 
-
     public  int  changeSlide(String nextSlideOperation) {
         if (ppLoaded == true) {
             switch (nextSlideOperation){
-                case "newQuestion":
-                    getNextQuestion();
-                    break;
-                case "back":
-                    moveBackwardInSeenSlides();
-                    break;
-                case "forward":
-                    moveForewardInSeenSlides();
-                    break;
-                default:
-                    pageNumber = -1;
+                case "newQuestion" -> getNextQuestion();
+                case "back" -> moveBackwardInSeenSlides();
+                case "forward" -> moveForewardInSeenSlides();
+                default -> pageNumber = -1;
             }
 
             //setting (or not) the 'on first slide' text
             switch (currentQuestion){
-                case 1:
+                case 1 -> {
                     if (isQuestion(pageNumber, document) == true) {
                         motherClickPanel.setFirstSlideStatus(true);
                     } else {
                         motherClickPanel.setFirstSlideStatus(false);
                     }
-                    break;
-                default:
-                    motherClickPanel.setFirstSlideStatus(false);
+                }
+                default -> motherClickPanel.setFirstSlideStatus(false);
             }
             //}}
 
@@ -869,18 +860,19 @@ public class ConvertPDFPagesToImages {
                     splitLine = line.split(",");
                     int splitLineLength = splitLine.length;
                     switch (splitLineLength){
-                        case 4:
+                        case 4 -> {
                             currentSlideNumber = Integer.parseInt(splitLine[0]);
                             currentQuestionTimesIncorrect = Integer.parseInt(splitLine[1]);
                             currentlyCompleted = Boolean.parseBoolean(splitLine[2]);
                             wrongLastTime = Boolean.parseBoolean(splitLine[3]);
-                            break;
-                        default:
+                        }
+                        default -> {
                             //if there are not 4 values
                             currentSlideNumber = 0;
                             currentQuestionTimesIncorrect = 0;
                             currentlyCompleted = false;
                             wrongLastTime = false;
+                        }
                     }
 
                     //choosing whether to remove the slide or not 

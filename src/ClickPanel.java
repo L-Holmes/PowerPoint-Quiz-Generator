@@ -319,20 +319,20 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 				//--DRAWING THE REST OF THE PAGE--
 				switch (currentPage){
-					case "2":
+					case "2" -> {
 						if (quizPageDrawerSet == false){
 							quizPageDrawer = new ClickPanelDrawQuizPage(windowWidth, windowHeight, this);
 							quizPageDrawerSet = true;
 						}
 						quizPageDrawer.drawQuiz(g, slidePDFLocation, pointXCoord, pointYCoord);
-						break;
-					case "1":
+					}
+					case "1"-> {
 						if (startPageDrawerSet == false){
 							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight);
 							startPageDrawerSet = true;
 						}
 						startPageDrawer.drawStartPage(g, slidePDFLocation, pointXCoord, pointYCoord);
-						break;
+					}
 				}
 
 			}
@@ -362,12 +362,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
         double pointXCoord = p.getX();
 		double pointYCoord = p.getY();
 		switch (currentPage){
-			case "1":
-				checkStartPageClickCollisions(pointXCoord, pointYCoord);
-				break;
-			case "2":
-				checkQuizPageClickCollisions(pointXCoord, pointYCoord);
-				break;
+			case "1" -> checkStartPageClickCollisions(pointXCoord, pointYCoord);
+			case "2" -> checkQuizPageClickCollisions(pointXCoord, pointYCoord);
 		}
 	}
 
@@ -932,15 +928,9 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		int typedKeysExtendedKeyCode = e.getExtendedKeyCode();
 		
 		switch (typedKeysExtendedKeyCode){
-			case 8:
-				typedKey = "backspace";
-				break;
-			case 10:
-				typedKey = "enter";
-				break;
-			case 16777383:
-				typedKey = "exit";
-				break;
+			case 8 -> typedKey = "backspace";
+			case 10 -> typedKey = "enter";
+			case 16777383 -> typedKey = "exit";
 		}
 		HandleTextEntered(typedKey, e);
 	}
@@ -963,25 +953,25 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 	public void HandleTextEntered(String typedChar, KeyEvent keyEvent)
 	{
 		switch (currentPage){
-			case "1":
+			case "1"->{
 				switch (typedChar){
-					case "enter":
+					case "enter" -> {
 						//launch quiz button click
 						currentPage = "2";
 						startPageDrawer.setLaunchQuizButtonClicked(true);
-						break;
-					case "c":
+					}
+					case "c" ->  {
 						//change file button click
 						changeLoadedFile();
 						startPageDrawer.setChangeFileButtonClicked(true);
-						break;
-					case "r":
+					}
+					case "r" -> {
 						//reset button click
 						setAllSlidesToUnseen(slidePDFLocation);
 						startPageDrawer.setResetCompletedQuestionsIndicationTextActivated(true);
 						startPageDrawer.setResetCompletedQuestionsButtonClicked(true);
-						break;
-					case "1":
+					}
+					case "1" -> {
 						//slide mode 1 button click
 						if (startPageDrawer.getSlideMode1ButtonSelected() == false){
 							startPageDrawer.setSlideMode1ButtonSelected(true);
@@ -992,8 +982,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 							}
 						}
 						startPageDrawer.setSlideMode1ButtonClicked(true);
-						break;
-					case "2":
+					}
+					case "2" -> {
 						//slide mode 2 button click
 						if (startPageDrawer.getSlideMode2ButtonSelected() == false){
 							startPageDrawer.setSlideMode2ButtonSelected(true);				}
@@ -1003,8 +993,8 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 							}
 						}
 						startPageDrawer.setSlideMode2ButtonClicked(true);
-						break;
-					case "3":
+					}
+					case "3" -> {
 						//slide mode 3 button click
 						if (startPageDrawer.getSlideMode3ButtonSelected() == false){
 							startPageDrawer.setSlideMode3ButtonSelected(true);				}
@@ -1014,26 +1004,26 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 							}
 						}
 						startPageDrawer.setSlideMode3ButtonClicked(true);
-						break;
-					case "[":
+					}
+					case "[" -> {
 						//slide option 1 button click
 						if (startPageDrawer.getSlideOrder1ButtonSelected() == false){
 							startPageDrawer.setSlideOrder2ButtonSelected(false);
 							startPageDrawer.setSlideOrder1ButtonSelected(true);
 						}			
 						startPageDrawer.setSlideOrder1ButtonClicked(true);
-						break;
-					case "]":
+					}
+					case "]" -> {
 						//slide option 2 button click
 						if (startPageDrawer.getSlideOrder2ButtonSelected() == false){
 							startPageDrawer.setSlideOrder1ButtonSelected(false);
 							startPageDrawer.setSlideOrder2ButtonSelected(true);
 						}			
 						startPageDrawer.setSlideOrder2ButtonClicked(true);
-						break;
+					}
 				}
-				break;
-			case "2":
+			}
+			case "2" -> {
 				if (textBoxEntered == true){
 					//user typed into the text box
 					quizPageDrawer.getTypingTextBox().typeLetter(typedChar, keyEvent.getExtendedKeyCode());
@@ -1047,41 +1037,41 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				else{
 					//not in text box
 					switch (typedChar){
-						case "enter":
+						case "enter" -> {
 							//next question button clicked
 							quizPageDrawer.setNextQuestionButtonClicked(true);
 							getNextQuestion();
-							break;
-						case "t":
+						}
+						case "t" -> {
 							//text box clicked
 							textBoxEntered = true;
 							quizPageDrawer.getTypingTextBox().setEntered(true);
-							break;
-						case "/":
+						}
+						case "/" -> {
 							//text box clicked
 							//textBoxTextLeftOfCursor = ""; reset the text in the text box
-							break;
-						case "r":
+						}
+						case "r" -> {
 							//green tick button clicked
 							quizPageDrawer.setTickButtonClicked(true);
 							greenTickClicked();
-							break;
-						case "w":
+						}
+						case "w" -> {
 							//red x button clicked
 							quizPageDrawer.setXButtonClicked(true);
 							redXClicked();
-							break;
-						case "[":
+						}
+						case "[" -> {
 							//move left in seen slides button clicked
 							quizPageDrawer.setBackwardPageButtonClicked(true);
 							getBackwardSlide();
-							break;
-						case "]":
+						}
+						case "]" -> {
 							//move right in seen slides button clicked
 							quizPageDrawer.setForwardPageButtonClicked(true);
 							getForwardSlide();
-							break;
-						case "b":
+						}
+						case "b" -> {
 							//back to menu button clicked
 							currentPage = "1";
 							quizPageDrawer.setBackToMenuButtonClicked(true);
@@ -1089,10 +1079,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 							saveQuestionsCompleted();
 							closePPFile();
 							initializeDefaultValueVariables();
-							break;
+						}
 					}					
 				}
-				break;
+			}
 		}
 	}
 

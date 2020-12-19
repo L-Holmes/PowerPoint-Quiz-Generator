@@ -130,15 +130,9 @@ public class TextBox
 
 		//handle the entered text
 		switch(extendedKeyCode){
-			case 8:
-				typedKey = "backspace";
-				break;
-			case 10:
-				typedKey = "enter";
-				break;
-			case 16777383:
-				typedKey = "exit";
-				break;
+			case 8 -> typedKey = "backspace";
+			case 10 -> typedKey = "enter";
+			case 16777383 -> typedKey = "exit";
 		}
 		handleTextEntered(typedKey);
 	}
@@ -170,7 +164,7 @@ public class TextBox
 	{
 		int howBig;
 		switch (typedChar){
-			case "backspace":
+			case "backspace" -> {
 				//find the last item in the array 
 				//ensure that the array is not empty
 				//backspace string the last part of the left of cursor text
@@ -201,16 +195,16 @@ public class TextBox
 						}
 					}
 				}
-				break;
-			case "enter":
+			}
+			case "enter" -> {
 				//add new entry for newline
 				leftText.add("");
 				//add the formatting info
 				ArrayList<Integer> thisLineInfo = new ArrayList<Integer>(); 
 				thisLineInfo.add(-1);  
 				leftTextFormatInfo.add(thisLineInfo);
-				break;
-			default:
+			}
+			default -> {
 				//add normal character
 				howBig = leftText.size();
 				if (howBig > 0){
@@ -221,6 +215,7 @@ public class TextBox
 					//only for if the last line has got longer and needs a new line, so check after the last newline
 					updateLeftTextFormatInfo(true);
 				}
+			}
 		}
 	}
 
