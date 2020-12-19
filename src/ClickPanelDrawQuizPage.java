@@ -18,7 +18,7 @@ public class ClickPanelDrawQuizPage extends JPanel
     //graphics handler
     private Graphics2D drawingLocation;
 
-    //
+    //the click panel that will be used to detect user inputs for this page
     private ClickPanel mainClickPanel;
 
     //window dimensions
@@ -29,14 +29,14 @@ public class ClickPanelDrawQuizPage extends JPanel
     private int pointXCoord;
     private int pointYCoord;
     
-
-    //loca
+    //file path of the pdf that the user is using as the quiz source
     private String slidePDFLocation; //set once
 
     //think its the slide number within the powerpoint(?)
     private int imagePageNumber = 1; //needs updating
 
-    //
+    //(true indicates that the slide image has just changed; (false) indicates that the slide image is the same as it was on the 
+    // previous game loop state
     private boolean slideImageUpdated = true; //needs updating
 
     //count indicating the number of questions that the user has completed in the current session
@@ -52,7 +52,6 @@ public class ClickPanelDrawQuizPage extends JPanel
 	private boolean mostRecentSlide = false; //needs updating
 	private boolean displayNoMoreSlidesText = false; //needs updating
 	private boolean firstSlide = false; //needs updating
-
 
     //---GENERAL PAGE DRAWING---
 	
@@ -272,7 +271,6 @@ public class ClickPanelDrawQuizPage extends JPanel
 
 	private boolean setTextBoxStuff;
 							
-
     /**
      * initialisation
      * @param windowW = the width of the window (in pixels)

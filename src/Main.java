@@ -36,9 +36,14 @@ public class Main {
 
  /**
   * TO DO:
+  * -polish up the rectangle stuff.
+  * -implement the rectangle stuff.
   * -add comments / doc strings to everything
   *     --docstrings after click panel, and then add the docstring to the click panel class def. 
   * -sort out the file system & defualt files
+  * -add a method that resets the instance variables for 2 click panel subclasses.
+  * -add comments explaining what each instance variable does
+  * -seperate variable type declarations: e.g. int x;  -- from variable initiations: e.g. x = 5;
   * -add the concurrency/threads for the loading of files, add a loading symbol (e.g. dots)
   *
   *
