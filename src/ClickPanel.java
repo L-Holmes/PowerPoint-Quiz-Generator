@@ -328,7 +328,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					}
 					case "1"-> {
 						if (startPageDrawerSet == false){
-							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight);
+							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight, g);
 							startPageDrawerSet = true;
 						}
 						startPageDrawer.drawStartPage(g, slidePDFLocation, pointXCoord, pointYCoord);
@@ -383,6 +383,11 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 		startPageSlideMode3ButtonClickCheck(pointXCoord, pointYCoord);
 		startPageSlideOrder1ButtonClickCheck(pointXCoord, pointYCoord);
 		startPageSlideOrder2ButtonClickCheck(pointXCoord, pointYCoord);
+
+
+		if (startPageDrawerSet == true){
+			startPageDrawer.clickCheckAllButtons(clickedXCoord, clickedYCoord);
+		}
 	}
 
 	/**
@@ -612,6 +617,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 				startPageDrawer.setLaunchQuizButtonClicked(true);
 			}
 		}
+
 	}
 
 	/**

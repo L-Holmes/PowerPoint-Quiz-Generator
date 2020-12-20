@@ -62,7 +62,11 @@ public class ColouredRectangleShape extends RectangleShape
      */
     private double getMinBorderMultiplier()
     {
-        return 1/Math.min(this.getWidth(),this.getHeight());
+        int minSideLen = Math.min(this.getWidth(),this.getHeight());
+        if (minSideLen > 0){
+            return 1/minSideLen;
+        }
+        return 0;
     }
     
     /**
@@ -92,14 +96,16 @@ public class ColouredRectangleShape extends RectangleShape
         else if (borderWidthAsPercentageOfRectShortestSide < minPercentMultiplier){
             borderWidthAsPercentageOfRectShortestSide = minPercentMultiplier;
         }
-        
-        //set the width
-        borderWidth = (int) borderWidthAsPercentageOfRectShortestSide*Math.min(this.getWidth(),this.getHeight());
 
-        //set the border's colour
-        setBorderColour(borderColour);
+        if (minPercentMultiplier != 0){
+            //set the width
+            borderWidth = (int) borderWidthAsPercentageOfRectShortestSide*Math.min(this.getWidth(),this.getHeight());
 
-        hasBorder = true;
+            //set the border's colour
+            setBorderColour(borderColour);
+
+            hasBorder = true;
+        }
     }
 
     /**
@@ -148,5 +154,42 @@ public class ColouredRectangleShape extends RectangleShape
             //default to black
             shapeColour = new Color(0,0,0);
         }
+    }
+
+
+    //---GETTERS & SETTERS---
+    /**
+     * @return the colour of this shape
+     */
+    public Color getColour()
+    {
+        return shapeColour;
+    }
+
+    /**
+     * @return the colour of the border of this shape, if it exists; null otherwise
+     */
+    public Color getBorderColour()
+    {
+        if (hasBorder){
+            return borderColour;
+        }
+        else{
+            return null;
+        }
+    }
+
+    /**
+     * @return the width of the border for this shape if it exists; 0 otherwise.
+     */
+    public int getBorderWidth()
+    {
+        if (hasBorder){
+            return borderWidth;
+        }
+        else{
+            return 0;
+        }
+        
     }
 }

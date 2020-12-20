@@ -31,7 +31,7 @@ public interface ClickableShape
 	 * @param clickedYCoordinate = the y coordinate of the pixel on screen that was clicked
      * @return true, if this shape was clicked; false otherwise. 
      */
-    public boolean isClicked(int clickedXCoordinate, int clickedYCoordinate);
+    public boolean isPointInsideThisShape(int clickedXCoordinate, int clickedYCoordinate);
 
     /**
      * This is the called after a click on this shape has been detected. 

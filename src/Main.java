@@ -36,6 +36,7 @@ public class Main {
 
  /**
   * TO DO:
+  * -need to sort out how to add the code for the button clicks to the activateClickedProcedure for each button
   * -polish up the rectangle stuff.
   * -implement the rectangle stuff.
   * -add comments / doc strings to everything
@@ -49,3 +50,5 @@ public class Main {
   *
   * -look at some readme examples off of other github projects, and make mine match
   */
+
+

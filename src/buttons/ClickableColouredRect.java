@@ -5,7 +5,7 @@ package buttons;
  *  was inside this rectangle.
  * @author Lindon Holmes
  */
-public abstract class ClickableColouredRect extends ColouredRectangleShape implements ClickableShape
+public class ClickableColouredRect extends ColouredRectangleShape implements ClickableShape
 {
 
     /**
@@ -26,13 +26,13 @@ public abstract class ClickableColouredRect extends ColouredRectangleShape imple
     @Override
     public void handleNewWindowClick(int clickedXCoordinate, int clickedYCoordinate)
     {
-        if (isClicked(clickedXCoordinate, clickedYCoordinate)){
+        if (isPointInsideThisShape(clickedXCoordinate, clickedYCoordinate)){
             activateClickedProcedure();
         }
     }
 
     @Override
-    public boolean isClicked(int clickedXCoordinate, int clickedYCoordinate)
+    public boolean isPointInsideThisShape(int clickedXCoordinate, int clickedYCoordinate)
     {
         if ( (clickedXCoordinate > this.getXCoordinate()) && (clickedXCoordinate < this.getRightXCoordinate()) ){
 			//it is in the x range

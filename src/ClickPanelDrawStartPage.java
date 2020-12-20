@@ -1,5 +1,8 @@
 import java.awt.*;//used for layout managers
+import java.util.LinkedList;
 
+import buttons.ClickableColouredButton;
+import buttons.SingleLineText;
 
 public class ClickPanelDrawStartPage
 {
@@ -15,7 +18,10 @@ public class ClickPanelDrawStartPage
 
     //mouse coordinates
     private int pointXCoord;
-	private int pointYCoord;
+    private int pointYCoord;
+    
+    //contains all of the buttons on this page
+    private LinkedList<ClickableColouredButton> allStartPageButtons = new LinkedList<ClickableColouredButton>();
 
     //---GENERAL PAGE DRAWING---
 
@@ -251,10 +257,12 @@ public class ClickPanelDrawStartPage
 
 	private boolean setResetQuestionsIndicationText;
 	
-    public ClickPanelDrawStartPage(int windowW, int windowH)
+    public ClickPanelDrawStartPage(int windowW, int windowH, Graphics2D graphicsHandle)
     {
+        drawingLocation = graphicsHandle;
         windowWidth = windowW;
         windowHeight = windowH;
+        initialiseAllButtons();////////////////////////////////
     }
 
     /**
@@ -328,6 +336,8 @@ public class ClickPanelDrawStartPage
         drawSlideOrder2Button();
 
         drawResetQuestionsTextIndication();
+
+        drawAllButtons();//////////////////////////
 
     }
 
@@ -482,6 +492,120 @@ public class ClickPanelDrawStartPage
         drawingLocation.drawString(startPageLoadedFilenameText, startPageLoadedFilenameTextX, startPageLoadedFilenameTextY);
 
         setLoadedFilenameStuff = true;
+    }
+
+    public void initialiseLaunchQuizButton()
+    {
+
+        startPageLaunchQuizButtonText = "Lauch Quiz";
+        int[] launchQuizButtonColour = {92, 222, 8};
+        int[] launchQuizButtonBorderColour = {0,0,0};
+        double borderMultiplier = 0.1;
+        Font defaultButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color defaultButtonFontColour = new Color (0,0,0);
+
+        ClickableColouredButton launchQuizButton;
+
+        //--initialise the button dimesions--
+        startPageLaunchQuizButtonWidth = (int) (startPageMainBoxInnerWidth- (2*sideSpacing));
+        startPageLaunchQuizButtonHeight = (int) (windowHeight*0.15);
+        startPageLaunchQuizButtonX = startPageMainBoxInnerX + sideSpacing;
+        startPageLaunchQuizButtonY = (startPageMainBoxInnerY + startPageMainBoxInnerHeight - startPageLaunchQuizButtonHeight) - sideSpacing;
+        
+        //--create the button object--
+        launchQuizButton = new ClickableColouredButton(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight, launchQuizButtonColour);
+        launchQuizButton.addBorder(borderMultiplier, launchQuizButtonBorderColour);
+        allStartPageButtons.add(launchQuizButton);
+        
+        //--initialise the button text data--
+        drawingLocation.setFont(defaultButtonFont); 
+        startPageLaunchQuizButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLaunchQuizButtonText);
+        startPageLaunchQuizButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        startPageLaunchQuizButtonTextX = launchQuizButton.getXCoordinate() + (int) ((launchQuizButton.getWidth()-startPageLaunchQuizButtonTextWidth)/2);
+        startPageLaunchQuizButtonTextY = launchQuizButton.getYCoordinate() + startPageLaunchQuizButtonTextHeight + (int) ((launchQuizButton.getHeight()-startPageLaunchQuizButtonTextHeight)/2);
+
+        //--create the button's font object, and add to the button--
+        launchQuizButton.addText(new SingleLineText(startPageLaunchQuizButtonText,  startPageLaunchQuizButtonTextX,  startPageLaunchQuizButtonTextY,  defaultButtonFont,  defaultButtonFontColour));
+
+    }
+
+    //MAYBE ADD TEXT TO THE BUTTON CLASS---------------------------------
+    //could have the button text, which point to a new 'TextLabel' class:
+                                                        //-string text:
+                                                        //-x coordinate;
+                                                        //-y coordinate;
+                                                        //-Font
+                                                        //-colour.
+
+
+    /**
+     * draws the button onto the drawing location
+     * @param buttonToBeDrawn = the button object which contains the necessary information for it to be drawn onto the screen
+     */
+    private void drawButton(ClickableColouredButton buttonToBeDrawn)
+    {
+        //--draw the button--
+        drawingLocation.setColor(buttonToBeDrawn.getDisplayColour(pointXCoord, pointYCoord));
+        drawingLocation.fillRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
+
+        //--draw the outline of the button--
+        drawingLocation.drawRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
+
+        //--draw all of the button's text--
+        SingleLineText[] buttonsText = buttonToBeDrawn.getText();
+        if (buttonsText.length > 0){
+            for (SingleLineText buttonTextEntry : buttonsText){
+                drawingLocation.setFont(buttonTextEntry.getFont()); 
+                drawingLocation.setColor(buttonTextEntry.getColour());
+        
+                //--draw the single line of text onto the button--
+                drawingLocation.drawString(buttonTextEntry.getText(), buttonTextEntry.getX(), buttonTextEntry.getY());
+            }
+        }
+    }
+
+    /**
+     * calls all of the initialisation methods in this class, in order to calculate / set
+     * all of the data for the buttons (and create objects for all of the buttons)
+     */
+    private void initialiseAllButtons()
+    {
+        initialiseLaunchQuizButton();
+    }
+
+    /**
+     * updates the click counters for all button objects on this page
+     * note: click counters = used to determine which state to display the colour in: 'clicked down' OR not been clicked
+     */
+    public void updateAllButtonsClickCounters()
+    {
+        for (ClickableColouredButton buttonObj : allStartPageButtons){
+            buttonObj.updateClickCounter();
+        }
+    }
+
+    /**
+     * draws all of the created buttons for this page onto the drawingLocation (i.e. the Graphics2D object for this window)
+     */
+    public void drawAllButtons()
+    {
+        updateAllButtonsClickCounters();
+
+        for (ClickableColouredButton buttonObj : allStartPageButtons){
+            drawButton(buttonObj);
+        }
+    }
+
+    /**
+     * determines if any of the buttons have been clicked and sets them to their clicked state if necessary
+     * @param clickedXCoordinate = the x coordinate of the pixel on screen that was clicked
+     * @param clickedYCoordinate = the y coordinate of the pixel on screen that was clicked
+     */
+    public void clickCheckAllButtons(int clickedXCoordinate, int clickedYCoordinate)
+    {
+        for (ClickableColouredButton buttonObj : allStartPageButtons){
+            buttonObj.handleNewWindowClick(clickedXCoordinate, clickedYCoordinate);
+        }
     }
 
     public void drawLaunchQuizButton()
