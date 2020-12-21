@@ -36,7 +36,8 @@ public class Main {
 
  /**
   * TO DO:
-  * -need to sort out how to add the code for the button clicks to the activateClickedProcedure for each button
+  * (just done launch quiz button so far)
+  * -need to sort out how to add the code for the button clicks to the activateClickedProcedure for each button 
   * -polish up the rectangle stuff.
   * -implement the rectangle stuff.
   * -add comments / doc strings to everything

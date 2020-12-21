@@ -111,8 +111,6 @@ public class ClickPanelDrawStartPage
 	private int startPageChangeFileButtonClickedTick;
 
 
-	private boolean setChangeFileButtonStuff;
-
 	//--drawing the reset completed questions file stuff--
 	private int startPageResetCompletedQuestionsButtonWidth;
 	private int startPageResetCompletedQuestionsButtonHeight;
@@ -126,7 +124,6 @@ public class ClickPanelDrawStartPage
 	private boolean startPageResetCompletedQuestionsButtonClicked;
 	private int startPageResetCompletedQuestionsButtonClickedTick;
 	
-	private boolean setResetCompletedQuestionsButtonStuff;
 
 	//--drawing the slide mode text--
 	private String startPageSlideModeText;
@@ -262,7 +259,7 @@ public class ClickPanelDrawStartPage
         drawingLocation = graphicsHandle;
         windowWidth = windowW;
         windowHeight = windowH;
-        initialiseAllButtons();////////////////////////////////
+        initialiseAllElements();
     }
 
     /**
@@ -315,7 +312,7 @@ public class ClickPanelDrawStartPage
 
         drawLoadedFilename();
 
-        drawLaunchQuizButton();
+        //drawLaunchQuizButton();//REMOVED//
 
         drawChangeFileButton();
 
@@ -499,7 +496,10 @@ public class ClickPanelDrawStartPage
 
         startPageLaunchQuizButtonText = "Lauch Quiz";
         int[] launchQuizButtonColour = {92, 222, 8};
+        int[] launchQuizButtonHoveredOverColour = {85, 215, 0};
+        int[] launchQuizButtonClickedColour = {110, 240, 25};
         int[] launchQuizButtonBorderColour = {0,0,0};
+        int laucnQuizButtonMaxClickedCount = 3;
         double borderMultiplier = 0.1;
         Font defaultButtonFont = new Font("Monospaced", Font.PLAIN, 20);
         Color defaultButtonFontColour = new Color (0,0,0);
@@ -513,7 +513,15 @@ public class ClickPanelDrawStartPage
         startPageLaunchQuizButtonY = (startPageMainBoxInnerY + startPageMainBoxInnerHeight - startPageLaunchQuizButtonHeight) - sideSpacing;
         
         //--create the button object--
-        launchQuizButton = new ClickableColouredButton(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight, launchQuizButtonColour);
+        System.out.println("creating obj with coords: ["+startPageLaunchQuizButtonX+","+startPageLaunchQuizButtonY+"]");
+        launchQuizButton = new ClickableColouredButton(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight, launchQuizButtonColour, launchQuizButtonClickedColour, launchQuizButtonHoveredOverColour, laucnQuizButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the launch quiz button stuff");
+            }
+        };
+        System.out.println("called");
+        launchQuizButton.handleNewWindowClick(0,0);
         launchQuizButton.addBorder(borderMultiplier, launchQuizButtonBorderColour);
         allStartPageButtons.add(launchQuizButton);
         
@@ -526,17 +534,7 @@ public class ClickPanelDrawStartPage
 
         //--create the button's font object, and add to the button--
         launchQuizButton.addText(new SingleLineText(startPageLaunchQuizButtonText,  startPageLaunchQuizButtonTextX,  startPageLaunchQuizButtonTextY,  defaultButtonFont,  defaultButtonFontColour));
-
     }
-
-    //MAYBE ADD TEXT TO THE BUTTON CLASS---------------------------------
-    //could have the button text, which point to a new 'TextLabel' class:
-                                                        //-string text:
-                                                        //-x coordinate;
-                                                        //-y coordinate;
-                                                        //-Font
-                                                        //-colour.
-
 
     /**
      * draws the button onto the drawing location
@@ -566,12 +564,50 @@ public class ClickPanelDrawStartPage
 
     /**
      * calls all of the initialisation methods in this class, in order to calculate / set
-     * all of the data for the buttons (and create objects for all of the buttons)
+     * all of the data for the objects that are being drawn onto the screen 
+     * (and create objects for all of the objects that are being drawn onto the screen)
+     * 
+     * NOTE:
+     * these methods must be called in a particular order, since some of the initialised variables
+     * depend on other initialised variables (created by higher up initialse calls).
+     * i.e. elements are created relative to other elements on the page, so depend on them being initialised.
      */
-    private void initialiseAllButtons()
+    private void initialiseAllElements()
     {
+
+        initialiseTitle();/////NEED TO MAKE THIS//////////
+
+        initialiseMainBox();/////NEED TO MAKE THIS//////////
+
+        initialiseLoadedPowerpointText();/////NEED TO MAKE THIS//////////
+
+        initinitialiseBoxSpacing();/////NEED TO MAKE THIS//////////
+
+        initialiseLoadedFilename();/////NEED TO MAKE THIS//////////
+
         initialiseLaunchQuizButton();
+
+        initialiseChangeFileButton();/////NEED TO MAKE THIS//////////
+
+        initialiseResetCompletedQuestionsButton();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideModeText();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideMode1Button();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideMode2Button();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideMode3Button();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideOrderText();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideOrder1Button();/////NEED TO MAKE THIS//////////
+
+        initialiseSlideOrder2Button();/////NEED TO MAKE THIS//////////
+
+        initialiseResetQuestionsTextIndication();/////NEED TO MAKE THIS//////////
     }
+
 
     /**
      * updates the click counters for all button objects on this page
@@ -608,6 +644,7 @@ public class ClickPanelDrawStartPage
         }
     }
 
+    /*
     public void drawLaunchQuizButton()
     {
         //
@@ -660,6 +697,7 @@ public class ClickPanelDrawStartPage
         setLaunchQuizButtonStuff = true;
 
     }
+    */
 
     public void drawChangeFileButton()
     {

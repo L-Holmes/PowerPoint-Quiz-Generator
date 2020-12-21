@@ -26,7 +26,9 @@ public class ClickableColouredRect extends ColouredRectangleShape implements Cli
     @Override
     public void handleNewWindowClick(int clickedXCoordinate, int clickedYCoordinate)
     {
+        System.out.println("handling new window click");
         if (isPointInsideThisShape(clickedXCoordinate, clickedYCoordinate)){
+            System.out.println("activating clicked procedure");
             activateClickedProcedure();
         }
     }
@@ -45,8 +47,8 @@ public class ClickableColouredRect extends ColouredRectangleShape implements Cli
     }
 
     @Override
-    public void activateClickedProcedure()
-    {
-        //
+    public void activateClickedProcedure() {
     }
+
+
 }

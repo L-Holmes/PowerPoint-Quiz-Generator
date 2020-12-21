@@ -20,6 +20,7 @@ public abstract class RectangleShape
      */
     public RectangleShape(int xCoord, int yCoord, int widthOfRect, int heightOfRect)
     {
+        System.out.println("setting x to: "+ xCoord+" & setting y to: "+ yCoord);
         x = xCoord;
         y = yCoord;
         width = widthOfRect;

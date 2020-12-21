@@ -38,5 +38,5 @@ public interface ClickableShape
      * This methods starts the procedure that the developer would want to
      *  occur after this ClickableShape has been clicked
      */
-    public void activateClickedProcedure();
+    public abstract void activateClickedProcedure();
 }

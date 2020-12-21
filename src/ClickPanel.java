@@ -386,7 +386,7 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 
 
 		if (startPageDrawerSet == true){
-			startPageDrawer.clickCheckAllButtons(clickedXCoord, clickedYCoord);
+			startPageDrawer.clickCheckAllButtons((int) pointXCoord, (int) pointYCoord);
 		}
 	}
 

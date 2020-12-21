@@ -43,7 +43,7 @@ public class ColouredRectangleShape extends RectangleShape
      *      [int redValue, int greenValue, int blueValue]
      *          -where each value must be an integer from 0 to 255. 
      */
-    private boolean validColourArgument(int[] colourArg)
+    public boolean validColourArgument(int[] colourArg)
     {
         if (colourArg.length == 3){
             for (int value : colourArg){

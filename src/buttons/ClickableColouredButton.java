@@ -28,8 +28,26 @@ public class ClickableColouredButton extends ClickableColouredRect
     private int maxClickCount;           //this is the number of game loop cycles, for which this button will remain 'isClicked', after 
                                          //first entering the isClicked = true state. i.e. this is the limit for the clickedCounter.
 
-    public ClickableColouredButton(int xCoord, int yCoord, int widthOfRect, int heightOfRect, int[] colourRGBvalues) {
+    public ClickableColouredButton(int xCoord, int yCoord, int widthOfRect, int heightOfRect, int[] colourRGBvalues, int[]  clickCol, int[]  hovCol, int maxCount) {
         super(xCoord, yCoord, widthOfRect, heightOfRect, colourRGBvalues);
+
+        if (validColourArgument(clickCol)){
+            clickedColour = new Color(clickCol[0], clickCol[1], clickCol[2]);
+        }
+        else{
+            //default to black
+            clickedColour = new Color(0,0,0);
+        }
+
+        if (validColourArgument(hovCol)){
+            hoveredOverColour = new Color(hovCol[0], hovCol[1], hovCol[2]);
+        }
+        else{
+            //default to black
+            hoveredOverColour = new Color(0,0,0);
+        }
+        
+        maxClickCount = maxCount;
     }
 
     /**
@@ -174,10 +192,4 @@ public class ClickableColouredButton extends ClickableColouredRect
     }
 
 
-    //---OVERRIDING---
-    @Override
-    public void activateClickedProcedure()
-    {
-        this.setButtonClickedState(true);
-    }
 }
