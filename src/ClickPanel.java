@@ -328,10 +328,10 @@ class ClickPanel extends JPanel implements MouseListener, KeyListener {
 					}
 					case "1"-> {
 						if (startPageDrawerSet == false){
-							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight, g);
+							startPageDrawer = new ClickPanelDrawStartPage(windowWidth, windowHeight, g, slidePDFLocation);
 							startPageDrawerSet = true;
 						}
-						startPageDrawer.drawStartPage(g, slidePDFLocation, pointXCoord, pointYCoord);
+						startPageDrawer.drawPage(g, slidePDFLocation, pointXCoord, pointYCoord);
 					}
 				}
 

@@ -190,6 +190,13 @@ public class ColouredRectangleShape extends RectangleShape
         else{
             return 0;
         }
-        
+    }
+
+    /**
+     * @return whether this rectangle has a border (true) or not (false)
+     */
+    public boolean isSorroundedByBorder()
+    {
+        return hasBorder;
     }
 }

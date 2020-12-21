@@ -4,6 +4,17 @@ import java.util.LinkedList;
 import buttons.ClickableColouredButton;
 import buttons.SingleLineText;
 
+
+/*
+TO DO:
+-move all of the instance variables from the methods to the class body
+
+-make the outline colours static, and then add getters for them
+-add a ClickPanel to buttons
+-update the button clicked lambda functions to replace the ones in the click panel
+-add aswell, the call to the static getters for the outline colour
+*/
+
 public class ClickPanelDrawStartPage
 {
     //graphics handler
@@ -17,246 +28,195 @@ public class ClickPanelDrawStartPage
     private String slidePDFLocation;
 
     //mouse coordinates
-    private int pointXCoord;
-    private int pointYCoord;
+    private int currentMouseCursorCoordX;
+    private int currentMouseCursorCoordY;
     
     //contains all of the buttons on this page
-    private LinkedList<ClickableColouredButton> allStartPageButtons = new LinkedList<ClickableColouredButton>();
+    private LinkedList<ClickableColouredButton> allButtons = new LinkedList<ClickableColouredButton>();
 
     //---GENERAL PAGE DRAWING---
 
     //--drawing the start page title--
-	private int startPageTitleWidth;
-	private int startPageTitleHeight;
-	private int startPageTitleX;
-	private int startPageTitleY;
-	private String startPageTitleTextUpper;
-	private int startPageTitleUpperTextWidth;
-	private int startPageTitleUpperTextHeight;
-	private int startPageTitleUpperTextX;
-	private int startPageTitleUpperTextY;
-	private String startPageTitleTextLower;
-	private int startPageTitleLowerTextWidth;
-	private int startPageTitleLowerTextHeight;
-	private int startPageTitleLowerTextX;
-	private int startPageTitleLowerTextY;
-
-	boolean setStartPageTitleStuff;
+	private int titleWidth;
+	private int titleHeight;
+	private int titleX;
+	private int titleY;
+	private String titleTextUpper;
+	private int titleUpperTextWidth;
+	private int titleUpperTextHeight;
+	private int titleUpperTextX;
+	private int titleUpperTextY;
+	private String titleTextLower;
+	private int titleLowerTextWidth;
+	private int titleLowerTextHeight;
+	private int titleLowerTextX;
+	private int titleLowerTextY;
 
 	//--drawing the start page main box--
-	private int startPageTitleBottom;
-	private int startPageMainBoxOuterWidth;
-	private int startPageMainBoxOuterHeight;
-	private int startPageMainBoxOuterX;
-	private int startPageMainBoxOuterY;
-	private int startPageMainBoxInnerWidth;
-	private int startPageMainBoxInnerHeight;
-	private int startPageMainBoxInnerX;
-	private int startPageMainBoxInnerY;
+	private int titleBottom;
+	private int mainBoxOuterWidth;
+	private int mainBoxOuterHeight;
+	private int mainBoxOuterX;
+	private int mainBoxOuterY;
+	private int mainBoxInnerWidth;
+	private int mainBoxInnerHeight;
+	private int mainBoxInnerX;
+	private int mainBoxInnerY;
 
-	private boolean setStartPageMainBoxStuff;
 
 	//--drawing the loaded powerpoint text--
-	private String startPageLoadedPowerpointText;
-	private int startPageLoadedPowerpointTextWidth;
-	private int startPageLoadedPowerpointTextHeight;
-	private int startPageLoadedPowerpointTextX;
-	private int startPageLoadedPowerpointTextY;
+	private String loadedPowerpointText;
+	private int loadedPowerpointTextWidth;
+	private int loadedPowerpointTextHeight;
+	private int loadedPowerpointTextX;
+	private int loadedPowerpointTextY;
 
-	private boolean setLoadedPowerpointTextStuff;
 
 	//--initiating the side spacing variables--
 	private int sideSpacing;
-	private boolean setBoxSpacing;
 
 	//--drawing the loaded filename--
-	private int startPageLoadedFilenameBoxWidth;
-	private int startPageLoadedFilenameBoxHeight;
-	private int startPageLoadedFilenameBoxX;
-	private int startPageLoadedFilenameBoxY;
-	private String startPageLoadedFilenameText;
-	private int startPageLoadedFilenameTextWidth;
-	private int startPageLoadedFilenameTextHeight;
-	private int startPageLoadedFilenameTextX;
-	private int startPageLoadedFilenameTextY;
+	private int loadedFilenameBoxWidth;
+	private int loadedFilenameBoxHeight;
+	private int loadedFilenameBoxX;
+	private int loadedFilenameBoxY;
+	private String loadedFilenameText;
+	private int loadedFilenameTextWidth;
+	private int loadedFilenameTextHeight;
+	private int loadedFilenameTextX;
+	private int loadedFilenameTextY;
 
-	private boolean setLoadedFilenameStuff;
 
 	//--drawnig the launch quiz button--
-	private int startPageLaunchQuizButtonWidth;
-	private int startPageLaunchQuizButtonHeight;
-	private int startPageLaunchQuizButtonX;
-	private int startPageLaunchQuizButtonY;
-	private String startPageLaunchQuizButtonText;
-	private int startPageLaunchQuizButtonTextWidth;
-	private int startPageLaunchQuizButtonTextHeight;
-	private int startPageLaunchQuizButtonTextX;
-	private int startPageLaunchQuizButtonTextY;
-	private boolean startPageLaunchQuizButtonClicked;
-	private int startPageLaunchQuizButtonClickedTick;
+	private int launchQuizButtonWidth;
+	private int launchQuizButtonHeight;
+	private int launchQuizButtonX;
+	private int launchQuizButtonY;
+	private String launchQuizButtonText;
+	private int launchQuizButtonTextWidth;
+	private int launchQuizButtonTextHeight;
+	private int launchQuizButtonTextX;
+	private int launchQuizButtonTextY;
+	private boolean launchQuizButtonClicked;
 
-	private boolean setLaunchQuizButtonStuff;
 
 	//--drawing the change file button stuff--
-	private int startPageChangeFileButtonWidth;
-	private int startPageChangeFileButtonHeight;
-	private int startPageChangeFileButtonX;
-	private int startPageChangeFileButtonY;
-	private String startPageChangeFileButtonText;
-	private int startPageChangeFileButtonTextWidth;
-	private int startPageChangeFileButtonTextHeight;
-	private int startPageChangeFileButtonTextX;
-	private int startPageChangeFileButtonTextY;
-	private boolean startPageChangeFileButtonClicked;
-	private int startPageChangeFileButtonClickedTick;
-
+	private int changeFileButtonWidth;
+	private int changeFileButtonHeight;
+	private int changeFileButtonX;
+	private int changeFileButtonY;
+	private String changeFileButtonText;
+	private int changeFileButtonTextWidth;
+	private int changeFileButtonTextHeight;
+	private int changeFileButtonTextX;
+	private int changeFileButtonTextY;
+	private boolean changeFileButtonClicked;
 
 	//--drawing the reset completed questions file stuff--
-	private int startPageResetCompletedQuestionsButtonWidth;
-	private int startPageResetCompletedQuestionsButtonHeight;
-	private int startPageResetCompletedQuestionsButtonX;
-	private int startPageResetCompletedQuestionsButtonY;
-	private String startPageResetCompletedQuestionsButtonText;
-	private int startPageResetCompletedQuestionsButtonTextWidth;
-	private int startPageResetCompletedQuestionsButtonTextHeight;
-	private int startPageResetCompletedQuestionsButtonTextX;
-	private int startPageResetCompletedQuestionsButtonTextY;
-	private boolean startPageResetCompletedQuestionsButtonClicked;
-	private int startPageResetCompletedQuestionsButtonClickedTick;
-	
+	private int resetCompletedQuestionsButtonWidth;
+	private int resetCompletedQuestionsButtonHeight;
+	private int resetCompletedQuestionsButtonX;
+	private int resetCompletedQuestionsButtonY;
+	private String resetCompletedQuestionsButtonText;
+	private int resetCompletedQuestionsButtonTextWidth;
+	private int resetCompletedQuestionsButtonTextHeight;
+	private int resetCompletedQuestionsButtonTextX;
+	private int resetCompletedQuestionsButtonTextY;
+	private boolean resetCompletedQuestionsButtonClicked;	
 
 	//--drawing the slide mode text--
-	private String startPageSlideModeText;
-	private int startPageSlideModeTextWidth ;
-	private int startPageSlideModeTextHeight;
-	private int startPageSlideModeTextX ;
-	private int startPageTextY;
+	private String slideModeText;
+	private int slideModeTextWidth ;
+	private int slideModeTextHeight;
+	private int slideModeTextX ;
+	private int slideModeTextY;
 	
-	private boolean setSlideModeTextStuff = false;
-
 	//--drawing the slide mode 1 button--
-	private int startPageSlideMode1ButtonWidth;
-	private int startPageSlideMode1ButtonHeight;
-	private int startPageSlideMode1ButtonX;
-	private int startPageSlideMode1ButtonY;
-	private boolean startPageSlideMode1ButtonClicked;
-	private int startPageSlideMode1ButtonClickedTick;
-	private String startPageSlideMode1ButtonText;
-	private int startPageSlideMode1ButtonTextWidth;
-	private int startPageSlideMode1ButtonTextHeight;
-	private int startPageSlideMode1ButtonTextX;
-	private int startPageSlideMode1ButtonTextY;
-	private boolean startPageSlideMode1ButtonSelected = true;
-	private int startPageSlideMode1ButtonOutlineX;
-	private int startPageSlideMode1ButtonOutlineY;
-	private int startPageSlideMode1ButtonOutlineW;
-	private int startPageSlideMode1ButtonOutlineH;
-
-	private boolean setSlideMode1ButtonStuff = false;
+	private int slideMode1ButtonWidth;
+	private int slideMode1ButtonHeight;
+	private int slideMode1ButtonX;
+	private int slideMode1ButtonY;
+	private boolean slideMode1ButtonClicked;
+	private String slideMode1ButtonText;
+	private int slideMode1ButtonTextWidth;
+	private int slideMode1ButtonTextHeight;
+	private int slideMode1ButtonTextX;
+	private int slideMode1ButtonTextY;
+	private boolean slideMode1ButtonSelected = true;
 
 	//--drawing the slide mode 2 button--
-	private int startPageSlideMode2ButtonWidth;
-	private int startPageSlideMode2ButtonHeight;
-	private int startPageSlideMode2ButtonX;
-	private int startPageSlideMode2ButtonY;
-	private boolean startPageSlideMode2ButtonClicked;
-	private int startPageSlideMode2ButtonClickedTick;
-	private String startPageSlideMode2ButtonText;
-	private int startPageSlideMode2ButtonTextWidth;
-	private int startPageSlideMode2ButtonTextHeight;
-	private int startPageSlideMode2ButtonTextX;
-	private int startPageSlideMode2ButtonTextY;
-	private boolean startPageSlideMode2ButtonSelected = false;
-	private int startPageSlideMode2ButtonOutlineX;
-	private int startPageSlideMode2ButtonOutlineY;
-	private int startPageSlideMode2ButtonOutlineW;
-	private int startPageSlideMode2ButtonOutlineH;
+	private int slideMode2ButtonWidth;
+	private int slideMode2ButtonHeight;
+	private int slideMode2ButtonX;
+	private int slideMode2ButtonY;
+	private boolean slideMode2ButtonClicked;
+	private String slideMode2ButtonText;
+	private int slideMode2ButtonTextWidth;
+	private int slideMode2ButtonTextHeight;
+	private int slideMode2ButtonTextX;
+	private int slideMode2ButtonTextY;
+	private boolean slideMode2ButtonSelected = false;
 	
-	private boolean setSlideMode2ButtonStuff = false;
-
 	//--drawing the slide mode 3 button--
-	private int startPageSlideMode3ButtonWidth;
-	private int startPageSlideMode3ButtonHeight;
-	private int startPageSlideMode3ButtonX;
-	private int startPageSlideMode3ButtonY;
-	private boolean startPageSlideMode3ButtonClicked;
-	private int startPageSlideMode3ButtonClickedTick;
-	private String startPageSlideMode3ButtonText;
-	private int startPageSlideMode3ButtonTextWidth;
-	private int startPageSlideMode3ButtonTextHeight;
-	private int startPageSlideMode3ButtonTextX;
-	private int startPageSlideMode3ButtonTextY;
-	private boolean startPageSlideMode3ButtonSelected = false;
-	private int startPageSlideMode3ButtonOutlineX;
-	private int startPageSlideMode3ButtonOutlineY;
-	private int startPageSlideMode3ButtonOutlineW;
-	private int startPageSlideMode3ButtonOutlineH;
+	private int slideMode3ButtonWidth;
+	private int slideMode3ButtonHeight;
+	private int slideMode3ButtonX;
+	private int slideMode3ButtonY;
+	private boolean slideMode3ButtonClicked;
+	private String slideMode3ButtonText;
+	private int slideMode3ButtonTextWidth;
+	private int slideMode3ButtonTextHeight;
+	private int slideMode3ButtonTextX;
+	private int slideMode3ButtonTextY;
+	private boolean slideMode3ButtonSelected = false;
 	
-	private boolean setSlideMode3ButtonStuff = false;
-
 	//--drawing the slide order text--
-	private String startPageSlideOrderText;
-	private int startPageSlideOrderTextWidth;
-	private int startPageSlideOrderTextHeight;
-	private int startPageSlideOrderTextX ;
-	private int startPageSlideOrderTextY;
-	
-	private boolean setSlideOrderTextStuff = false;
-	
+	private String slideOrderText;
+	private int slideOrderTextWidth;
+	private int slideOrderTextHeight;
+	private int slideOrderTextX ;
+	private int slideOrderTextY;
+		
 	//--drawing the slide order 1 button--
-	private int startPageSlideOrder1ButtonWidth;
-	private int startPageSlideOrder1ButtonHeight;
-	private int startPageSlideOrder1ButtonX;
-	private int startPageSlideOrder1ButtonY;
-	private boolean startPageSlideOrder1ButtonClicked;
-	private int startPageSlideOrder1ButtonClickedTick;
-	private String startPageSlideOrder1ButtonText;
-	private int startPageSlideOrder1ButtonTextWidth;
-	private int startPageSlideOrder1ButtonTextHeight;
-	private int startPageSlideOrder1ButtonTextX;
-	private int startPageSlideOrder1ButtonTextY;
-	private boolean startPageSlideOrder1ButtonSelected = true;
-	private int startPageSlideOrder1ButtonOutlineX;
-	private int startPageSlideOrder1ButtonOutlineY;
-	private int startPageSlideOrder1ButtonOutlineW;
-	private int startPageSlideOrder1ButtonOutlineH;
+	private int slideOrder1ButtonWidth;
+	private int slideOrder1ButtonHeight;
+	private int slideOrder1ButtonX;
+	private int slideOrder1ButtonY;
+	private boolean slideOrder1ButtonClicked;
+	private String slideOrder1ButtonText;
+	private int slideOrder1ButtonTextWidth;
+	private int slideOrder1ButtonTextHeight;
+	private int slideOrder1ButtonTextX;
+	private int slideOrder1ButtonTextY;
+	private boolean slideOrder1ButtonSelected = true;
 
-	private boolean setSlideOrder1ButtonStuff = false;
 
 	//--drawing the slide order 2 button--
-	private int startPageSlideOrder2ButtonWidth;
-	private int startPageSlideOrder2ButtonHeight;
-	private int startPageSlideOrder2ButtonX;
-	private int startPageSlideOrder2ButtonY;
-	private boolean startPageSlideOrder2ButtonClicked;
-	private int startPageSlideOrder2ButtonClickedTick;
-	private String startPageSlideOrder2ButtonText;
-	private int startPageSlideOrder2ButtonTextWidth;
-	private int startPageSlideOrder2ButtonTextHeight;
-	private int startPageSlideOrder2ButtonTextX;
-	private int startPageSlideOrder2ButtonTextY;
-	private boolean startPageSlideOrder2ButtonSelected = false;
-	private int startPageSlideOrder2ButtonOutlineX;
-	private int startPageSlideOrder2ButtonOutlineY;
-	private int startPageSlideOrder2ButtonOutlineW;
-	private int startPageSlideOrder2ButtonOutlineH;
-
-	private boolean setSlideOrder2ButtonStuff = false;
+	private int slideOrder2ButtonWidth;
+	private int slideOrder2ButtonHeight;
+	private int slideOrder2ButtonX;
+	private int slideOrder2ButtonY;
+	private boolean slideOrder2ButtonClicked;
+	private String slideOrder2ButtonText;
+	private int slideOrder2ButtonTextWidth;
+	private int slideOrder2ButtonTextHeight;
+	private int slideOrder2ButtonTextX;
+	private int slideOrder2ButtonTextY;
+	private boolean slideOrder2ButtonSelected = false;
 
 	//--drawing the reset completed questions indication text--
-	private String startPageResetQuestionsIndicationText;
-	private int startPageResetQuestionsIndicationTextWidth;
-	private int startPageResetQuestionsIndicationTextHeight;
-	private int startPageResetQuestionsIndicationTextX;
-	private int startPageResetQuestionsIndicationTextY;
-	private boolean startPageResetQuestionsIndicationTextActivated;
-	private int startPageResetQuestionsIndicationTextActivatedTick;
-
-	private boolean setResetQuestionsIndicationText;
+	private String resetQuestionsIndicationText;
+	private int resetQuestionsIndicationTextWidth;
+	private int resetQuestionsIndicationTextHeight;
+	private int resetQuestionsIndicationTextX;
+	private int resetQuestionsIndicationTextY;
+	private boolean resetQuestionsIndicationTextActivated = false;
+	private int resetQuestionsIndicationTextActivatedTick;
 	
-    public ClickPanelDrawStartPage(int windowW, int windowH, Graphics2D graphicsHandle)
+    public ClickPanelDrawStartPage(int windowW, int windowH, Graphics2D graphicsHandle, String slideFilePath)
     {
         drawingLocation = graphicsHandle;
+        slidePDFLocation = slideFilePath;
         windowWidth = windowW;
         windowHeight = windowH;
         initialiseAllElements();
@@ -291,210 +251,192 @@ public class ClickPanelDrawStartPage
 
     //DRAWING START PAGE STUFF START 
 
-    public void drawStartPage(Graphics2D graphicsHandle, String slideFilePath, int mouseXCoord, int mouseYCoord)
+    public void drawPage(Graphics2D graphicsHandle, String slideFilePath, int mouseXCoord, int mouseYCoord)
     {
         //updating variables
-
         drawingLocation = graphicsHandle;
         slidePDFLocation = slideFilePath;
-        pointXCoord = mouseXCoord;
-        pointYCoord = mouseYCoord;
+        currentMouseCursorCoordX = mouseXCoord;
+        currentMouseCursorCoordY = mouseYCoord;
 
         //drawing
+        drawTitle();
 
-        drawStartPageTitle();
-
-        drawStartPageMainBox();
+        drawMainBox();
 
         drawLoadedPowerpointText();
 
-        initiateBoxSpacing();
-
         drawLoadedFilename();
-
-        //drawLaunchQuizButton();//REMOVED//
-
-        drawChangeFileButton();
-
-        drawResetCompletedQuestionsButton();
 
         drawSlideModeText();
 
-        drawSlideMode1Button();
-
-        drawSlideMode2Button();
-
-        drawSlideMode3Button();
-
         drawSlideOrderText();
-
-        drawSlideOrder1Button();
-
-        drawSlideOrder2Button();
 
         drawResetQuestionsTextIndication();
 
-        drawAllButtons();//////////////////////////
-
+        drawAllButtons();
     }
 
-    public void drawStartPageTitle()
+    public void initialiseTitle()
     {
-        if (setStartPageTitleStuff == false){
-            //--box that the string goes in--
-            startPageTitleWidth = (int) (windowWidth*0.33);
-            startPageTitleHeight = (int) (windowHeight*0.15);
-            startPageTitleX = (int) (windowWidth*0.5 - startPageTitleWidth*0.5);
-            startPageTitleY = (int) (windowHeight * 0.01);
+        Font titleTextFont = new Font ("Monospaced", Font.PLAIN, 50);
+        titleTextUpper = "Powerpoint";
+        titleTextLower = "Quiz Generator";
 
-            //--text--
-            drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 50)); 
-            
-            //top text
-            startPageTitleTextUpper = "Powerpoint";
-            startPageTitleUpperTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageTitleTextUpper);
-            startPageTitleUpperTextHeight = drawingLocation.getFontMetrics().getAscent();
-            startPageTitleUpperTextX = startPageTitleX + (int) ((startPageTitleX - startPageTitleUpperTextWidth)/2);
-            startPageTitleUpperTextY = startPageTitleY + (int) (startPageTitleUpperTextHeight);
-
-            drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 50)); 
-            //bottom text
-            startPageTitleTextLower = "Quiz Generator";
-            startPageTitleLowerTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageTitleTextLower);
-            startPageTitleLowerTextHeight = drawingLocation.getFontMetrics().getAscent();
-            startPageTitleLowerTextX = startPageTitleX + (int) ((startPageTitleX - startPageTitleLowerTextWidth)/2);
-            startPageTitleLowerTextY = startPageTitleUpperTextY + startPageTitleUpperTextHeight + (int) (windowHeight*0.015);
-
-            setStartPageTitleStuff = true;
-
-        }
-        
-
-        drawingLocation.setColor(new Color(255, 255, 255));
-        drawingLocation.fillRect(startPageTitleX, startPageTitleY, startPageTitleWidth, startPageTitleHeight);
-
-        //black border around the box
-        drawingLocation.setColor(new Color(1, 1, 1));
-        drawingLocation.drawRect(startPageTitleX, startPageTitleY, startPageTitleWidth, startPageTitleHeight);
-
-
+        //--box that the string goes in--
+        titleWidth = (int) (windowWidth*0.33);
+        titleHeight = (int) (windowHeight*0.15);
+        titleX = (int) (windowWidth*0.5 - titleWidth*0.5);
+        titleY = (int) (windowHeight * 0.01);
 
         //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 50)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
         
-        
-        drawingLocation.drawString(startPageTitleTextUpper, startPageTitleUpperTextX, startPageTitleUpperTextY);
-        
-        drawingLocation.drawString(startPageTitleTextLower, startPageTitleLowerTextX, startPageTitleLowerTextY);
+        drawingLocation.setFont(titleTextFont); 
+        //top text
+        titleUpperTextWidth = drawingLocation.getFontMetrics().stringWidth(titleTextUpper);
+        titleUpperTextHeight = drawingLocation.getFontMetrics().getAscent();
+        titleUpperTextX = titleX + (int) ((titleX - titleUpperTextWidth)/2);
+        titleUpperTextY = titleY + (int) (titleUpperTextHeight);
 
-
-
-
+        drawingLocation.setFont(titleTextFont); 
+        //bottom text
+        titleLowerTextWidth = drawingLocation.getFontMetrics().stringWidth(titleTextLower);
+        titleLowerTextHeight = drawingLocation.getFontMetrics().getAscent();
+        titleLowerTextX = titleX + (int) ((titleX - titleLowerTextWidth)/2);
+        titleLowerTextY = titleUpperTextY + titleUpperTextHeight + (int) (windowHeight*0.015);
     }
 
-    public void drawStartPageMainBox()
+    public void drawTitle()
     {
-        if (setStartPageMainBoxStuff == false){
-            //other stuff/ dependencies
-            startPageTitleBottom = (startPageTitleY + startPageTitleHeight);
-            //--outer box--
-            startPageMainBoxOuterWidth = (int) (windowWidth*0.8);
-            startPageMainBoxOuterHeight = (int) (windowHeight-startPageTitleBottom - 2*(windowHeight*0.05));
-            startPageMainBoxOuterX =(int)  ((windowWidth - startPageMainBoxOuterWidth)/2);
-            startPageMainBoxOuterY = startPageTitleBottom + (int) ((windowHeight - startPageTitleBottom - startPageMainBoxOuterHeight)/2);
+        Color titleBoxColour = new Color (255, 255, 255);
+        Color titleBoxBorderColour = new Color(1,1,1);
+        Font titleTextFont = new Font ("Monospaced", Font.PLAIN, 50);
+        Color titleTextColour = new Color (0,0,0);
 
-            //--inner box--
-            startPageMainBoxInnerWidth = startPageMainBoxOuterWidth - (int) (2*(windowWidth*0.01));
-            startPageMainBoxInnerHeight = startPageMainBoxOuterHeight - (int) (2*(windowHeight*0.01));
-            startPageMainBoxInnerX = startPageMainBoxOuterX + (int) ((startPageMainBoxOuterWidth - startPageMainBoxInnerWidth)/2);
-            startPageMainBoxInnerY = startPageMainBoxOuterY + (int) ((startPageMainBoxOuterHeight - startPageMainBoxInnerHeight)/2);
+        drawingLocation.setColor(titleBoxColour);
+        drawingLocation.fillRect(titleX, titleY, titleWidth, titleHeight);
 
-            setStartPageMainBoxStuff = true;
-        }
-        
+        //black border around the box
+        drawingLocation.setColor(titleBoxBorderColour);
+        drawingLocation.drawRect(titleX, titleY, titleWidth, titleHeight);
 
-        drawingLocation.setColor(new Color(22, 122, 24));
-        drawingLocation.drawRect(startPageMainBoxOuterX, startPageMainBoxOuterY, startPageMainBoxOuterWidth, startPageMainBoxOuterHeight);
+        //--text--
+        drawingLocation.setFont(titleTextFont); 
+        drawingLocation.setColor(titleTextColour);
         
-        
-        
-        drawingLocation.setColor(new Color(22, 207, 159));
-        drawingLocation.fillRect(startPageMainBoxInnerX, startPageMainBoxInnerY, startPageMainBoxInnerWidth, startPageMainBoxInnerHeight);
+        drawingLocation.drawString(titleTextUpper, titleUpperTextX, titleUpperTextY);
+        drawingLocation.drawString(titleTextLower, titleLowerTextX, titleLowerTextY);
+    }
+
+    public void initialiseMainBox()
+    {
+        //other stuff/ dependencies
+        titleBottom = (titleY + titleHeight);
+        //--outer box--
+        mainBoxOuterWidth = (int) (windowWidth*0.8);
+        mainBoxOuterHeight = (int) (windowHeight-titleBottom - 2*(windowHeight*0.05));
+        mainBoxOuterX =(int)  ((windowWidth - mainBoxOuterWidth)/2);
+        mainBoxOuterY = titleBottom + (int) ((windowHeight - titleBottom - mainBoxOuterHeight)/2);
+
+        //--inner box-m
+        mainBoxInnerWidth = mainBoxOuterWidth - (int) (2*(windowWidth*0.01));
+        mainBoxInnerHeight = mainBoxOuterHeight - (int) (2*(windowHeight*0.01));
+        mainBoxInnerX = mainBoxOuterX + (int) ((mainBoxOuterWidth - mainBoxInnerWidth)/2);
+        mainBoxInnerY = mainBoxOuterY + (int) ((mainBoxOuterHeight - mainBoxInnerHeight)/2);
+    }
+
+    public void drawMainBox()
+    {
+        Color mainBoxOuterColour = new Color(22, 122,24);
+        Color mainBoxInnerColour = new Color(22, 207,159);
+        Color mainBoxInnerOutlineColour = new Color (0,0,0);
+
+        drawingLocation.setColor(mainBoxOuterColour);
+        drawingLocation.drawRect(mainBoxOuterX, mainBoxOuterY, mainBoxOuterWidth, mainBoxOuterHeight);
+    
+        drawingLocation.setColor(mainBoxInnerColour);
+        drawingLocation.fillRect(mainBoxInnerX, mainBoxInnerY, mainBoxInnerWidth, mainBoxInnerHeight);
 
         //outline for the inner box
-        drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(startPageMainBoxInnerX, startPageMainBoxInnerY, startPageMainBoxInnerWidth, startPageMainBoxInnerHeight);
-
+        drawingLocation.setColor(mainBoxInnerOutlineColour);
+        drawingLocation.drawRect(mainBoxInnerX, mainBoxInnerY, mainBoxInnerWidth, mainBoxInnerHeight);
     }
 
+    public void initialiseLoadedPowerpointText()
+    {
+        Font loadedPowerpointTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        loadedPowerpointText = "Loaded Powerpoint";
 
+        drawingLocation.setFont(loadedPowerpointTextFont); 
+        
+        loadedPowerpointTextWidth = drawingLocation.getFontMetrics().stringWidth(loadedPowerpointText);
+        loadedPowerpointTextHeight = drawingLocation.getFontMetrics().getAscent();
+        loadedPowerpointTextX = mainBoxInnerX + (int) ((mainBoxInnerWidth - loadedPowerpointTextWidth)/2);
+        loadedPowerpointTextY = mainBoxInnerY + loadedPowerpointTextHeight + (int) (windowHeight*0.01);
+    }
 
     public void drawLoadedPowerpointText()
     {
-        //--text--
+        Font loadedPowerpointTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color loadedPowerpointTextColour = new Color(0,0,0);
 
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
-        
-        startPageLoadedPowerpointText = "Loaded Powerpoint";
-        startPageLoadedPowerpointTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLoadedPowerpointText);
-        startPageLoadedPowerpointTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageLoadedPowerpointTextX = startPageMainBoxInnerX + (int) ((startPageMainBoxInnerWidth - startPageLoadedPowerpointTextWidth)/2);
-        startPageLoadedPowerpointTextY = startPageMainBoxInnerY + startPageLoadedPowerpointTextHeight + (int) (windowHeight*0.01);
-        
-        drawingLocation.drawString(startPageLoadedPowerpointText, startPageLoadedPowerpointTextX, startPageLoadedPowerpointTextY);
+        drawingLocation.setFont(loadedPowerpointTextFont); 
+        drawingLocation.setColor(loadedPowerpointTextColour);
 
-        setLoadedPowerpointTextStuff = true;
+        drawingLocation.drawString(loadedPowerpointText, loadedPowerpointTextX, loadedPowerpointTextY);
     }
 
-    public void initiateBoxSpacing()
+    public void initinitialiseBoxSpacing()
+    {   
+        sideSpacing = (int) (windowWidth*0.01);        
+    }
+
+    public void initialiseLoadedFilename()
     {
-        //
-        if (setBoxSpacing == false){
-            //
-            sideSpacing = (int) (windowWidth*0.01);
-            setBoxSpacing = true;
-        }
+        Font loadedFilenameTextFont = new Font("Monospaced", Font.PLAIN, 20);
+
+        //--box that the string goes in--
+        loadedFilenameBoxWidth = mainBoxInnerWidth - (int) (2*sideSpacing);
+        loadedFilenameBoxHeight = (int) (windowHeight*0.05);
+        loadedFilenameBoxX = mainBoxInnerX + sideSpacing;
+        loadedFilenameBoxY = loadedPowerpointTextY + (int) (windowHeight*0.02);
+
+        //--text--
+        drawingLocation.setFont(loadedFilenameTextFont); 
         
+        loadedFilenameText = (ConvertPDFPagesToImages.getFileNameFromLocation(slidePDFLocation));
+        loadedFilenameTextWidth = drawingLocation.getFontMetrics().stringWidth(loadedFilenameText);
+        loadedFilenameTextHeight = drawingLocation.getFontMetrics().getAscent();
+        loadedFilenameTextX = loadedFilenameBoxX + (int) (windowWidth*0.01);
+        loadedFilenameTextY = loadedFilenameBoxY +loadedFilenameTextHeight + (int) (windowHeight*0.01);
     }
 
     public void drawLoadedFilename()
     {
-        //--box that the string goes in--
-        startPageLoadedFilenameBoxWidth = startPageMainBoxInnerWidth - (int) (2*sideSpacing);
-        startPageLoadedFilenameBoxHeight = (int) (windowHeight*0.05);
-        startPageLoadedFilenameBoxX = startPageMainBoxInnerX + sideSpacing;
-        startPageLoadedFilenameBoxY = startPageLoadedPowerpointTextY + (int) (windowHeight*0.02);
+        Color loadedFilenameBoxColour = new Color(250, 250, 250);
+        Color loadedFilenameBoxBorderColour = new Color(100,100,100);
+        Font loadedFilenameTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color loadedFilenameTextColour = new Color(0,0,0);
 
-        drawingLocation.setColor(new Color(250, 250, 250));
-        drawingLocation.fillRect(startPageLoadedFilenameBoxX, startPageLoadedFilenameBoxY, startPageLoadedFilenameBoxWidth, startPageLoadedFilenameBoxHeight);
+        
+        //--draw the box that the text goes in--
+        drawingLocation.setColor(loadedFilenameBoxColour);
+        drawingLocation.fillRect(loadedFilenameBoxX, loadedFilenameBoxY, loadedFilenameBoxWidth, loadedFilenameBoxHeight);
 
         //black border around the box
-        drawingLocation.setColor(new Color(100, 100, 100));
-        drawingLocation.drawRect(startPageLoadedFilenameBoxX, startPageLoadedFilenameBoxY, startPageLoadedFilenameBoxWidth, startPageLoadedFilenameBoxHeight);
-
-
+        drawingLocation.setColor(loadedFilenameBoxBorderColour);
+        drawingLocation.drawRect(loadedFilenameBoxX, loadedFilenameBoxY, loadedFilenameBoxWidth, loadedFilenameBoxHeight);
 
         //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        drawingLocation.setFont(loadedFilenameTextFont); 
+        drawingLocation.setColor(loadedFilenameTextColour);
         
-        startPageLoadedFilenameText = (ConvertPDFPagesToImages.getFileNameFromLocation(slidePDFLocation));
-        startPageLoadedFilenameTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLoadedFilenameText);
-        startPageLoadedFilenameTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageLoadedFilenameTextX = startPageLoadedFilenameBoxX + (int) (windowWidth*0.01);
-        startPageLoadedFilenameTextY = startPageLoadedFilenameBoxY +startPageLoadedFilenameTextHeight + (int) (windowHeight*0.01);
-        
-        drawingLocation.drawString(startPageLoadedFilenameText, startPageLoadedFilenameTextX, startPageLoadedFilenameTextY);
-
-        setLoadedFilenameStuff = true;
+        drawingLocation.drawString(loadedFilenameText, loadedFilenameTextX, loadedFilenameTextY);
     }
 
     public void initialiseLaunchQuizButton()
     {
-
-        startPageLaunchQuizButtonText = "Lauch Quiz";
+        launchQuizButtonText = "Lauch Quiz";
         int[] launchQuizButtonColour = {92, 222, 8};
         int[] launchQuizButtonHoveredOverColour = {85, 215, 0};
         int[] launchQuizButtonClickedColour = {110, 240, 25};
@@ -507,47 +449,53 @@ public class ClickPanelDrawStartPage
         ClickableColouredButton launchQuizButton;
 
         //--initialise the button dimesions--
-        startPageLaunchQuizButtonWidth = (int) (startPageMainBoxInnerWidth- (2*sideSpacing));
-        startPageLaunchQuizButtonHeight = (int) (windowHeight*0.15);
-        startPageLaunchQuizButtonX = startPageMainBoxInnerX + sideSpacing;
-        startPageLaunchQuizButtonY = (startPageMainBoxInnerY + startPageMainBoxInnerHeight - startPageLaunchQuizButtonHeight) - sideSpacing;
+        launchQuizButtonWidth = (int) (mainBoxInnerWidth- (2*sideSpacing));
+        launchQuizButtonHeight = (int) (windowHeight*0.15);
+        launchQuizButtonX = mainBoxInnerX + sideSpacing;
+        launchQuizButtonY = (mainBoxInnerY + mainBoxInnerHeight - launchQuizButtonHeight) - sideSpacing;
         
         //--create the button object--
-        System.out.println("creating obj with coords: ["+startPageLaunchQuizButtonX+","+startPageLaunchQuizButtonY+"]");
-        launchQuizButton = new ClickableColouredButton(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight, launchQuizButtonColour, launchQuizButtonClickedColour, launchQuizButtonHoveredOverColour, laucnQuizButtonMaxClickedCount){
+        launchQuizButton = new ClickableColouredButton(launchQuizButtonX, launchQuizButtonY, launchQuizButtonWidth, launchQuizButtonHeight, launchQuizButtonColour, launchQuizButtonClickedColour, launchQuizButtonHoveredOverColour, laucnQuizButtonMaxClickedCount){
             @Override
             public void activateClickedProcedure(){
                 System.out.println("doing all of the launch quiz button stuff");
             }
         };
-        System.out.println("called");
         launchQuizButton.handleNewWindowClick(0,0);
         launchQuizButton.addBorder(borderMultiplier, launchQuizButtonBorderColour);
-        allStartPageButtons.add(launchQuizButton);
+        allButtons.add(launchQuizButton);
         
         //--initialise the button text data--
         drawingLocation.setFont(defaultButtonFont); 
-        startPageLaunchQuizButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLaunchQuizButtonText);
-        startPageLaunchQuizButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageLaunchQuizButtonTextX = launchQuizButton.getXCoordinate() + (int) ((launchQuizButton.getWidth()-startPageLaunchQuizButtonTextWidth)/2);
-        startPageLaunchQuizButtonTextY = launchQuizButton.getYCoordinate() + startPageLaunchQuizButtonTextHeight + (int) ((launchQuizButton.getHeight()-startPageLaunchQuizButtonTextHeight)/2);
+        launchQuizButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(launchQuizButtonText);
+        launchQuizButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        launchQuizButtonTextX = launchQuizButton.getXCoordinate() + (int) ((launchQuizButton.getWidth()-launchQuizButtonTextWidth)/2);
+        launchQuizButtonTextY = launchQuizButton.getYCoordinate() + launchQuizButtonTextHeight + (int) ((launchQuizButton.getHeight()-launchQuizButtonTextHeight)/2);
 
         //--create the button's font object, and add to the button--
-        launchQuizButton.addText(new SingleLineText(startPageLaunchQuizButtonText,  startPageLaunchQuizButtonTextX,  startPageLaunchQuizButtonTextY,  defaultButtonFont,  defaultButtonFontColour));
+        launchQuizButton.addText(new SingleLineText(launchQuizButtonText,  launchQuizButtonTextX,  launchQuizButtonTextY,  defaultButtonFont,  defaultButtonFontColour));
     }
 
-    /**
+    /*c
      * draws the button onto the drawing location
      * @param buttonToBeDrawn = the button object which contains the necessary information for it to be drawn onto the screen
      */
     private void drawButton(ClickableColouredButton buttonToBeDrawn)
     {
-        //--draw the button--
-        drawingLocation.setColor(buttonToBeDrawn.getDisplayColour(pointXCoord, pointYCoord));
-        drawingLocation.fillRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
+        if (buttonToBeDrawn.isSorroundedByBorder()){
+            //--draw the outline of the button--
+            drawingLocation.setColor(buttonToBeDrawn.getBorderColour());
+            drawingLocation.fillRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
 
-        //--draw the outline of the button--
-        drawingLocation.drawRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
+            //--draw the button--
+            drawingLocation.setColor(buttonToBeDrawn.getDisplayColour(currentMouseCursorCoordX, currentMouseCursorCoordY));
+            drawingLocation.fillRect(buttonToBeDrawn.getXCoordinate() + buttonToBeDrawn.getBorderWidth(), buttonToBeDrawn.getYCoordinate() + buttonToBeDrawn.getBorderWidth(), buttonToBeDrawn.getWidth() - 2*(buttonToBeDrawn.getBorderWidth()), buttonToBeDrawn.getHeight() - 2*(buttonToBeDrawn.getBorderWidth()));
+        }
+        else{
+            //--draw the button--
+            drawingLocation.setColor(buttonToBeDrawn.getDisplayColour(currentMouseCursorCoordX, currentMouseCursorCoordY));
+            drawingLocation.fillRect(buttonToBeDrawn.getXCoordinate(), buttonToBeDrawn.getYCoordinate(), buttonToBeDrawn.getWidth(), buttonToBeDrawn.getHeight());
+        }
 
         //--draw all of the button's text--
         SingleLineText[] buttonsText = buttonToBeDrawn.getText();
@@ -575,37 +523,37 @@ public class ClickPanelDrawStartPage
     private void initialiseAllElements()
     {
 
-        initialiseTitle();/////NEED TO MAKE THIS//////////
+        initialiseTitle();
 
-        initialiseMainBox();/////NEED TO MAKE THIS//////////
+        initialiseMainBox();
 
-        initialiseLoadedPowerpointText();/////NEED TO MAKE THIS//////////
+        initialiseLoadedPowerpointText();
 
-        initinitialiseBoxSpacing();/////NEED TO MAKE THIS//////////
+        initinitialiseBoxSpacing();
 
-        initialiseLoadedFilename();/////NEED TO MAKE THIS//////////
+        initialiseLoadedFilename();
 
         initialiseLaunchQuizButton();
 
-        initialiseChangeFileButton();/////NEED TO MAKE THIS//////////
+        initialiseChangeFileButton();
 
-        initialiseResetCompletedQuestionsButton();/////NEED TO MAKE THIS//////////
+        initialiseResetCompletedQuestionsButton();
 
-        initialiseSlideModeText();/////NEED TO MAKE THIS//////////
+        initialiseSlideModeText();
 
-        initialiseSlideMode1Button();/////NEED TO MAKE THIS//////////
+        initialiseSlideMode1Button();
 
-        initialiseSlideMode2Button();/////NEED TO MAKE THIS//////////
+        initialiseSlideMode2Button();
 
-        initialiseSlideMode3Button();/////NEED TO MAKE THIS//////////
+        initialiseSlideMode3Button();
 
-        initialiseSlideOrderText();/////NEED TO MAKE THIS//////////
+        initialiseSlideOrderText();
 
-        initialiseSlideOrder1Button();/////NEED TO MAKE THIS//////////
+        initialiseSlideOrder1Button();
 
-        initialiseSlideOrder2Button();/////NEED TO MAKE THIS//////////
+        initialiseSlideOrder2Button();
 
-        initialiseResetQuestionsTextIndication();/////NEED TO MAKE THIS//////////
+        initialiseResetQuestionsTextIndication();
     }
 
 
@@ -615,7 +563,7 @@ public class ClickPanelDrawStartPage
      */
     public void updateAllButtonsClickCounters()
     {
-        for (ClickableColouredButton buttonObj : allStartPageButtons){
+        for (ClickableColouredButton buttonObj : allButtons){
             buttonObj.updateClickCounter();
         }
     }
@@ -627,7 +575,7 @@ public class ClickPanelDrawStartPage
     {
         updateAllButtonsClickCounters();
 
-        for (ClickableColouredButton buttonObj : allStartPageButtons){
+        for (ClickableColouredButton buttonObj : allButtons){
             drawButton(buttonObj);
         }
     }
@@ -639,576 +587,405 @@ public class ClickPanelDrawStartPage
      */
     public void clickCheckAllButtons(int clickedXCoordinate, int clickedYCoordinate)
     {
-        for (ClickableColouredButton buttonObj : allStartPageButtons){
+        for (ClickableColouredButton buttonObj : allButtons){
             buttonObj.handleNewWindowClick(clickedXCoordinate, clickedYCoordinate);
         }
     }
 
-    /*
-    public void drawLaunchQuizButton()
+    public void initialiseChangeFileButton()
     {
-        //
-        //--box that the string goes in--
-        startPageLaunchQuizButtonWidth = (int) (startPageMainBoxInnerWidth- (2*sideSpacing));
-        startPageLaunchQuizButtonHeight = (int) (windowHeight*0.15);
-        startPageLaunchQuizButtonX = startPageMainBoxInnerX + sideSpacing;
-        startPageLaunchQuizButtonY = (startPageMainBoxInnerY + startPageMainBoxInnerHeight - startPageLaunchQuizButtonHeight) - sideSpacing;
-        int startPageLaunchQuizButtonRight = startPageLaunchQuizButtonX + startPageLaunchQuizButtonWidth;
-        int startPageLaunchQuizButtonBottom = startPageLaunchQuizButtonY + startPageLaunchQuizButtonHeight;
+        changeFileButtonText = "Change File";
+        int[] changeFileButtonColour = {190, 190, 190};
+        int[] changeFileButtonHoveredOverColour = {183, 183, 183};
+        int[] changeFileButtonClickedColour = {208, 208, 208};
+        int[] changeFileButtonBorderColour = {0,0,0};
+        int changeFileButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font changeFileButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color changeFileButtonFontColour = new Color (0,0,0);
 
-        if (startPageLaunchQuizButtonClicked == true){
-            drawingLocation.setColor(new Color(110, 240, 25));
+        ClickableColouredButton changeFileButton;
 
-            switch (startPageLaunchQuizButtonClickedTick){
-                case 3 -> {
-                    startPageLaunchQuizButtonClicked = false;
-                    startPageLaunchQuizButtonClickedTick = 0;
-                }
-                default -> startPageLaunchQuizButtonClickedTick++;
+        //--initialise the button dimesions--
+        changeFileButtonWidth = (int) ((mainBoxInnerWidth- (3*sideSpacing)) *0.5);
+        changeFileButtonHeight = (int) (windowHeight*0.1);
+        changeFileButtonX = mainBoxInnerX + sideSpacing;
+        changeFileButtonY = loadedFilenameBoxY + loadedFilenameBoxHeight + sideSpacing;
+        
+        //--create the button object--
+        changeFileButton = new ClickableColouredButton(changeFileButtonX, changeFileButtonY, changeFileButtonWidth, changeFileButtonHeight, changeFileButtonColour, changeFileButtonClickedColour, changeFileButtonHoveredOverColour,changeFileButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the change file button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageLaunchQuizButtonX, startPageLaunchQuizButtonRight, startPageLaunchQuizButtonY, startPageLaunchQuizButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(85, 215, 0));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(92, 222, 8));
-        }
-        drawingLocation.fillRect(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(startPageLaunchQuizButtonX, startPageLaunchQuizButtonY, startPageLaunchQuizButtonWidth, startPageLaunchQuizButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        changeFileButton.addBorder(borderMultiplier, changeFileButtonBorderColour);
+        allButtons.add(changeFileButton);
         
-        //top text
-        startPageLaunchQuizButtonText = "Lauch Quiz";
-        startPageLaunchQuizButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLaunchQuizButtonText);
-        startPageLaunchQuizButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageLaunchQuizButtonTextX = startPageLaunchQuizButtonX + (int) ((startPageLaunchQuizButtonWidth-startPageLaunchQuizButtonTextWidth)/2);
-        startPageLaunchQuizButtonTextY = startPageLaunchQuizButtonY + startPageLaunchQuizButtonTextHeight + (int) ((startPageLaunchQuizButtonHeight-startPageLaunchQuizButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageLaunchQuizButtonText, startPageLaunchQuizButtonTextX, startPageLaunchQuizButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(changeFileButtonFont); 
+        changeFileButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(launchQuizButtonText);
+        changeFileButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        changeFileButtonTextX = changeFileButtonX + (int) ((changeFileButtonWidth-changeFileButtonTextWidth)/2);
+        changeFileButtonTextY = changeFileButtonY + changeFileButtonTextHeight + (int) ((changeFileButtonHeight-changeFileButtonTextHeight)/2);
 
-        setLaunchQuizButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        changeFileButton.addText(new SingleLineText(changeFileButtonText,  changeFileButtonTextX,  changeFileButtonTextY, changeFileButtonFont, changeFileButtonFontColour));
 
     }
-    */
 
-    public void drawChangeFileButton()
+    public void initialiseResetCompletedQuestionsButton()
     {
-        //--box that the string goes in--
-        startPageChangeFileButtonWidth = (int) ((startPageMainBoxInnerWidth- (3*sideSpacing)) *0.5);
-        startPageChangeFileButtonHeight = (int) (windowHeight*0.1);
-        startPageChangeFileButtonX = startPageMainBoxInnerX + sideSpacing;
-        //bottom of loaded filename box + (dist. from: bottom of loaded filename box to: launch quiz button)/2 [for middle] - (button height/2)
-        //	startPageChangeFileButtonY =(startPageLoadedFilenameBoxY + startPageLoadedFilenameBoxHeight) + (int)  (  (startPageLaunchQuizButtonY - (startPageLoadedFilenameBoxY + startPageLoadedFilenameBoxHeight))/2 -(startPageChangeFileButtonHeight/2)  );
-        startPageChangeFileButtonY = startPageLoadedFilenameBoxY + startPageLoadedFilenameBoxHeight + sideSpacing;
-        int startPageChangeFileButtonRight = startPageChangeFileButtonX + startPageChangeFileButtonWidth;
-        int startPageChangeFileButtonBottom = startPageChangeFileButtonY + startPageChangeFileButtonHeight ;
+        resetCompletedQuestionsButtonText = "RESET";
+        int[] resetCompletedQuestionsButtonColour = {190, 190, 190};
+        int[] resetCompletedQuestionsButtonHoveredOverColour = {183,183,183};
+        int[] resetCompletedQuestionsButtonClickedColour = {208, 208, 208};
+        int[] resetCompletedQuestionsButtonBorderColour = {0,0,0};
+        int resetCompletedQuestionsButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font resetCompletedQuestionsButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color resetCompletedQuestionsButtonFontColour = new Color (0,0,0);
 
-        if (startPageChangeFileButtonClicked == true){
-            drawingLocation.setColor(new Color(208, 208, 208));
+        ClickableColouredButton resetCompletedQuestionsButton;
 
-            switch(startPageChangeFileButtonClickedTick){
-                case 3 -> {
-                    startPageChangeFileButtonClicked = false;
-                    startPageChangeFileButtonClickedTick = 0;
-                }
-                default -> startPageChangeFileButtonClickedTick++;
+        //--initialise the button dimesions--
+        resetCompletedQuestionsButtonWidth = (int) ((mainBoxInnerWidth- (3*sideSpacing)) *0.5);
+        resetCompletedQuestionsButtonHeight = (int) (windowHeight*0.1);
+        resetCompletedQuestionsButtonX = mainBoxInnerX + sideSpacing + changeFileButtonWidth + sideSpacing;
+        resetCompletedQuestionsButtonY =loadedFilenameBoxY + loadedFilenameBoxHeight + sideSpacing;
+        
+        //--create the button object--
+        resetCompletedQuestionsButton = new ClickableColouredButton(resetCompletedQuestionsButtonX, resetCompletedQuestionsButtonY, resetCompletedQuestionsButtonWidth, resetCompletedQuestionsButtonHeight, resetCompletedQuestionsButtonColour, resetCompletedQuestionsButtonClickedColour, resetCompletedQuestionsButtonHoveredOverColour,resetCompletedQuestionsButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the resetCompletedQuestions button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageChangeFileButtonX, startPageChangeFileButtonRight, startPageChangeFileButtonY, startPageChangeFileButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(183, 183, 183));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(190, 190, 190));
-        }
-        drawingLocation.fillRect(startPageChangeFileButtonX, startPageChangeFileButtonY, startPageChangeFileButtonWidth, startPageChangeFileButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(startPageChangeFileButtonX, startPageChangeFileButtonY, startPageChangeFileButtonWidth, startPageChangeFileButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        resetCompletedQuestionsButton.addBorder(borderMultiplier, resetCompletedQuestionsButtonBorderColour);
+        allButtons.add(resetCompletedQuestionsButton);
         
-        //top text
-        startPageChangeFileButtonText = "Change File";
-        startPageChangeFileButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLaunchQuizButtonText);
-        startPageChangeFileButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageChangeFileButtonTextX = startPageChangeFileButtonX + (int) ((startPageChangeFileButtonWidth-startPageChangeFileButtonTextWidth)/2);
-        startPageChangeFileButtonTextY = startPageChangeFileButtonY + startPageChangeFileButtonTextHeight + (int) ((startPageChangeFileButtonHeight-startPageChangeFileButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageChangeFileButtonText, startPageChangeFileButtonTextX, startPageChangeFileButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(resetCompletedQuestionsButtonFont); 
+        resetCompletedQuestionsButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(launchQuizButtonText);
+        resetCompletedQuestionsButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        resetCompletedQuestionsButtonTextX = resetCompletedQuestionsButtonX + (int) ((resetCompletedQuestionsButtonWidth-resetCompletedQuestionsButtonTextWidth)/2);
+        resetCompletedQuestionsButtonTextY = resetCompletedQuestionsButtonY + resetCompletedQuestionsButtonTextHeight + (int) ((resetCompletedQuestionsButtonHeight-resetCompletedQuestionsButtonTextHeight)/2);
 
-        setChangeFileButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        resetCompletedQuestionsButton.addText(new SingleLineText(resetCompletedQuestionsButtonText,  resetCompletedQuestionsButtonTextX,  resetCompletedQuestionsButtonTextY, resetCompletedQuestionsButtonFont, resetCompletedQuestionsButtonFontColour));
+
     }
 
-    public void drawResetCompletedQuestionsButton()
+    public void initialiseSlideModeText()
     {
-        //--box that the string goes in--
-        startPageResetCompletedQuestionsButtonWidth = (int) ((startPageMainBoxInnerWidth- (3*sideSpacing)) *0.5);
-        startPageResetCompletedQuestionsButtonHeight = (int) (windowHeight*0.1);
-        startPageResetCompletedQuestionsButtonX = startPageMainBoxInnerX + sideSpacing + startPageChangeFileButtonWidth + sideSpacing;
-        //bottom of loaded filename box + (dist. from: bottom of loaded filename box to: launch quiz button)/2 [for middle] - (button height/2)
-        startPageResetCompletedQuestionsButtonY =startPageLoadedFilenameBoxY + startPageLoadedFilenameBoxHeight + sideSpacing;
-        int startPageResetCompletedQuestionsButtonRight = startPageResetCompletedQuestionsButtonX + startPageResetCompletedQuestionsButtonWidth;
-        int startPageResetCompletedQuestionsButtonBottom = startPageResetCompletedQuestionsButtonY + startPageResetCompletedQuestionsButtonHeight;
+        Font slideModeTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        slideModeText = "Slide Mode";
 
-        if (startPageResetCompletedQuestionsButtonClicked == true){
-            drawingLocation.setColor(new Color(208, 208, 208));
 
-            switch (startPageResetCompletedQuestionsButtonClickedTick){
-                case 3 ->{
-                    startPageResetCompletedQuestionsButtonClicked = false;
-                    startPageResetCompletedQuestionsButtonClickedTick = 0;
-                }
-                default -> startPageResetCompletedQuestionsButtonClickedTick++;
-            }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageResetCompletedQuestionsButtonX, startPageResetCompletedQuestionsButtonRight, startPageResetCompletedQuestionsButtonY, startPageResetCompletedQuestionsButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(183, 183, 183));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(190, 190, 190));
-        }
-        drawingLocation.fillRect(startPageResetCompletedQuestionsButtonX, startPageResetCompletedQuestionsButtonY, startPageResetCompletedQuestionsButtonWidth, startPageResetCompletedQuestionsButtonHeight);
+        drawingLocation.setFont(slideModeTextFont); 
 
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        drawingLocation.drawRect(startPageResetCompletedQuestionsButtonX, startPageResetCompletedQuestionsButtonY, startPageResetCompletedQuestionsButtonWidth, startPageResetCompletedQuestionsButtonHeight);
+        slideModeTextWidth = drawingLocation.getFontMetrics().stringWidth(slideModeText);
+        slideModeTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideModeTextX = mainBoxInnerX + (int) ((mainBoxInnerWidth - slideModeTextWidth)/2);
+        slideModeTextY = resetCompletedQuestionsButtonY + resetCompletedQuestionsButtonHeight + slideModeTextHeight + sideSpacing;
 
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
-        
-        //top text
-        startPageResetCompletedQuestionsButtonText = "RESET";
-        startPageResetCompletedQuestionsButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageLaunchQuizButtonText);
-        startPageResetCompletedQuestionsButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageResetCompletedQuestionsButtonTextX = startPageResetCompletedQuestionsButtonX + (int) ((startPageResetCompletedQuestionsButtonWidth-startPageResetCompletedQuestionsButtonTextWidth)/2);
-        startPageResetCompletedQuestionsButtonTextY = startPageResetCompletedQuestionsButtonY + startPageResetCompletedQuestionsButtonTextHeight + (int) ((startPageResetCompletedQuestionsButtonHeight-startPageResetCompletedQuestionsButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageResetCompletedQuestionsButtonText, startPageResetCompletedQuestionsButtonTextX, startPageResetCompletedQuestionsButtonTextY);
-
-        setResetCompletedQuestionsButtonStuff = true;
     }
 
-    ////////////////////////////////////////////***************************** */
     public void drawSlideModeText()
     {
-        //--text--
+        Font slideModeTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideModeTextColour = new Color(0,0,0);
+        slideModeText = "Slide Mode";
 
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
-        
-        startPageSlideModeText = "Slide Mode";
-        startPageSlideModeTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideModeText);
-        startPageSlideModeTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideModeTextX = startPageMainBoxInnerX + (int) ((startPageMainBoxInnerWidth - startPageSlideModeTextWidth)/2);
-        startPageTextY = startPageResetCompletedQuestionsButtonY + startPageResetCompletedQuestionsButtonHeight + startPageSlideModeTextHeight + sideSpacing;
-        
-        drawingLocation.drawString(startPageSlideModeText, startPageSlideModeTextX, startPageTextY);
 
-        setSlideModeTextStuff = true;
+        drawingLocation.setFont(slideModeTextFont); 
+        drawingLocation.setColor(slideModeTextColour);
+        
+        drawingLocation.drawString(slideModeText, slideModeTextX, slideModeTextY);
     }
 
-
-    public void drawSlideMode1Button()
+    /**
+     * 
+     */
+    public void initialiseSlideMode1Button()
     {
-        //for the highlighted outline
-        if (startPageSlideMode1ButtonSelected == true){
-            //draw highlighted outline 
-            startPageSlideMode1ButtonOutlineX = startPageSlideMode1ButtonX - 2;
-            startPageSlideMode1ButtonOutlineY = startPageSlideMode1ButtonY - 2;
-            startPageSlideMode1ButtonOutlineW = startPageSlideMode1ButtonWidth + 4;
-            startPageSlideMode1ButtonOutlineH = startPageSlideMode1ButtonHeight + 4;
+        slideMode1ButtonText = "Uncomplete";
+        int[] slideMode1ButtonColour = {120, 225, 237};
+        int[] slideMode1ButtonHoveredOverColour = {113, 218, 230};
+        int[] slideMode1ButtonClickedColour = {138, 243, 255};
+        int[] slideMode1ButtonBorderColour = {0,0,0};
+        int[] slideMode1ButtonSelectedBorderColour = {245, 197, 22};
+        int slideMode1ButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font slideMode1ButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideMode1ButtonFontColour = new Color (0,0,0);
 
-            drawingLocation.setColor(new Color(245, 197, 22));
-            drawingLocation.fillRect(startPageSlideMode1ButtonOutlineX, startPageSlideMode1ButtonOutlineY, startPageSlideMode1ButtonOutlineW, startPageSlideMode1ButtonOutlineH);
-        }
+        ClickableColouredButton slideMode1Button;
 
-        //--box that the string goes in--
-        startPageSlideMode1ButtonWidth = (int) ((startPageMainBoxInnerWidth- (4*sideSpacing)) *0.33);
-        startPageSlideMode1ButtonHeight = (int) (windowHeight*0.1);
-        startPageSlideMode1ButtonX = startPageMainBoxInnerX + sideSpacing;
-        startPageSlideMode1ButtonY = startPageTextY + sideSpacing;
-        int startPageSlideMode1ButtonRight = startPageSlideMode1ButtonX + startPageSlideMode1ButtonWidth;
-        int startPageSlideMode1ButtonBottom = startPageSlideMode1ButtonY + startPageSlideMode1ButtonHeight;
-
-        if (startPageSlideMode1ButtonClicked == true){
-            drawingLocation.setColor(new Color(138, 243, 255));
-
-            switch (startPageSlideMode1ButtonClickedTick){
-                case 3->{
-                    startPageSlideMode1ButtonClicked = false;
-                    startPageSlideMode1ButtonClickedTick = 0;
-                }
-                default -> startPageSlideMode1ButtonClickedTick++;
+        //--initialise the button dimesions--
+        slideMode1ButtonWidth = (int) ((mainBoxInnerWidth- (4*sideSpacing)) *0.33);
+        slideMode1ButtonHeight = (int) (windowHeight*0.1);
+        slideMode1ButtonX = mainBoxInnerX + sideSpacing;
+        slideMode1ButtonY = slideModeTextY + sideSpacing;
+        
+        //--create the button object--
+        slideMode1Button = new ClickableColouredButton(slideMode1ButtonX, slideMode1ButtonY, slideMode1ButtonWidth, slideMode1ButtonHeight, slideMode1ButtonColour, slideMode1ButtonClickedColour, slideMode1ButtonHoveredOverColour,slideMode1ButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the slideMode1 button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode1ButtonX, startPageSlideMode1ButtonRight, startPageSlideMode1ButtonY, startPageSlideMode1ButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(113, 218, 230));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(120, 225, 237));
-
-        }
-        drawingLocation.fillRect(startPageSlideMode1ButtonX, startPageSlideMode1ButtonY, startPageSlideMode1ButtonWidth, startPageSlideMode1ButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        if (startPageSlideMode1ButtonSelected == true){
-            drawingLocation.setColor(new Color(245, 197, 22));
-        }
-        drawingLocation.drawRect(startPageSlideMode1ButtonX, startPageSlideMode1ButtonY, startPageSlideMode1ButtonWidth, startPageSlideMode1ButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        slideMode1Button.addBorder(borderMultiplier, slideMode1ButtonBorderColour);
+        allButtons.add(slideMode1Button);
         
-        //top text
-        startPageSlideMode1ButtonText = "Uncomplete";
-        startPageSlideMode1ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideMode1ButtonText);
-        startPageSlideMode1ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideMode1ButtonTextX = startPageSlideMode1ButtonX + (int) ((startPageSlideMode1ButtonWidth-startPageSlideMode1ButtonTextWidth)/2);
-        startPageSlideMode1ButtonTextY = startPageSlideMode1ButtonY + startPageSlideMode1ButtonTextHeight + (int) ((startPageSlideMode1ButtonHeight-startPageSlideMode1ButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageSlideMode1ButtonText, startPageSlideMode1ButtonTextX, startPageSlideMode1ButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(slideMode1ButtonFont); 
+        slideMode1ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(slideMode1ButtonText);
+        slideMode1ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideMode1ButtonTextX = slideMode1ButtonX + (int) ((slideMode1ButtonWidth-slideMode1ButtonTextWidth)/2);
+        slideMode1ButtonTextY = slideMode1ButtonY + slideMode1ButtonTextHeight + (int) ((slideMode1ButtonHeight-slideMode1ButtonTextHeight)/2);
 
-
-        setSlideMode1ButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        slideMode1Button.addText(new SingleLineText(slideMode1ButtonText,  slideMode1ButtonTextX,  slideMode1ButtonTextY, slideMode1ButtonFont, slideMode1ButtonFontColour));
     }
 
-    public void drawSlideMode2Button()
+    /**
+     * 
+     */
+    public void initialiseSlideMode2Button()
     {
-        //for the highlighted outline
-        if (startPageSlideMode2ButtonSelected == true){
-            //draw highlighted outline 
-            startPageSlideMode2ButtonOutlineX = startPageSlideMode2ButtonX - 2;
-            startPageSlideMode2ButtonOutlineY = startPageSlideMode2ButtonY - 2;
-            startPageSlideMode2ButtonOutlineW = startPageSlideMode2ButtonWidth + 4;
-            startPageSlideMode2ButtonOutlineH = startPageSlideMode2ButtonHeight + 4;
+        slideMode2ButtonText = "Wrong";
+        int[] slideMode2ButtonColour = {120, 225, 237};
+        int[] slideMode2ButtonHoveredOverColour = {113, 218, 230};
+        int[] slideMode2ButtonClickedColour = {138, 248, 255};
+        int[] slideMode2ButtonBorderColour = {0,0,0};
+        int[] slideMode2ButtonSelectedBorderColour = {245, 197, 22};
+        int slideMode2ButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font slideMode2ButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideMode2ButtonFontColour = new Color (0,0,0);
 
-            drawingLocation.setColor(new Color(245, 197, 22));
-            drawingLocation.fillRect(startPageSlideMode2ButtonOutlineX, startPageSlideMode2ButtonOutlineY, startPageSlideMode2ButtonOutlineW, startPageSlideMode2ButtonOutlineH);
-        }
+        ClickableColouredButton slideMode2Button;
 
-        //--box that the string goes in--
-        startPageSlideMode2ButtonWidth = (int) ((startPageMainBoxInnerWidth- (4*sideSpacing)) *0.33);
-        startPageSlideMode2ButtonHeight = (int) (windowHeight*0.1);
-        startPageSlideMode2ButtonX = startPageMainBoxInnerX + sideSpacing + startPageSlideMode1ButtonWidth + sideSpacing;
-        startPageSlideMode2ButtonY = startPageTextY + sideSpacing;
-        int startPageSlideMode2ButtonRight = startPageSlideMode2ButtonX + startPageSlideMode2ButtonWidth;
-        int startPageSlideMode2ButtonBottom = startPageSlideMode2ButtonY + startPageSlideMode2ButtonHeight;
-
-        if (startPageSlideMode2ButtonClicked == true){
-            drawingLocation.setColor(new Color(138, 248, 255));
-
-            switch(startPageSlideMode2ButtonClickedTick){
-                case 3 -> {
-                    startPageSlideMode2ButtonClicked = false;
-                    startPageSlideMode2ButtonClickedTick = 0;
-                }
-                default -> startPageSlideMode2ButtonClickedTick++;
+        //--initialise the button dimesions--
+        slideMode2ButtonWidth = (int) ((mainBoxInnerWidth- (4*sideSpacing)) *0.33);
+        slideMode2ButtonHeight = (int) (windowHeight*0.1);
+        slideMode2ButtonX = mainBoxInnerX + sideSpacing + slideMode1ButtonWidth + sideSpacing;
+        slideMode2ButtonY = slideModeTextY + sideSpacing;
+        
+        //--create the button object--
+        slideMode2Button = new ClickableColouredButton(slideMode2ButtonX, slideMode2ButtonY, slideMode2ButtonWidth, slideMode2ButtonHeight, slideMode2ButtonColour, slideMode2ButtonClickedColour, slideMode2ButtonHoveredOverColour,slideMode2ButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the slideMode2 button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode2ButtonX, startPageSlideMode2ButtonRight, startPageSlideMode2ButtonY, startPageSlideMode2ButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(113, 218, 230));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(120, 225, 237));
-        }
-        drawingLocation.fillRect(startPageSlideMode2ButtonX, startPageSlideMode2ButtonY, startPageSlideMode2ButtonWidth, startPageSlideMode2ButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        if (startPageSlideMode2ButtonSelected == true){
-            drawingLocation.setColor(new Color(245, 197, 22));
-        }
-        drawingLocation.drawRect(startPageSlideMode2ButtonX, startPageSlideMode2ButtonY, startPageSlideMode2ButtonWidth, startPageSlideMode2ButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        slideMode2Button.addBorder(borderMultiplier, slideMode2ButtonBorderColour);
+        allButtons.add(slideMode2Button);
         
-        //top text
-        startPageSlideMode2ButtonText = "Wrong";
-        startPageSlideMode2ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideMode2ButtonText);
-        startPageSlideMode2ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideMode2ButtonTextX = startPageSlideMode2ButtonX + (int) ((startPageSlideMode2ButtonWidth-startPageSlideMode2ButtonTextWidth)/2);
-        startPageSlideMode2ButtonTextY = startPageSlideMode2ButtonY + startPageSlideMode2ButtonTextHeight + (int) ((startPageSlideMode2ButtonHeight-startPageSlideMode2ButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageSlideMode2ButtonText, startPageSlideMode2ButtonTextX, startPageSlideMode2ButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(slideMode2ButtonFont); 
+        slideMode2ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(slideMode2ButtonText);
+        slideMode2ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideMode2ButtonTextX = slideMode2ButtonX + (int) ((slideMode2ButtonWidth-slideMode2ButtonTextWidth)/2);
+        slideMode2ButtonTextY = slideMode2ButtonY + slideMode2ButtonTextHeight + (int) ((slideMode2ButtonHeight-slideMode2ButtonTextHeight)/2);
 
-        
-
-        setSlideMode2ButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        slideMode2Button.addText(new SingleLineText(slideMode2ButtonText,  slideMode2ButtonTextX,  slideMode2ButtonTextY, slideMode2ButtonFont, slideMode2ButtonFontColour));
     }
 
-    public void drawSlideMode3Button()
+    /**
+     * 
+     */
+    public void initialiseSlideMode3Button()
     {
-        //for the highlighted outline
-        if (startPageSlideMode3ButtonSelected == true){
-            //draw highlighted outline 
-            startPageSlideMode3ButtonOutlineX = startPageSlideMode3ButtonX - 2;
-            startPageSlideMode3ButtonOutlineY = startPageSlideMode3ButtonY - 2;
-            startPageSlideMode3ButtonOutlineW = startPageSlideMode3ButtonWidth + 4;
-            startPageSlideMode3ButtonOutlineH = startPageSlideMode3ButtonHeight + 4;
+        slideMode3ButtonText = "Wrong Last Attempt";
+        int[] slideMode3ButtonColour = {120, 225, 237};
+        int[] slideMode3ButtonHoveredOverColour = {113, 218, 230};
+        int[] slideMode3ButtonClickedColour = {138, 248, 255};
+        int[] slideMode3ButtonBorderColour = {0,0,0};
+        int[] slideMode3ButtonSelectedBorderColour = {245, 197, 22};
+        int slideMode3ButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font slideMode3ButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideMode3ButtonFontColour = new Color (0,0,0);
 
-            drawingLocation.setColor(new Color(245, 197, 22));
-            drawingLocation.fillRect(startPageSlideMode3ButtonOutlineX, startPageSlideMode3ButtonOutlineY, startPageSlideMode3ButtonOutlineW, startPageSlideMode3ButtonOutlineH);
-        }
+        ClickableColouredButton slideMode3Button;
 
-        //--box that the string goes in--
-        startPageSlideMode3ButtonWidth = (int) ((startPageMainBoxInnerWidth- (4*sideSpacing)) *0.33);
-        startPageSlideMode3ButtonHeight = (int) (windowHeight*0.1);
-        startPageSlideMode3ButtonX = startPageMainBoxInnerX + sideSpacing + startPageSlideMode1ButtonWidth + sideSpacing + startPageSlideMode2ButtonWidth + sideSpacing;
-        startPageSlideMode3ButtonY = startPageTextY + sideSpacing;
-        int startPageSlideMode3ButtonRight = startPageSlideMode3ButtonX + startPageSlideMode3ButtonWidth;
-        int startPageSlideMode3ButtonBottom = startPageSlideMode3ButtonY + startPageSlideMode3ButtonHeight;
-
-        if (startPageSlideMode3ButtonClicked == true){
-            drawingLocation.setColor(new Color(138, 248, 255));
-
-            switch (startPageSlideMode3ButtonClickedTick){
-                case 3->{
-                    startPageSlideMode3ButtonClicked = false;
-                    startPageSlideMode3ButtonClickedTick = 0;
-                }
-                default -> startPageSlideMode3ButtonClickedTick++;
+        //--initialise the button dimesions--
+        slideMode3ButtonWidth = (int) ((mainBoxInnerWidth- (4*sideSpacing)) *0.33);
+        slideMode3ButtonHeight = (int) (windowHeight*0.1);
+        slideMode3ButtonX = mainBoxInnerX + sideSpacing + slideMode1ButtonWidth + sideSpacing + slideMode2ButtonWidth + sideSpacing;
+        slideMode3ButtonY = slideModeTextY + sideSpacing;
+        
+        //--create the button object--
+        slideMode3Button = new ClickableColouredButton(slideMode3ButtonX, slideMode3ButtonY, slideMode3ButtonWidth, slideMode3ButtonHeight, slideMode3ButtonColour, slideMode3ButtonClickedColour, slideMode3ButtonHoveredOverColour,slideMode3ButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the slideMode3 button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideMode3ButtonX, startPageSlideMode3ButtonRight, startPageSlideMode3ButtonY, startPageSlideMode3ButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(113, 218, 230));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(120, 225, 237));
-        }
-        drawingLocation.fillRect(startPageSlideMode3ButtonX, startPageSlideMode3ButtonY, startPageSlideMode3ButtonWidth, startPageSlideMode3ButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        if (startPageSlideMode3ButtonSelected == true){
-            drawingLocation.setColor(new Color(245, 197, 22));
-        }
-        drawingLocation.drawRect(startPageSlideMode3ButtonX, startPageSlideMode3ButtonY, startPageSlideMode3ButtonWidth, startPageSlideMode3ButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        slideMode3Button.addBorder(borderMultiplier, slideMode3ButtonBorderColour);
+        allButtons.add(slideMode3Button);
         
-        //top text
-        startPageSlideMode3ButtonText = "Wrong Last Attempt";
-        startPageSlideMode3ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideMode3ButtonText);
-        startPageSlideMode3ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideMode3ButtonTextX = startPageSlideMode3ButtonX + (int) ((startPageSlideMode3ButtonWidth-startPageSlideMode3ButtonTextWidth)/2);
-        startPageSlideMode3ButtonTextY = startPageSlideMode3ButtonY + startPageSlideMode3ButtonTextHeight + (int) ((startPageSlideMode3ButtonHeight-startPageSlideMode3ButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageSlideMode3ButtonText, startPageSlideMode3ButtonTextX, startPageSlideMode3ButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(slideMode3ButtonFont); 
+        slideMode3ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(slideMode3ButtonText);
+        slideMode3ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideMode3ButtonTextX = slideMode3ButtonX + (int) ((slideMode3ButtonWidth-slideMode3ButtonTextWidth)/2);
+        slideMode3ButtonTextY = slideMode3ButtonY + slideMode3ButtonTextHeight + (int) ((slideMode3ButtonHeight-slideMode3ButtonTextHeight)/2);
 
-        setSlideMode3ButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        slideMode3Button.addText(new SingleLineText(slideMode3ButtonText,  slideMode3ButtonTextX,  slideMode3ButtonTextY, slideMode3ButtonFont, slideMode3ButtonFontColour));
+    }
+
+    public void initialiseSlideOrderText()
+    {
+        slideOrderText = "Slide Order";
+        Font slideOrderTextFont = new Font("Monospaced", Font.PLAIN, 20);
+
+        drawingLocation.setFont(slideOrderTextFont); 
+        
+        slideOrderTextWidth = drawingLocation.getFontMetrics().stringWidth(slideOrderText);
+        slideOrderTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideOrderTextX = mainBoxInnerX + (int) ((mainBoxInnerWidth - slideOrderTextWidth)/2);
+        slideOrderTextY = slideMode1ButtonY + slideMode1ButtonHeight + sideSpacing + slideOrderTextHeight;
     }
 
     public void drawSlideOrderText()
     {
+        Color slideOrderTextColour = new Color(0,0,0);
+        Font slideOrderTextFont = new Font("Monospaced", Font.PLAIN, 20);
+
         //--text--
+        drawingLocation.setFont(slideOrderTextFont); 
+        drawingLocation.setColor(slideOrderTextColour);        
 
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
-        
-        startPageSlideOrderText = "Slide Order";
-        startPageSlideOrderTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideOrderText);
-        startPageSlideOrderTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideOrderTextX = startPageMainBoxInnerX + (int) ((startPageMainBoxInnerWidth - startPageSlideOrderTextWidth)/2);
-        startPageSlideOrderTextY = startPageSlideMode1ButtonY + startPageSlideMode1ButtonHeight + sideSpacing + startPageSlideOrderTextHeight;
-        
-        drawingLocation.drawString(startPageSlideOrderText, startPageSlideOrderTextX, startPageSlideOrderTextY);
-
-        setSlideOrderTextStuff = true;
+        drawingLocation.drawString(slideOrderText, slideOrderTextX, slideOrderTextY);
     }
 
-    public void drawSlideOrder1Button()
+    /**
+     * 
+     */
+    public void initialiseSlideOrder1Button()
     {
-        //for the highlighted outline
-        if (startPageSlideOrder1ButtonSelected == true){
-            //draw highlighted outline 
-            startPageSlideOrder1ButtonOutlineX = startPageSlideOrder1ButtonX - 2;
-            startPageSlideOrder1ButtonOutlineY = startPageSlideOrder1ButtonY - 2;
-            startPageSlideOrder1ButtonOutlineW = startPageSlideOrder1ButtonWidth + 4;
-            startPageSlideOrder1ButtonOutlineH = startPageSlideOrder1ButtonHeight + 4;
+        slideOrder1ButtonText = "Random";
+        int[] slideOrder1ButtonColour = {129, 225, 237};
+        int[] slideOrder1ButtonHoveredOverColour = {113, 218, 230};
+        int[] slideOrder1ButtonClickedColour = {138, 243, 255};
+        int[] slideOrder1ButtonBorderColour = {0,0,0};
+        int[] slideOrder1ButtonSelectedBorderColour = {245, 197, 22};
+        int slideOrder1ButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font slideOrder1ButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideOrder1ButtonFontColour = new Color (0,0,0);
 
-            drawingLocation.setColor(new Color(245, 197, 22));
-            drawingLocation.fillRect(startPageSlideOrder1ButtonOutlineX, startPageSlideOrder1ButtonOutlineY, startPageSlideOrder1ButtonOutlineW, startPageSlideOrder1ButtonOutlineH);
-        }
+        ClickableColouredButton slideOrder1Button;
 
-        //--box that the string goes in--
-        startPageSlideOrder1ButtonWidth = (int) ((startPageMainBoxInnerWidth- (3*sideSpacing)) *0.5);
-        startPageSlideOrder1ButtonHeight = (int) (windowHeight*0.1);
-        startPageSlideOrder1ButtonX = startPageMainBoxInnerX + sideSpacing;
-        startPageSlideOrder1ButtonY = startPageSlideOrderTextY + sideSpacing;
-        int startPageSlideOrder1ButtonRight = startPageSlideOrder1ButtonX + startPageSlideOrder1ButtonWidth;
-        int startPageSlideOrder1ButtonBottom = startPageSlideOrder1ButtonY + startPageSlideOrder1ButtonHeight;
-
-        if (startPageSlideOrder1ButtonClicked == true){
-            drawingLocation.setColor(new Color(138, 243, 255));
-
-            switch(startPageSlideOrder1ButtonClickedTick){
-                case 3 -> {
-                    startPageSlideOrder1ButtonClicked = false;
-                    startPageSlideOrder1ButtonClickedTick = 0;
-                }
-                default -> startPageSlideOrder1ButtonClickedTick++;
+        //--initialise the button dimesions--
+        slideOrder1ButtonWidth = (int) ((mainBoxInnerWidth- (3*sideSpacing)) *0.5);
+        slideOrder1ButtonHeight = (int) (windowHeight*0.1);
+        slideOrder1ButtonX = mainBoxInnerX + sideSpacing;
+        slideOrder1ButtonY = slideOrderTextY + sideSpacing;
+        
+        //--create the button object--
+        slideOrder1Button = new ClickableColouredButton(slideOrder1ButtonX, slideOrder1ButtonY, slideOrder1ButtonWidth, slideOrder1ButtonHeight, slideOrder1ButtonColour, slideOrder1ButtonClickedColour, slideOrder1ButtonHoveredOverColour,slideOrder1ButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the slideOrder1 button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideOrder1ButtonX, startPageSlideOrder1ButtonRight, startPageSlideOrder1ButtonY, startPageSlideOrder1ButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(113, 218, 230));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(129, 225, 237));
-        }
-        drawingLocation.fillRect(startPageSlideOrder1ButtonX, startPageSlideOrder1ButtonY, startPageSlideOrder1ButtonWidth, startPageSlideOrder1ButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        if (startPageSlideOrder1ButtonSelected == true){
-            drawingLocation.setColor(new Color(245, 197, 22));
-        }
-        drawingLocation.drawRect(startPageSlideOrder1ButtonX, startPageSlideOrder1ButtonY, startPageSlideOrder1ButtonWidth, startPageSlideOrder1ButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        slideOrder1Button.addBorder(borderMultiplier, slideOrder1ButtonBorderColour);
+        allButtons.add(slideOrder1Button);
         
-        //top text
-        startPageSlideOrder1ButtonText = "Random";
-        startPageSlideOrder1ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideOrder1ButtonText);
-        startPageSlideOrder1ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideOrder1ButtonTextX = startPageSlideOrder1ButtonX + (int) ((startPageSlideOrder1ButtonWidth-startPageSlideOrder1ButtonTextWidth)/2);
-        startPageSlideOrder1ButtonTextY = startPageSlideOrder1ButtonY + startPageSlideOrder1ButtonTextHeight + (int) ((startPageSlideOrder1ButtonHeight-startPageSlideOrder1ButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageSlideOrder1ButtonText, startPageSlideOrder1ButtonTextX, startPageSlideOrder1ButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(slideOrder1ButtonFont); 
+        slideOrder1ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(slideOrder1ButtonText);
+        slideOrder1ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideOrder1ButtonTextX = slideOrder1ButtonX + (int) ((slideOrder1ButtonWidth-slideOrder1ButtonTextWidth)/2);
+        slideOrder1ButtonTextY = slideOrder1ButtonY + slideOrder1ButtonTextHeight + (int) ((slideOrder1ButtonHeight-slideOrder1ButtonTextHeight)/2);
 
-        setSlideOrder1ButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        slideOrder1Button.addText(new SingleLineText(slideOrder1ButtonText,  slideOrder1ButtonTextX,  slideOrder1ButtonTextY, slideOrder1ButtonFont, slideOrder1ButtonFontColour));
     }
 
-    public void drawSlideOrder2Button()
+    /**
+     * 
+     */
+    public void initialiseSlideOrder2Button()
     {
-        //for the highlighted outline
-        if (startPageSlideOrder2ButtonSelected == true){
-            //draw highlighted outline 
-            startPageSlideOrder2ButtonOutlineX = startPageSlideOrder2ButtonX - 2;
-            startPageSlideOrder2ButtonOutlineY = startPageSlideOrder2ButtonY - 2;
-            startPageSlideOrder2ButtonOutlineW = startPageSlideOrder2ButtonWidth + 4;
-            startPageSlideOrder2ButtonOutlineH = startPageSlideOrder2ButtonHeight + 4;
+        slideOrder2ButtonText = "Descending Wrongness";
+        int[] slideOrder2ButtonColour = {120, 225, 237};
+        int[] slideOrder2ButtonHoveredOverColour = {113, 218, 230};
+        int[] slideOrder2ButtonClickedColour = {138, 243, 255};
+        int[] slideOrder2ButtonBorderColour = {0,0,0};
+        int[] slideOrder2ButtonSelectedBorderColour = {245, 197, 22};
+        int slideOrder2ButtonMaxClickedCount = 3;
+        double borderMultiplier = 0.1;
+        Font slideOrder2ButtonFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color slideOrder2ButtonFontColour = new Color (0,0,0);
 
-            drawingLocation.setColor(new Color(245, 197, 22));
-            drawingLocation.fillRect(startPageSlideOrder2ButtonOutlineX, startPageSlideOrder2ButtonOutlineY, startPageSlideOrder2ButtonOutlineW, startPageSlideOrder2ButtonOutlineH);
-        }
+        ClickableColouredButton slideOrder2Button;
 
-        //--box that the string goes in--
-        startPageSlideOrder2ButtonWidth = (int) ((startPageMainBoxInnerWidth- (3*sideSpacing)) *0.5);
-        startPageSlideOrder2ButtonHeight = (int) (windowHeight*0.1);
-        startPageSlideOrder2ButtonX = startPageMainBoxInnerX + sideSpacing + startPageSlideOrder1ButtonWidth+ sideSpacing;
-        startPageSlideOrder2ButtonY = startPageSlideOrderTextY + sideSpacing;
-        int startPageSlideOrder2ButtonRight = startPageSlideOrder2ButtonX + startPageSlideOrder2ButtonWidth;
-        int startPageSlideOrder2ButtonBottom = startPageSlideOrder2ButtonY + startPageSlideOrder2ButtonHeight;
-
-        if (startPageSlideOrder2ButtonClicked == true){
-            drawingLocation.setColor(new Color(138, 243, 255));
-
-            switch (startPageSlideOrder2ButtonClickedTick){
-                case 3 -> {
-                    startPageSlideOrder2ButtonClicked = false;
-                    startPageSlideOrder2ButtonClickedTick = 0;
-                }
-                default -> startPageSlideOrder2ButtonClickedTick++;
+        //--initialise the button dimesions--
+        slideOrder2ButtonWidth = (int) ((mainBoxInnerWidth- (3*sideSpacing)) *0.5);
+        slideOrder2ButtonHeight = (int) (windowHeight*0.1);
+        slideOrder2ButtonX = mainBoxInnerX + sideSpacing + slideOrder1ButtonWidth+ sideSpacing;
+        slideOrder2ButtonY = slideOrderTextY + sideSpacing;
+        
+        //--create the button object--
+        slideOrder2Button = new ClickableColouredButton(slideOrder2ButtonX, slideOrder2ButtonY, slideOrder2ButtonWidth, slideOrder2ButtonHeight, slideOrder2ButtonColour, slideOrder2ButtonClickedColour, slideOrder2ButtonHoveredOverColour,slideOrder2ButtonMaxClickedCount){
+            @Override
+            public void activateClickedProcedure(){
+                System.out.println("doing all of the slideOrder2 button stuff");
             }
-        }
-        else if (isPointCollisionWithRectangle(pointXCoord, pointYCoord, startPageSlideOrder2ButtonX, startPageSlideOrder2ButtonRight, startPageSlideOrder2ButtonY, startPageSlideOrder2ButtonBottom) == true){
-            //user is hovering over this button
-            drawingLocation.setColor(new Color(113, 218, 230));
-        }
-        else{
-            //
-            drawingLocation.setColor(new Color(120, 225, 237));
-        }
-        drawingLocation.fillRect(startPageSlideOrder2ButtonX, startPageSlideOrder2ButtonY, startPageSlideOrder2ButtonWidth, startPageSlideOrder2ButtonHeight);
-
-        //outline of the button
-        drawingLocation.setColor(new Color(0, 0, 0));
-        if (startPageSlideOrder2ButtonSelected == true){
-            drawingLocation.setColor(new Color(245, 197, 22));
-        }
-        drawingLocation.drawRect(startPageSlideOrder2ButtonX, startPageSlideOrder2ButtonY, startPageSlideOrder2ButtonWidth, startPageSlideOrder2ButtonHeight);
-
-        //--text--
-        drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-        drawingLocation.setColor(new Color(0, 0, 0));
+        };
+        slideOrder2Button.addBorder(borderMultiplier, slideOrder2ButtonBorderColour);
+        allButtons.add(slideOrder2Button);
         
-        //top text
-        startPageSlideOrder2ButtonText = "Descending Wrongness";
-        startPageSlideOrder2ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageSlideOrder2ButtonText);
-        startPageSlideOrder2ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageSlideOrder2ButtonTextX = startPageSlideOrder2ButtonX + (int) ((startPageSlideOrder2ButtonWidth-startPageSlideOrder2ButtonTextWidth)/2);
-        startPageSlideOrder2ButtonTextY = startPageSlideOrder2ButtonY + startPageSlideOrder2ButtonTextHeight + (int) ((startPageSlideOrder2ButtonHeight-startPageSlideOrder2ButtonTextHeight)/2);;
-        
-        drawingLocation.drawString(startPageSlideOrder2ButtonText, startPageSlideOrder2ButtonTextX, startPageSlideOrder2ButtonTextY);
+        //--initialise the button text data--
+        drawingLocation.setFont(slideOrder2ButtonFont); 
+        slideOrder2ButtonTextWidth = drawingLocation.getFontMetrics().stringWidth(slideOrder2ButtonText);
+        slideOrder2ButtonTextHeight = drawingLocation.getFontMetrics().getAscent();
+        slideOrder2ButtonTextX = slideOrder2ButtonX + (int) ((slideOrder2ButtonWidth-slideOrder2ButtonTextWidth)/2);
+        slideOrder2ButtonTextY = slideOrder2ButtonY + slideOrder2ButtonTextHeight + (int) ((slideOrder2ButtonHeight-slideOrder2ButtonTextHeight)/2);
 
-        setSlideOrder2ButtonStuff = true;
+        //--create the button's font object, and add to the button--
+        slideOrder2Button.addText(new SingleLineText(slideOrder2ButtonText,  slideOrder2ButtonTextX,  slideOrder2ButtonTextY, slideOrder2ButtonFont, slideOrder2ButtonFontColour));
     }
 
+    public void initialiseResetQuestionsTextIndication()
+    {
+        resetQuestionsIndicationText = "The completed questions have been reset";
+        Font resetQuestionsTextFont = new Font("Monospaced", Font.PLAIN, 20);
 
+        drawingLocation.setFont(resetQuestionsTextFont); 
+        resetQuestionsIndicationTextWidth = drawingLocation.getFontMetrics().stringWidth(resetQuestionsIndicationText);
+        resetQuestionsIndicationTextHeight = drawingLocation.getFontMetrics().getAscent();
+        resetQuestionsIndicationTextX = mainBoxInnerX + (int) ((mainBoxInnerWidth - resetQuestionsIndicationTextWidth)/2);
+        resetQuestionsIndicationTextY = titleY + titleHeight +resetQuestionsIndicationTextHeight +  sideSpacing;
+    }
 
     public void drawResetQuestionsTextIndication()
     {
         //--text--
+        Font resetQuestionsTextFont = new Font("Monospaced", Font.PLAIN, 20);
+        Color resetQuestionsTextColour = new Color(0,0, 128);
+        int resetQuestionsTextDisplayCount = 30;
 
-        int startPageResetCompletedQuestionsButtonBottom = startPageResetCompletedQuestionsButtonY + startPageResetCompletedQuestionsButtonHeight;
-        
-        startPageResetQuestionsIndicationText = "The completed questions have been reset";
-        startPageResetQuestionsIndicationTextWidth = drawingLocation.getFontMetrics().stringWidth(startPageResetQuestionsIndicationText);
-        startPageResetQuestionsIndicationTextHeight = drawingLocation.getFontMetrics().getAscent();
-        startPageResetQuestionsIndicationTextX = startPageMainBoxInnerX + (int) ((startPageMainBoxInnerWidth - startPageResetQuestionsIndicationTextWidth)/2);
-        startPageResetQuestionsIndicationTextY = startPageTitleY + startPageTitleHeight +startPageResetQuestionsIndicationTextHeight +  sideSpacing;//startPageResetCompletedQuestionsButtonBottom+ (int) ((startPageLaunchQuizButtonY-startPageResetCompletedQuestionsButtonBottom)/2) + (int) (startPageResetQuestionsIndicationTextHeight/2);
-        setResetQuestionsIndicationText = true;
+        if (resetQuestionsIndicationTextActivated == true){
+            drawingLocation.setFont(resetQuestionsTextFont); 
+            drawingLocation.setColor(resetQuestionsTextColour);
+            drawingLocation.drawString(resetQuestionsIndicationText, resetQuestionsIndicationTextX, resetQuestionsIndicationTextY); 
 
-        if (startPageResetQuestionsIndicationTextActivated == true){
-            drawingLocation.setFont(new Font("Monospaced", Font.PLAIN, 20)); 
-            drawingLocation.setColor(new Color(0, 0, 128));
-            drawingLocation.drawString(startPageResetQuestionsIndicationText, startPageResetQuestionsIndicationTextX, startPageResetQuestionsIndicationTextY);
-
-
-            switch (startPageResetQuestionsIndicationTextActivatedTick){
-                case 30 -> {
-                    startPageResetQuestionsIndicationTextActivated = false;
-                    startPageResetQuestionsIndicationTextActivatedTick = 0;
-                    break;
-                }
-                default -> startPageResetQuestionsIndicationTextActivatedTick++;
+            if (resetQuestionsIndicationTextActivatedTick >= resetQuestionsTextDisplayCount){
+                resetQuestionsIndicationTextActivated = false;
+                resetQuestionsIndicationTextActivatedTick = 0;
             }
-            
+            else{
+                resetQuestionsIndicationTextActivatedTick++;
+            }
         }
-
-        
     }
 
 
@@ -1219,7 +996,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode1Selected()
     {
-        return startPageSlideMode1ButtonSelected;
+        return slideMode1ButtonSelected;
     }
 
     /**
@@ -1227,7 +1004,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode2Selected()
     {
-        return startPageSlideMode2ButtonSelected;
+        return slideMode2ButtonSelected;
     }
 
     /**
@@ -1235,7 +1012,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode3Selected()
     {
-        return startPageSlideMode3ButtonSelected;
+        return slideMode3ButtonSelected;
     }
 
     /**
@@ -1243,7 +1020,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideOrder1Selected()
     {
-        return startPageSlideOrder1ButtonSelected;
+        return slideOrder1ButtonSelected;
     }
 
     /**
@@ -1251,7 +1028,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideOrder2Selected()
     {
-        return startPageSlideOrder2ButtonSelected;
+        return slideOrder2ButtonSelected;
     }
 
     //--launch quiz button--
@@ -1261,7 +1038,7 @@ public class ClickPanelDrawStartPage
      */
     public int getLaunchQuizButtonX()
     {
-        return startPageLaunchQuizButtonX;
+        return launchQuizButtonX;
     }
 
     /**
@@ -1269,7 +1046,7 @@ public class ClickPanelDrawStartPage
      */
     public int getLaunchQuizButtonY()
     {
-        return startPageLaunchQuizButtonY;
+        return launchQuizButtonY;
     }
 
     /**
@@ -1277,7 +1054,7 @@ public class ClickPanelDrawStartPage
      */
     public int getLaunchQuizButtonW()
     {
-        return startPageLaunchQuizButtonWidth;
+        return launchQuizButtonWidth;
     }
 
     /**
@@ -1285,7 +1062,7 @@ public class ClickPanelDrawStartPage
      */
     public int getLaunchQuizButtonH()
     {
-        return startPageLaunchQuizButtonWidth;
+        return launchQuizButtonWidth;
     }
 
     /**
@@ -1293,7 +1070,7 @@ public class ClickPanelDrawStartPage
      */
     public void setLaunchQuizButtonClicked(boolean newClicked)
     {
-        startPageLaunchQuizButtonClicked = newClicked;
+        launchQuizButtonClicked = newClicked;
     }
 
     //--change file button--
@@ -1303,7 +1080,7 @@ public class ClickPanelDrawStartPage
      */
     public int getChangeFileButtonX()
     {
-        return startPageChangeFileButtonX;
+        return changeFileButtonX;
     }
 
     /**
@@ -1311,7 +1088,7 @@ public class ClickPanelDrawStartPage
      */
     public int getChangeFileButtonY()
     {
-        return startPageChangeFileButtonY;
+        return changeFileButtonY;
     }
 
     /**
@@ -1319,7 +1096,7 @@ public class ClickPanelDrawStartPage
      */
     public int getChangeFileButtonW()
     {
-        return startPageChangeFileButtonWidth;
+        return changeFileButtonWidth;
     }
 
     /**
@@ -1327,7 +1104,7 @@ public class ClickPanelDrawStartPage
      */
     public int getChangeFileButtonH()
     {
-        return startPageChangeFileButtonHeight;
+        return changeFileButtonHeight;
     }
 
     /**
@@ -1335,7 +1112,7 @@ public class ClickPanelDrawStartPage
      */
     public void setChangeFileButtonClicked(boolean newClicked)
     {
-        startPageChangeFileButtonClicked = newClicked;
+        changeFileButtonClicked = newClicked;
     }
 
     //--reset completed questions button--
@@ -1345,7 +1122,7 @@ public class ClickPanelDrawStartPage
      */
     public int getResetCompletedQuestionsButtonX()
     {
-        return startPageResetCompletedQuestionsButtonX;
+        return resetCompletedQuestionsButtonX;
     }
 
     /**
@@ -1353,7 +1130,7 @@ public class ClickPanelDrawStartPage
      */
     public int getResetCompletedQuestionsButtonY()
     {
-        return startPageResetCompletedQuestionsButtonY;
+        return resetCompletedQuestionsButtonY;
     }
 
     /**
@@ -1361,7 +1138,7 @@ public class ClickPanelDrawStartPage
      */
     public int getResetCompletedQuestionsButtonW()
     {
-        return startPageResetCompletedQuestionsButtonWidth;
+        return resetCompletedQuestionsButtonWidth;
     }
 
     /**
@@ -1369,7 +1146,7 @@ public class ClickPanelDrawStartPage
      */
     public int getResetCompletedQuestionsButtonH()
     {
-        return startPageResetCompletedQuestionsButtonHeight;
+        return resetCompletedQuestionsButtonHeight;
     }
 
     /**
@@ -1377,7 +1154,7 @@ public class ClickPanelDrawStartPage
      */
     public void setResetCompletedQuestionsButtonClicked(boolean newClicked)
     {
-        startPageResetCompletedQuestionsButtonClicked = newClicked;
+        resetCompletedQuestionsButtonClicked = newClicked;
     }
 
     /**
@@ -1385,7 +1162,7 @@ public class ClickPanelDrawStartPage
      */
     public void setResetCompletedQuestionsIndicationTextActivated(boolean newActivated)
     {
-        startPageResetQuestionsIndicationTextActivated = newActivated;
+        resetQuestionsIndicationTextActivated = newActivated;
     }
 
 
@@ -1396,7 +1173,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode1ButtonX()
     {
-        return startPageSlideMode1ButtonX;
+        return slideMode1ButtonX;
     }
 
     /**
@@ -1404,7 +1181,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode1ButtonY()
     {
-        return startPageSlideMode1ButtonY;
+        return slideMode1ButtonY;
     }
 
     /**
@@ -1412,7 +1189,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode1ButtonW()
     {
-        return startPageSlideMode1ButtonWidth;
+        return slideMode1ButtonWidth;
     }
 
     /**
@@ -1420,7 +1197,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode1ButtonH()
     {
-        return startPageSlideMode1ButtonHeight;
+        return slideMode1ButtonHeight;
     }
 
     /**
@@ -1428,7 +1205,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode1ButtonClicked(boolean newClicked)
     {
-        startPageSlideMode1ButtonClicked = newClicked;
+        slideMode1ButtonClicked = newClicked;
     }
 
     /**
@@ -1436,7 +1213,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode1ButtonSelected(boolean newSelected)
     {
-        startPageSlideMode1ButtonSelected = newSelected;
+        slideMode1ButtonSelected = newSelected;
     }
 
     /**
@@ -1444,7 +1221,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode1ButtonSelected()
     {
-        return startPageSlideMode1ButtonSelected;
+        return slideMode1ButtonSelected;
     }
 
 
@@ -1453,7 +1230,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode2ButtonX()
     {
-        return startPageSlideMode2ButtonX;
+        return slideMode2ButtonX;
     }
 
     /**
@@ -1461,7 +1238,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode2ButtonY()
     {
-        return startPageSlideMode2ButtonY;
+        return slideMode2ButtonY;
     }
 
     /**
@@ -1469,7 +1246,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode2ButtonW()
     {
-        return startPageSlideMode2ButtonWidth;
+        return slideMode2ButtonWidth;
     }
 
     /**
@@ -1477,7 +1254,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode2ButtonH()
     {
-        return startPageSlideMode2ButtonHeight;
+        return slideMode2ButtonHeight;
     }
 
      /**
@@ -1485,7 +1262,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode2ButtonClicked(boolean newClicked)
     {
-        startPageSlideMode2ButtonClicked = newClicked;
+        slideMode2ButtonClicked = newClicked;
     }
 
     /**
@@ -1493,7 +1270,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode2ButtonSelected(boolean newSelected)
     {
-        startPageSlideMode2ButtonSelected = newSelected;
+        slideMode2ButtonSelected = newSelected;
     }
 
     /**
@@ -1501,7 +1278,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode2ButtonSelected()
     {
-        return startPageSlideMode2ButtonSelected;
+        return slideMode2ButtonSelected;
     }
 
     /**
@@ -1509,7 +1286,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode3ButtonX()
     {
-        return startPageSlideMode3ButtonX;
+        return slideMode3ButtonX;
     }
 
     /**
@@ -1517,7 +1294,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode3ButtonY()
     {
-        return startPageSlideMode3ButtonY;
+        return slideMode3ButtonY;
     }
 
     /**
@@ -1525,7 +1302,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode3ButtonW()
     {
-        return startPageSlideMode3ButtonWidth;
+        return slideMode3ButtonWidth;
     }
 
     /**
@@ -1533,7 +1310,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideMode3ButtonH()
     {
-        return startPageSlideMode3ButtonHeight;
+        return slideMode3ButtonHeight;
     }
 
      /**
@@ -1541,7 +1318,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode3ButtonClicked(boolean newClicked)
     {
-        startPageSlideMode3ButtonClicked = newClicked;
+        slideMode3ButtonClicked = newClicked;
     }
 
     /**
@@ -1549,7 +1326,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideMode3ButtonSelected(boolean newSelected)
     {
-        startPageSlideMode3ButtonSelected = newSelected;
+        slideMode3ButtonSelected = newSelected;
     }
 
     /**
@@ -1557,7 +1334,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideMode3ButtonSelected()
     {
-        return startPageSlideMode3ButtonSelected;
+        return slideMode3ButtonSelected;
     }
 
     //--slide order buttons--
@@ -1567,7 +1344,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder1ButtonX()
     {
-        return startPageSlideOrder1ButtonX;
+        return slideOrder1ButtonX;
     }
 
     /**
@@ -1575,7 +1352,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder1ButtonY()
     {
-        return startPageSlideOrder1ButtonY;
+        return slideOrder1ButtonY;
     }
 
     /**
@@ -1583,7 +1360,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder1ButtonW()
     {
-        return startPageSlideOrder1ButtonWidth;
+        return slideOrder1ButtonWidth;
     }
 
     /**
@@ -1591,7 +1368,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder1ButtonH()
     {
-        return startPageSlideOrder1ButtonHeight;
+        return slideOrder1ButtonHeight;
     }
 
     /**
@@ -1599,7 +1376,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideOrder1ButtonClicked(boolean newClicked)
     {
-        startPageSlideOrder1ButtonClicked = newClicked;
+        slideOrder1ButtonClicked = newClicked;
     }
 
     /**
@@ -1607,7 +1384,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideOrder1ButtonSelected(boolean newSelected)
     {
-        startPageSlideOrder1ButtonSelected = newSelected;
+        slideOrder1ButtonSelected = newSelected;
     }
 
     /**
@@ -1615,7 +1392,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideOrder1ButtonSelected()
     {
-        return startPageSlideOrder1ButtonSelected;
+        return slideOrder1ButtonSelected;
     }
 
     /**
@@ -1623,7 +1400,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder2ButtonX()
     {
-        return startPageSlideOrder2ButtonX;
+        return slideOrder2ButtonX;
     }
 
     /**
@@ -1631,7 +1408,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder2ButtonY()
     {
-        return startPageSlideOrder2ButtonY;
+        return slideOrder2ButtonY;
     }
 
     /**
@@ -1639,7 +1416,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder2ButtonW()
     {
-        return startPageSlideOrder2ButtonWidth;
+        return slideOrder2ButtonWidth;
     }
 
     /**
@@ -1647,7 +1424,7 @@ public class ClickPanelDrawStartPage
      */
     public int getSlideOrder2ButtonH()
     {
-        return startPageSlideOrder2ButtonHeight;
+        return slideOrder2ButtonHeight;
     }
 
     /**
@@ -1655,7 +1432,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideOrder2ButtonClicked(boolean newClicked)
     {
-        startPageSlideOrder2ButtonClicked = newClicked;
+        slideOrder2ButtonClicked = newClicked;
     }
 
     /**
@@ -1663,7 +1440,7 @@ public class ClickPanelDrawStartPage
      */
     public void setSlideOrder2ButtonSelected(boolean newSelected)
     {
-        startPageSlideOrder2ButtonSelected = newSelected;
+        slideOrder2ButtonSelected = newSelected;
     }
 
     /**
@@ -1671,7 +1448,7 @@ public class ClickPanelDrawStartPage
      */
     public boolean getSlideOrder2ButtonSelected()
     {
-        return startPageSlideOrder2ButtonSelected;
+        return slideOrder2ButtonSelected;
     }
     
 }

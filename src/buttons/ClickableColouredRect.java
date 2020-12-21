@@ -27,18 +27,22 @@ public class ClickableColouredRect extends ColouredRectangleShape implements Cli
     public void handleNewWindowClick(int clickedXCoordinate, int clickedYCoordinate)
     {
         System.out.println("handling new window click");
-        if (isPointInsideThisShape(clickedXCoordinate, clickedYCoordinate)){
+        if (isPointInsideThisShape(clickedXCoordinate, clickedYCoordinate, false)){
             System.out.println("activating clicked procedure");
             activateClickedProcedure();
         }
     }
 
     @Override
-    public boolean isPointInsideThisShape(int clickedXCoordinate, int clickedYCoordinate)
+    public boolean isPointInsideThisShape(int clickedXCoordinate, int clickedYCoordinate, boolean adjustForMacCursorPositionDetectionIssue)
     {
+        int verticalAdjust = 0;
+        if (adjustForMacCursorPositionDetectionIssue==true){
+            verticalAdjust = -55;
+        }
         if ( (clickedXCoordinate > this.getXCoordinate()) && (clickedXCoordinate < this.getRightXCoordinate()) ){
 			//it is in the x range
-			if ( (clickedYCoordinate < this.getBottomYCoordinate()) && (clickedYCoordinate > this.getYCoordinate()) ){
+			if ( (clickedYCoordinate + verticalAdjust  < this.getBottomYCoordinate()) && (clickedYCoordinate + verticalAdjust > this.getYCoordinate()) ){
 				//it has been clicked (since it is also in the y range)
 				return true;
 			}

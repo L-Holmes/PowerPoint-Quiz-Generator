@@ -61,7 +61,7 @@ public class ClickableColouredButton extends ClickableColouredRect
         if (isClicked == true){
             return clickedColour;
         }
-        else if (this.isPointInsideThisShape(currentMouseXCoordinate, currentMouseYCoordinate) == true){
+        else if (this.isPointInsideThisShape(currentMouseXCoordinate, currentMouseYCoordinate, true) == true){
             //user is hovering over this button
             return hoveredOverColour;
         }
